@@ -17,7 +17,7 @@ public class Tour
         calculateTourLength();
     }
 
-    public Tour(int[] cityInd, List<City2D> cities)
+    public Tour(List<int> cityInd, List<City2D> cities)
     {
         this.cities = new List<City2D>();
         for(int i = 0; i < cities.Count; i++)
@@ -47,7 +47,7 @@ public class Tour
             Debug.Log("City with ID"+ cities[i].getId()+" and i = " + i +": " + cities[i].getXPosition() + " - " + cities[i].getYPosition());
     }
 
-    public double getTourLength()
+    public double getLength()
     {
         return tourLength;
     }
@@ -61,4 +61,25 @@ public class Tour
     {
         return cities.Count;
     }
+
+    public bool isEdge(int cityAID, int cityBID)
+    {
+        for (int i = 0; i < cities.Count - 1; i++)
+        {
+            if (cities[i].getId() == cityAID && cities[i + 1].getId() == cityBID)
+                return true;
+            else if (cities[i + 1].getId() == cityAID && cities[i].getId() == cityBID)
+                return true;
+
+        }
+
+        if (cities[cities.Count - 1].getId() == cityAID && cities[0].getId() == cityBID)
+            return true;
+        if (cities[0].getId() == cityAID && cities[cities.Count - 1].getId() == cityBID)
+            return true;
+
+        return false;
+
+    }
+
 }

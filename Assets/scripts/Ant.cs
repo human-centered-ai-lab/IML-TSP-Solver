@@ -19,10 +19,10 @@ public class Ant {
     private Tour generateRandomTour(List<City2D> cities, int start)
     {
 
-        int[] cityIndices = new int[cities.Count];
+        List<int> cityIndices = new List<int>();
 
         for (int i = 0; i < cities.Count; i++)
-            cityIndices[i] = i;
+            cityIndices.Add(i);
 
         //shuffle
         for (int i = 0; i < cities.Count; i++)
@@ -36,7 +36,7 @@ public class Ant {
         int target = -1;
 
         // search for the index of the target city
-        for (int i = 0; i < cityIndices.Length; i++)
+        for (int i = 0; i < cityIndices.Count; i++)
         {
             if (cityIndices[i] == start)
             {

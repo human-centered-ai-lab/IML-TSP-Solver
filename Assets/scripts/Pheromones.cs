@@ -2,6 +2,8 @@
  * PROGRAMMED BY Andrej Müller (andrej.mueller@student.tugraz.at), student of TU Graz - University of Technology
  * */
 
+using UnityEngine;
+
 public class Pheromones 
 {
     public static double initPheromoneValue = 0.01;
@@ -23,6 +25,8 @@ public class Pheromones
         for (int i = 0; i < pheromones.Length; i++)
             for (int j = 0; j < pheromones[i].Length; j++)
                 pheromones[i][j] = initPheromoneValue;
+
+        Debug.Log("Pheromones: "+this.ToString);
     }
 
     public double getPheromone(int cityAId, int cityBId)
@@ -33,6 +37,21 @@ public class Pheromones
     public int getCount()
     {
         return count;
+    }
+
+    public new string ToString
+    {
+        get
+        {
+            string str = "";
+            for (int i = 0; i < pheromones.Length; i++)
+            {
+                str += "\n";
+                for (int j = 0; j < pheromones[i].Length; j++)
+                    str += pheromones[i][j] + " ";
+            }
+            return str;
+        }
     }
 
     public void setPheromone(int cityAId, int cityBId, double amount)

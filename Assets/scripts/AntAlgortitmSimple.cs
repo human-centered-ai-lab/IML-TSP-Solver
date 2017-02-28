@@ -7,14 +7,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AntAlgortitmSimple : MonoBehaviour {
+public class AntAlgortitmSimple : MonoBehaviour
+{
 
     //variables for the ACO basic algorithm
-    static int alpha = 3;
-    static int beta = 2;
-    static double rho = 0.01;
-    static double Q = 2.0;
+
+    // influence of pheromone on direction
+    private static int alpha = 3;
+    // influence of adjacent node distance
+    private static int beta = 2;
+
+    // pheromone decrease factor
+    private static double rho = 0.01;
+    // pheromone increase factor
+    private static double Q = 2.0;
 
     private List<Ant> ants;
     private List<City2D> cities;
@@ -25,14 +33,23 @@ public class AntAlgortitmSimple : MonoBehaviour {
 
     // helper
     private static int cityId = 0;
+    private Tour bestTour;
+    private Pheromones pheromones;
+    private Distances distances;
+    private double bestLength;
 
-    // initialize ants, routes
-    public void initializationPhase()
-    {
-        
-    }
+    // testing
+    public Button button;
+    private bool clicked = false;
+    int counter = 0;
+
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
+
+        //testing
+        button.onClick.AddListener(buttonClickRoutine);
+
 
         cities = new List<City2D>();
 
@@ -40,15 +57,16 @@ public class AntAlgortitmSimple : MonoBehaviour {
         cities.Add(new City2D(1, 9, cityId++, "Graz", cityGameObject));
         cities.Add(new City2D(3, 8, cityId++, "Klagenfurt", cityGameObject));
         cities.Add(new City2D(9, 1, cityId++, "Innsbruck", cityGameObject));
-        /*cities.Add(new City2D(5, 2, cityId++));
-        cities.Add(new City2D(2, 5, cityId++));
-        cities.Add(new City2D(9, 6, cityId++));
-        cities.Add(new City2D(8, 1, cityId++));
-        cities.Add(new City2D(7, 2, cityId++));
-        cities.Add(new City2D(6, 1, cityId++));
-        cities.Add(new City2D(4, 0, cityId++));
-        */
 
+        cities.Add(new City2D(5, 2, cityId++, "Innsbruck", cityGameObject));
+        cities.Add(new City2D(2, 5, cityId++, "Innsbruck", cityGameObject));
+        cities.Add(new City2D(9, 6, cityId++, "Innsbruck", cityGameObject));
+        cities.Add(new City2D(8, 1, cityId++, "Innsbruck", cityGameObject));
+        cities.Add(new City2D(7, 2, cityId++, "Innsbruck", cityGameObject));
+        cities.Add(new City2D(6, 1, cityId++, "Innsbruck", cityGameObject));
+        cities.Add(new City2D(4, 0, cityId++, "Innsbruck", cityGameObject));
+        
+        //start
         initAnts();
 
         try
@@ -56,45 +74,25 @@ public class AntAlgortitmSimple : MonoBehaviour {
             Debug.Log("#########################Begin Ant Colony Optimization########################");
 
             Debug.Log("Calculate distances...");
-            Distances distances = new Distances(cities);
+            distances = new Distances(cities);
 
             Debug.Log("Calculate initial best tour...");
-            Tour bestTour = calculateBestTour();
-            double bestLength = bestTour.getTourLength();
+            bestTour = calculateBestTour();
+            bestLength = bestTour.getLength();
 
             Debug.Log("Init pheromones...");
-            Pheromones pheromones = new Pheromones(cities.Count);
+            pheromones = new Pheromones(cities.Count);
 
-            int time = 0;
-            while (time < numOfLoops)
-            {
-                Debug.Log("_________________LOOP"+time+"____________________");
-                Debug.Log("Update ANTS...");
-                updateAnts(ants, pheromones, distances);
-                Debug.Log("Update PHEROMONES...");
-                UpdatePheromones(pheromones, distances);
-
-                Debug.Log("Calculate best tour...");
-                Tour currBestTour = calculateBestTour();
-                double currBestLength = currBestTour.getTourLength();
-                if (currBestLength < bestLength)
-                {
-                    Debug.Log("BEST TOUR SO FAR!!!");
-                    bestLength = currBestLength;
-                    bestTour = currBestTour;
-                }
-                time ++;
-            }
-
-            Debug.Log("Best trail found:");
-            Display(bestTour);
-            Debug.Log("Length of best trail found: " +
-            bestLength.ToString("F1"));
         }
         catch (Exception ex)
         {
             Debug.Log(ex.Message);
         }
+    }
+
+    private void buttonClickRoutine()
+    {
+            clicked = true;
     }
 
     private void Display(Tour tour)
@@ -107,12 +105,12 @@ public class AntAlgortitmSimple : MonoBehaviour {
 
     private Tour calculateBestTour()
     {
-        double bestLength = ants[0].getTour().getTourLength();
+        double bestLength = ants[0].getTour().getLength();
         int bestLengthIndex = 0;
 
         for (int i = 1; i < ants.Count; i++)
         {
-            double len = ants[i].getTour().getTourLength(); ;
+            double len = ants[i].getTour().getLength(); ;
             if (len < bestLength)
             {
                 bestLength = len;
@@ -120,15 +118,53 @@ public class AntAlgortitmSimple : MonoBehaviour {
             }
         }
 
-        Debug.Log("BEST TOUR: " + "ANT "+ bestLengthIndex + " LENGTH: " + bestLength);
+        Debug.Log("BEST TOUR: " + "ANT " + bestLengthIndex + " LENGTH: " + bestLength);
 
         return ants[bestLengthIndex].getTour();
     }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+    void Update()
+    {
+        if (clicked == true)
+        {
+
+            try
+            {
+
+                Debug.Log("_________________LOOP" + counter + "____________________");
+                Debug.Log("Update ANTS...");
+                updateAnts(ants);
+                Debug.Log("Update PHEROMONES...");
+                UpdatePheromones();
+
+                Debug.Log("Calculate best tour...");
+                Tour currBestTour = calculateBestTour();
+                double currBestLength = currBestTour.getLength();
+                if (currBestLength < bestLength)
+                {
+                    Debug.Log("BEST TOUR SO FAR!!!");
+                    bestLength = currBestLength;
+                    bestTour = currBestTour;
+                }
+
+
+                Debug.Log("Best trail found:");
+                Display(bestTour);
+                Debug.Log("Length of best trail found: " +
+                bestLength.ToString("F1"));
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message);
+                Debug.Log(ex.StackTrace);
+                Debug.Log(ex.HelpLink);
+            }
+            counter++;
+            clicked = false;
+        }
+
+    }
 
     private void initAnts()
     {
@@ -137,47 +173,47 @@ public class AntAlgortitmSimple : MonoBehaviour {
         for (int i = 0; i < numOfAnts; i++)
         {
             ants.Add(new Ant(cities));
-           // ants[i].printCities();
+            // ants[i].printCities();
         }
     }
 
-    private void updateAnts(List<Ant> ants, Pheromones pheromones, Distances distances)
+    private void updateAnts(List<Ant> ants)
     {
         for (int i = 0; i < ants.Count; i++)
         {
             int start = UnityEngine.Random.Range(0, cities.Count);
             Debug.Log("::::::::::: ANT " + i + " starts at " + start + " ::::::::::::::::::::");
 
-            Tour newTour = BuildTrail(i, start, pheromones, distances);
+            Tour newTour = BuildTrail(i, start);
             ants[i].setTour(newTour);
-            Debug.Log("The tour length of ANT " + i + " is " + newTour.getTourLength() + "!");
+            Debug.Log("The tour length of ANT " + i + " is " + newTour.getLength() + "!");
 
         }
     }
 
-    private Tour BuildTrail(int k, int start, Pheromones pheromones, Distances distances)
+    private Tour BuildTrail(int k, int start)
     {
-        List<City2D> tempCityList = new List<City2D>();
+        List<int> tempCityIndexList = new List<int>();
         bool[] visited = new bool[cities.Count];
-        tempCityList.Add(cities[start]);
+        tempCityIndexList.Add(cities[start].getId());
         visited[start] = true;
 
         for (int i = 0; i < cities.Count - 1; i++)
         {
-            City2D cityA = tempCityList[i];
-            City2D next = NextCity(k, cityA, visited, pheromones, distances);
+            int cityAIndex = tempCityIndexList[i];
+            int nextCityIndex = NextCity(k, cityAIndex, visited);
 
-            Debug.Log("City "+ cityA.getId() + " selected. NEXT city is: " + next.getId());
+            Debug.Log("City " + cityAIndex + " selected. NEXT city is: " + nextCityIndex);
 
-            tempCityList.Add(next);
-            visited[next.getId()] = true;
+            tempCityIndexList.Add(nextCityIndex);
+            visited[nextCityIndex] = true;
         }
-        return new Tour(tempCityList);
+        return new Tour(tempCityIndexList, cities);
     }
 
-    private City2D NextCity(int k, City2D cityA, bool[] visited, Pheromones pheromones, Distances distances)
+    private int NextCity(int k, int cityAIndex, bool[] visited)
     {
-        double[] probabilities = MoveProbabilities(k, cityA, visited, pheromones, distances);
+        double[] probabilities = MoveProbabilities(k, cityAIndex, visited);
         double[] cumulativeProbs = new double[probabilities.Length + 1];
 
         // calculate the comulative probabilities
@@ -189,27 +225,27 @@ public class AntAlgortitmSimple : MonoBehaviour {
 
         for (int i = 0; i < cumulativeProbs.Length - 1; i++)
             if (p >= cumulativeProbs[i] && p < cumulativeProbs[i + 1])
-                return cities[i];
+                return cities[i].getId();
         throw new Exception("Failure to return valid city in NextCity");
     }
 
     //calculate the probabilities for moving to a certain city
-    private double[] MoveProbabilities(int k, City2D cityA, bool[] visited, Pheromones pheromones, Distances distances)
+    private double[] MoveProbabilities(int k, int cityAIndex, bool[] visited)
     {
         double[] taueta = new double[cities.Count];
         double sum = 0.0;
         for (int i = 0; i < taueta.Length; i++)
         {
-            if (cities[i].getId() == cityA.getId())
+            if (cities[i].getId() == cityAIndex)
             {
                 taueta[i] = 0.0;
             }
             else if (visited[i] == true)
-                taueta[i] = 0.0; 
+                taueta[i] = 0.0;
             else
             {
-                taueta[i] = Math.Pow(pheromones.getPheromone(cityA.getId(), i), alpha) *
-                Math.Pow((1.0 / distances.getDistance(cityA.getId(), i)), beta);
+                taueta[i] = Math.Pow(pheromones.getPheromone(cityAIndex, i), alpha) *
+                Math.Pow((1.0 / distances.getDistance(cityAIndex, i)), beta);
 
                 if (taueta[i] < 0.0001)
                     taueta[i] = 0.0001;
@@ -223,13 +259,13 @@ public class AntAlgortitmSimple : MonoBehaviour {
         for (int i = 0; i < probs.Length; ++i)
         {
             probs[i] = taueta[i] / sum;
-          //  Debug.Log("MOVE PROB: From city "+ cityA.getId() +" to city" + i + " is " + probs[i] );
+            //  Debug.Log("MOVE PROB: From city "+ cityA.getId() +" to city" + i + " is " + probs[i] );
 
         }
         return probs;
     }
 
-    private void UpdatePheromones(Pheromones pheromones, Distances dists)
+    private void UpdatePheromones()
     {
         for (int i = 0; i < pheromones.getCount(); i++)
         {
@@ -237,17 +273,20 @@ public class AntAlgortitmSimple : MonoBehaviour {
             {
                 for (int k = 0; k < ants.Count; k++)
                 {
-                    double length = ants[k].getTour().getTourLength(); 
-                    // length of ant k trail
+                    double length = ants[k].getTour().getLength();
                     double decrease = (1.0 - rho) * pheromones.getPheromone(i, j);
                     double increase = 0.0;
-                    if (EdgeInTrail(ants[k].getTour().getCity(i), ants[k].getTour().getCity(j), ants[k]) == true)
+
+                    // if the current edge is visited by the current ant
+                    if (ants[k].getTour().isEdge(i,j))
                     {
+                        Debug.Log("Ant [" + k + "] There is an edge between City " + i + " and City " + j + "!");
                         increase = (Q / length);
                     }
 
                     pheromones.setPheromone(i, j, decrease + increase);
 
+                    // 0.0001 to 10000.0
                     if (pheromones.getPheromone(i, j) < 0.0001)
                     {
                         pheromones.setPheromone(i, j, 0.0001);
@@ -257,66 +296,15 @@ public class AntAlgortitmSimple : MonoBehaviour {
                         pheromones.setPheromone(i, j, 100000.0);
                     }
 
-                    pheromones.setPheromone(j, i,  pheromones.getPheromone(i, j));
+                    pheromones.setPheromone(j, i, pheromones.getPheromone(i, j));
                 }
             }
         }
+        Debug.Log("UPDATE PHEROMONE" + pheromones.ToString);
     }
-    private bool EdgeInTrail(City2D cityX, City2D cityY, Ant ant)
-    {
-        // are cityX and cityY adjacent to each other in trail[]?
-        int lastIndex = cities.Count - 1;
-        int idx = IndexOfTarget(ant, cityX);
+   
+    
 
-        if (idx == 0 && ant.getTour().getCity(1) == cityY)
-        {
-            return true;
-        }
-        else if (idx == 0 && ant.getTour().getCity(lastIndex) == cityY)
-        {
-            return true;
-        }
-        else if (idx == 0)
-        {
-            return false;
-        }
-        else if (idx == lastIndex && ant.getTour().getCity(lastIndex - 1) == cityY)
-        {
-            return true;
-        }
-        else if (idx == lastIndex && ant.getTour().getCity(0) == cityY)
-        {
-            return true;
-        }
-        else if (idx == lastIndex)
-        {
-            return false;
-        }
-        else if (ant.getTour().getCity(idx - 1) == cityY)
-        {
-            return true;
-        }
-        else if (ant.getTour().getCity(idx + 1) == cityY)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
-    private int IndexOfTarget(Ant ant, City2D target)
-    {
-        // helper for RandomTrail
-        for (int i = 0; i < cities.Count; i++)
-        {
-            if (ant.getTour().getCity(i).getId() == target.getId())
-            {
-                return i;
-            }
-        }
-        throw new Exception("Target not found in IndexOfTarget");
-    }
 
 }

@@ -3,7 +3,7 @@
  * */
 using UnityEngine;
 
-public class City2D: MonoBehaviour{
+public class City2D{
 
     private int id;
     private int xPosition;
@@ -18,8 +18,7 @@ public class City2D: MonoBehaviour{
 
         if (cityGA != null)
         {
-            Debug.Log(cityGA.name);
-            this.city = (GameObject)Instantiate(cityGA) as GameObject;
+            this.city = cityGA as GameObject;
             city.transform.position = new Vector3(xPosition, yPosition, 0);
             //city.name = "City:" + name;
         }
