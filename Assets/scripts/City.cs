@@ -3,25 +3,18 @@
  * */
 using UnityEngine;
 
-public class City2D{
+public class City{
 
     private int id;
     private int xPosition;
     private int yPosition;
     private GameObject city;
 
-    public City2D(int xPosition, int yPosition, int id, string name, GameObject cityGA)
+    public City(int xPosition, int yPosition, int id, string name, GameObject gameObject)
     {
         this.id = id;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
-
-        if (cityGA != null)
-        {
-            this.city = cityGA as GameObject;
-            city.transform.position = new Vector3(xPosition, yPosition, 0);
-            //city.name = "City:" + name;
-        }
     }
 
     public int getId()

@@ -26,7 +26,7 @@ public class Pheromones
             for (int j = 0; j < pheromones[i].Length; j++)
                 pheromones[i][j] = initPheromoneValue;
 
-        Debug.Log("Pheromones: "+this.ToString);
+        Debug.Log("Pheromones: "+ this.ToString);
     }
 
     public double getPheromone(int cityAId, int cityBId)

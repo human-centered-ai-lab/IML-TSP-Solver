@@ -3,52 +3,116 @@
  * */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Distances
-{ 
-    // default value used for initialization
-    public static double initPheromoneValue = 0.01;
-
+{
     // The distance matrix: x is the city A and y is the city B
     private double[][] distances;
+    private int[][] nearestNeighbours;
 
-    public Distances(List<City2D> cities)
+    private List<City> cities;
+
+    public Distances(List<City> cities)
     {
+        this.cities = cities;
         //build the distance matix
-        MakeGraphDistances(cities);
+        calculateDistances();
+        //build the nearestNeighbour matix
+        calculateNearestNeighbours();
     }
 
-    // Calculate the initial distances between cities in array order and return it as an array
-    private void MakeGraphDistances(List<City2D> cities)
+    // Calculate the initial distances between cities in array order 
+    private void calculateDistances()
     {
         distances = new double[cities.Count][];
+        String str = "";
 
         for (int i = 0; i < cities.Count; i++)
             distances[i] = new double[cities.Count];
 
         for (int i = 0; i < cities.Count; i++)
+        {
             for (int j = 0; j < cities.Count; j++)
             {
                 // distance matrix from cityA to cityB
-                double distance = calculateCityDistance(cities[i], cities[j]);
+                double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
                 distances[i][j] = distance;
                 distances[j][i] = distance;
+                str += distances[i][j] + " ";
+
             }
+            str += "\n";
+        }
+        Debug.Log("Distance matrix: " + str);
+
+    }
+
+    /* Calculate all nearest neigbours of all cities in array order 
+    * example: cityB is the nearest neighbour of cityA and cityC the 2nd nearest neighbour of cityA
+    *          nn[cityAid][0] = cityBid
+    *          nn[cityAid][1] = cityCid
+    */
+    private void calculateNearestNeighbours()
+    {
+        nearestNeighbours = new int[cities.Count][];
+        double lowestValue = double.MaxValue;
+        int lowestValueIndex = -1;
+        String str = "";
+
+        double[][] distancesHelper = new double[cities.Count][];
+        for (int i = 0; i < cities.Count; i++)
+        {
+            distancesHelper[i] = new double[cities.Count];
+        }
+
+        for (int i = 0; i < cities.Count; i++)
+            nearestNeighbours[i] = new int[cities.Count - 1];
+
+
+        for (int i = 0; i < cities.Count; i++)
+        {
+            for (int j = 0; j < cities.Count; j++)
+            {
+                distancesHelper[i][j] = distances[i][j];
+            }
+        }
+
+        for (int i = 0; i < cities.Count; i++)
+        {
+            for (int j = 0; j < cities.Count -1 ; j++)
+            {
+                for(int k = 0; k < cities.Count; k++)
+                {
+                    if(distancesHelper[i][k] < lowestValue && distancesHelper[i][k] != 0)
+                    {       
+                        lowestValue = distancesHelper[i][k];
+                        lowestValueIndex = k;                       
+                    }
+                }
+                distancesHelper[i][lowestValueIndex] = double.MaxValue;                       
+                nearestNeighbours[i][j] = lowestValueIndex;
+                str += nearestNeighbours[i][j] + " ";
+                lowestValue = double.MaxValue;
+            }
+            str += "\n";
+        }
+        Debug.Log("nearestNeighbours matrix: " + str);
+
     }
 
     // Calculate the the vpoint distance between 2 cities with 2D coordinates
-    public static double calculateCityDistance(City2D cityA, City2D cityB)
+    private double calculateCityDistance(int cityAID, int cityBID)
     {
-        return (Math.Pow(cityA.getXPosition() - cityB.getXPosition(), 2) + Math.Pow(cityA.getYPosition() - cityB.getYPosition(), 2));
+        return (Math.Pow(cities[cityAID].getXPosition() - cities[cityBID].getXPosition(), 2) + Math.Pow(cities[cityAID].getYPosition() - cities[cityBID].getYPosition(), 2));
     }
 
     // returns the distance between two cities
     public double getDistance(int cityAId, int cityBId)
     {
         return distances[cityAId][cityBId];
+
     }
 
 }
