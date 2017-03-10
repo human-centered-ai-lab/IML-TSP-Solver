@@ -9,12 +9,10 @@ public class Pheromones
     public static double initPheromoneValue = 0.01;
     // x is the city A and y is the city B
     private double[][] pheromones;
-    private int count;
-
+  
     public Pheromones(int numOfCities)
     {
         initializePheromones(numOfCities);
-        count = numOfCities;
     }
 
     private void initializePheromones(int numOfCities)
@@ -32,11 +30,6 @@ public class Pheromones
     public double getPheromone(int cityAId, int cityBId)
     {
         return pheromones[cityAId][cityBId];
-    }
-
-    public int getCount()
-    {
-        return count;
     }
 
     public new string ToString

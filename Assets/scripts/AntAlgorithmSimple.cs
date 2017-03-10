@@ -66,16 +66,11 @@ namespace AntAlgorithms
 
             Ant bestAntTemp = antin.findBestAnt();
 
-
             if (bestAntTemp.getTourLength() < bestAnt.getTourLength())
                 bestAnt = bestAntTemp;
 
-            Debug.Log("Length of best trail found!");
             Debug.Log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             Debug.Log("Best Ant: " + bestAnt.ToString);
-            Debug.Log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-
-            Debug.Log("######################################################################################");
 
         }
 

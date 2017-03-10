@@ -53,6 +53,32 @@ public class AntAlgorithmSimpleTest
     }
 
     [Test]
+    public void test10()
+    {
+        GameObject cityGameObject = new GameObject();
+        AntAlgorithms.AntAlgorithmSimple aas = Camera.main.GetComponent<AntAlgorithms.AntAlgorithmSimple>();
+
+        cities.Add(new City(2, 4, 0, "Vienna", cityGameObject));
+        cities.Add(new City(1, 9, 1, "Graz", cityGameObject));
+        cities.Add(new City(3, 8, 2, "Klagenfurt", cityGameObject));
+        cities.Add(new City(9, 1, 3, "Innsbruck", cityGameObject));
+        cities.Add(new City(19, 1, 4, "Innsbruck", cityGameObject));
+
+        cities.Add(new City(22, 4, 5, "Vienna", cityGameObject));
+        cities.Add(new City(1, 11, 6, "Graz", cityGameObject));
+        cities.Add(new City(3, 4, 7, "Klagenfurt", cityGameObject));
+
+
+        aas.setCities(cities);
+        aas.init();
+        for (int i = 0; i < 3; i++)
+            aas.step();
+        Assert.That(cities.Count, Is.EqualTo(56));
+        //  AntAlgorithmSimple.init();
+
+    }
+
+    [Test]
     public void test50()
     {
         GameObject cityGameObject = new GameObject();
@@ -121,7 +147,7 @@ public class AntAlgorithmSimpleTest
 
         aas.setCities(cities);
         aas.init();
-        for(int i = 0; i < 120; i++)
+        for(int i = 0; i < 1; i++)
             aas.step();
         Assert.That(cities.Count, Is.EqualTo(56));
         //  AntAlgorithmSimple.init();
