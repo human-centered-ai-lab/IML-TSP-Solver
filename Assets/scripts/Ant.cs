@@ -55,7 +55,8 @@ public class Ant {
         int tmpC2 = tour[0];
         tour[0] = tour[target];
         tour[target] = tmpC2;
-        
+        tour.Add(tour[0]);
+
     }
 
     public new string ToString
@@ -114,11 +115,10 @@ public class Ant {
     public double calculateTourLength()
     {
         tourLength = 0;
-        for (int i = 0; i < (tour.Count - 1); i++)
+        for (int i = 0; i < tour.Count - 1; i++)
         {
             tourLength += distances.getDistance(tour[i], tour[i + 1]);
         }
-        tourLength += distances.getDistance(tour[tour.Count - 1], tour[0]);
 
         return tourLength;
     }

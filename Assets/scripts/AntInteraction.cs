@@ -50,19 +50,16 @@ public class AntInteraction
     //update the tours of ants by considering the pheromones
     public void updateAnts()
     {
-        choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
-        Debug.Log("Choices: " + choiceInfo.ToString);
-
-        for (int i = 0; i < ants.Count; i++)
+        for (int k = 0; k < ants.Count; k++)
         {
-            ants[i].clearTour();
-            ants[i].unvisitAllCities();
+            ants[k].clearTour();
+            ants[k].unvisitAllCities();
         }
-        for (int i = 0; i < ants.Count; i++)
+        for (int k = 0; k < ants.Count; k++)
         {
             int start = UnityEngine.Random.Range(0, cities.Count);
-            ants[i].addCityToTour(cities[start].getId());
-            ants[i].setCityVisited(cities[start].getId());
+            ants[k].addCityToTour(cities[start].getId());
+            ants[k].setCityVisited(cities[start].getId());
         }
         for (int i = 1; i < cities.Count; i++)
         {
@@ -75,9 +72,10 @@ public class AntInteraction
                 ants[k].setCityVisited(nextCityIndex);
             }
         }
-        for (int i = 0; i < ants.Count; i++)
+        for (int k = 0; k < ants.Count; k++)
         {
-            ants[i].calculateTourLength();
+            ants[k].addCityToTour(ants[k].getCityOfTour(0));
+            ants[k].calculateTourLength();
         }
     }
 
@@ -127,38 +125,31 @@ public class AntInteraction
 
     public void updatePheromones()
     {
+
         for (int i = 0; i < cities.Count; i++)
         {
             for (int j = i + 1; j < cities.Count; j++)
             {
-                for (int k = 0; k < ants.Count; k++)
-                {
-                    double length = ants[k].getTourLength();
-                    double decrease = (1.0 - rho) * pheromones.getPheromone(i, j);
-                    double increase = 0.0;
-
-                    // if the current edge is visited by the current ant
-                    if (ants[k].isEdge(i, j))
-                    {
-                        // Debug.Log("Ant [" + k + "] There is an edge between City " + i + " and City " + j + "!");
-                        increase = (q / length);
-                    }
-
-                    pheromones.setPheromone(i, j, decrease + increase);
-
-                    if (pheromones.getPheromone(i, j) < 0.0001)
-                    {
-                        pheromones.setPheromone(i, j, 0.0001);
-                    }
-                    else if (pheromones.getPheromone(i, j) > 100000.0)
-                    {
-                        pheromones.setPheromone(i, j, 100000.0);
-                    }
-
-                    pheromones.setPheromone(j, i, pheromones.getPheromone(i, j));
-                }
+                pheromones.setPheromone(i, j, (1.0 - rho) * pheromones.getPheromone(i, j));
+                pheromones.setPheromone(j, i, pheromones.getPheromone(i, j));
             }
         }
+        for (int k = 0; k < ants.Count; k++)
+        {
+            double deltaTau = 1.0 / ants[k].getTourLength();
+
+            for (int i = 0; i < cities.Count; i++)
+            {
+                int j = ants[k].getCityOfTour(i);
+                int l = ants[k].getCityOfTour(i + 1);
+                pheromones.setPheromone(j, l, pheromones.getPheromone(j, l) + (deltaTau * q));
+                pheromones.setPheromone(l, j, pheromones.getPheromone(j, l));
+
+            }
+        }
+        choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
+
+        Debug.Log("Choices: " + choiceInfo.ToString);
         Debug.Log("UPDATE PHEROMONE" + pheromones.ToString);
     }
 

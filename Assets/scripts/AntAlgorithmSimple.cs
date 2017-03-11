@@ -32,7 +32,8 @@ namespace AntAlgorithms
         public int firstCity;
         public Mode mode;
 
-        private Ant bestAnt;
+        private double tourLength;
+        private List<int> bestTour;
 
         public void setCities(List<City> cities)
         {
@@ -49,8 +50,9 @@ namespace AntAlgorithms
             Debug.Log("######################### Begin Ant Colony Optimization: INIT ########################");
             antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities);
 
-            bestAnt = antin.findBestAnt();
-            Debug.Log("Best Ant: " + bestAnt.ToString);
+            Ant bestAnt = antin.findBestAnt();
+            tourLength = bestAnt.getTourLength();
+            Debug.Log("Best Dist: " + tourLength);
 
             Debug.Log("######################################################################################");
 
@@ -65,12 +67,15 @@ namespace AntAlgorithms
             antin.updatePheromones();
 
             Ant bestAntTemp = antin.findBestAnt();
+            double tourLengthTemp = bestAntTemp.getTourLength();
 
-            if (bestAntTemp.getTourLength() < bestAnt.getTourLength())
-                bestAnt = bestAntTemp;
+            if (tourLengthTemp < tourLength)
+            {
+                tourLength = tourLengthTemp;
+            }
 
             Debug.Log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-            Debug.Log("Best Ant: " + bestAnt.ToString);
+            Debug.Log("Best Dist: " + tourLength);
 
         }
 

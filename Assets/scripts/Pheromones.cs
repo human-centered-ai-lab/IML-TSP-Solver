@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Pheromones 
 {
-    public static double initPheromoneValue = 0.01;
+    public static double initPheromoneValue = 10;
     // x is the city A and y is the city B
     private double[][] pheromones;
   
