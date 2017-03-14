@@ -1,6 +1,11 @@
-﻿/* Distances is a wrapper class for distances bewtween 2 2d points(cities)
- * PROGRAMMED BY Andrej Müller (andrej.mueller@student.tugraz.at), student of TU Graz - University of Technology
- * */
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2017
+ *****************************************************/
+
+/* Distances represents the distances between cities */
 
 using System;
 using System.Collections.Generic;
@@ -8,8 +13,9 @@ using UnityEngine;
 
 public class Distances
 {
-    // The distance matrix: x is the city A and y is the city B
+    // Matrix of distances between city x and city y
     private double[][] distances;
+    // nearest neighbours of a cities
     private int[][] nearestNeighbours;
 
     private List<City> cities;
@@ -46,7 +52,6 @@ public class Distances
             str += "\n";
         }
         Debug.Log("Distance matrix: " + str);
-
     }
 
     /* Calculate all nearest neigbours of all cities in array order 
@@ -81,24 +86,24 @@ public class Distances
 
         for (int i = 0; i < cities.Count; i++)
         {
-            for (int j = 0; j < cities.Count -1 ; j++)
+            for (int j = 0; j < cities.Count - 1; j++)
             {
-                for(int k = 0; k < cities.Count; k++)
+                for (int k = 0; k < cities.Count; k++)
                 {
-                    if(distancesHelper[i][k] < lowestValue && distancesHelper[i][k] != 0)
-                    {       
+                    if (distancesHelper[i][k] < lowestValue && distancesHelper[i][k] != 0)
+                    {
                         lowestValue = distancesHelper[i][k];
-                        lowestValueIndex = k;                       
+                        lowestValueIndex = k;
                     }
                 }
-                distancesHelper[i][lowestValueIndex] = double.MaxValue;                       
+                distancesHelper[i][lowestValueIndex] = double.MaxValue;
                 nearestNeighbours[i][j] = lowestValueIndex;
                 str += nearestNeighbours[i][j] + " ";
                 lowestValue = double.MaxValue;
             }
             str += "\n";
         }
-        Debug.Log("nearestNeighbours matrix: " + str);
+        Debug.Log("NearestNeighbours matrix: " + str);
 
     }
 
@@ -114,5 +119,4 @@ public class Distances
         return distances[cityAId][cityBId];
 
     }
-
 }

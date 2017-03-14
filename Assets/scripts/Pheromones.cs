@@ -1,21 +1,26 @@
-﻿/* Pheromones is a wrapper class for pheromones between cities in 2D space.
- * PROGRAMMED BY Andrej Müller (andrej.mueller@student.tugraz.at), student of TU Graz - University of Technology
- * */
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2017
+ *****************************************************/
 
-using UnityEngine;
+ /* Pheromone represents the pheromones between cities */
 
-public class Pheromones 
+public class Pheromones
 {
+    // initialization factor for pheromones
     public static double initPheromoneValue = 10;
-    // x is the city A and y is the city B
+    // Matrix of pheromones between city x and city y
     private double[][] pheromones;
-  
+
     public Pheromones(int numOfCities)
     {
-        initializePheromones(numOfCities);
+        initPheromones(numOfCities);
     }
 
-    private void initializePheromones(int numOfCities)
+    // init of pheromones
+    private void initPheromones(int numOfCities)
     {
         pheromones = new double[numOfCities][];
         for (int i = 0; i < numOfCities; i++)
@@ -23,13 +28,6 @@ public class Pheromones
         for (int i = 0; i < pheromones.Length; i++)
             for (int j = 0; j < pheromones[i].Length; j++)
                 pheromones[i][j] = initPheromoneValue;
-
-        Debug.Log("Pheromones: "+ this.ToString);
-    }
-
-    public double getPheromone(int cityAId, int cityBId)
-    {
-        return pheromones[cityAId][cityBId];
     }
 
     public new string ToString
@@ -47,8 +45,20 @@ public class Pheromones
         }
     }
 
-    public void setPheromone(int cityAId, int cityBId, double amount)
+    // decrease the pheromone value between 2 particular cities by one ant 
+    public void decreasePheromone(int cityAId, int cityBId, double decreaseValue)
     {
-        pheromones[cityAId][cityBId] = amount;
+        pheromones[cityAId][cityBId] = decreaseValue * pheromones[cityAId][cityBId];
+    }
+
+    // decrease the pheromone value between 2 particular cities by one ant 
+    public void increasePheromone(int cityAId, int cityBId, double increaseValue)
+    {
+        pheromones[cityAId][cityBId] = pheromones[cityAId][cityBId] + increaseValue;
+    }
+
+    public double getPheromone(int cityAId, int cityBId)
+    {
+        return pheromones[cityAId][cityBId];
     }
 }

@@ -1,10 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2017
+ *****************************************************/
+
+/* ChoiceInfo represents the choices to select a certain path with respect to pheromones and distances */
+
+using System;
 
 public class ChoiceInfo {
 
+    // a matrix representing the choice of selecting a path
     private double[][] choiceInfo;
     private int size;
 
@@ -16,6 +23,7 @@ public class ChoiceInfo {
             choiceInfo[i] = new double[numOfCities];
     }
 
+    // choice update
     public void updateChoiceInfo(Pheromones pheromones, Distances distances, int alpha, int beta)
     {
         for (int i = 0; i < size; i++)
@@ -24,19 +32,9 @@ public class ChoiceInfo {
             {
                 choiceInfo[i][j] = Math.Pow(pheromones.getPheromone(i, j), alpha) *
                                    Math.Pow((1.0 / distances.getDistance(i, j)), beta);
-               /* if (choiceInfo[i][j] < 0.0001)
-                    choiceInfo[i][j] = 0.0001;
-                else if (choiceInfo[i][j] > (double.MaxValue / (size * 100)))
-                    choiceInfo[i][j] = double.MaxValue / (size * 100);*/
-
                 choiceInfo[j][i] = choiceInfo[i][j];
             }
         }
-    }
-
-    public double getChoice(int cityA, int cityB)
-    {
-        return choiceInfo[cityA][cityB];
     }
 
     public new string ToString
@@ -52,5 +50,10 @@ public class ChoiceInfo {
             }
             return str;
         }
+    }
+
+    public double getChoice(int cityA, int cityB)
+    {
+        return choiceInfo[cityA][cityB];
     }
 }

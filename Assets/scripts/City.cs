@@ -1,6 +1,11 @@
-﻿/* City2D represents a point in 2D space.
- * PROGRAMMED BY Andrej Müller (andrej.mueller@student.tugraz.at), student of TU Graz - University of Technology
- * */
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2017
+ *****************************************************/
+
+/* City represents a city in the TSP */
 using UnityEngine;
 
 public class City{
