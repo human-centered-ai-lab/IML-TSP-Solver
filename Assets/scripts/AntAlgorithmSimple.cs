@@ -47,71 +47,72 @@ namespace AntAlgorithms
         public int algStep = 1;
 
         // inits step of the algorithm
+        // usage: use it once for initialization
         public void init()
         {
-            Debug.Log("######################### Begin Ant Colony Optimization: INIT ########################");
             antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities);
-
-            Ant bestAnt = antin.findBestAnt();
-            tourLength = bestAnt.getTourLength();
-            Debug.Log("Best Dist: " + tourLength);
-
-            Debug.Log("######################################################################################");
-
+            bestTour = new List<int>();
+            tourLength = double.MaxValue;
+            Debug.Log("bbbbbbest!" + tourLength);
+            checkBestTour();
+            printBestTour("init");
             algStep = 1;
-
         }
 
         // iteration step of the algorithm - calculates a complete tour for every ant
+        // usage: you can use it several times
         public void iteration()
         {
-
-            Debug.Log("######################### Begin Ant Colony Optimization: ITERATION ########################");
-
             antin.updateAnts();
             antin.updatePheromones();
-
-            Ant bestAntTemp = antin.findBestAnt();
-            double tourLengthTemp = bestAntTemp.getTourLength();
-
-            if (tourLengthTemp < tourLength)
-            {
-                tourLength = tourLengthTemp;
-            }
-
-            Debug.Log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-            Debug.Log("Best Dist: " + tourLength);
-
+            checkBestTour();
+            printBestTour("iteration");
         }
 
         // all ants are moving one city ahead. If the routes are completed, a new iteration is starting.
+        // usage: small part of the iteration. you should use it several times to complete an iteration
         public void step()
         {
-
-            Debug.Log("######################### Begin Ant Colony Optimization: STEP " + algStep + "########################");
-
             if (antin.updateAntsStepwise(algStep))
             {
                 algStep = 1;
                 antin.updatePheromones();
-
-                Ant bestAntTemp = antin.findBestAnt();
-                double tourLengthTemp = bestAntTemp.getTourLength();
-
-                if (tourLengthTemp < tourLength)
-                {
-                    tourLength = tourLengthTemp;
-                }
-
-                Debug.Log("::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                Debug.Log("Best Dist: " + tourLength);
-            }else
+                checkBestTour();
+                printBestTour("step " + algStep);
+            }
+            else
             {
                 algStep++;
             }
         }
 
-        // set cities before the initialization
+        // checks best tour so far
+        private bool checkBestTour()
+        {
+            Ant bestAnt = antin.findBestAnt();
+            double tourLengthTemp = bestAnt.getTourLength();
+
+            if (tourLengthTemp < tourLength)
+            {
+                tourLength = tourLengthTemp;
+                bestTour.Clear();
+                for (int i = 0; i < bestAnt.getTour().Count; i++)
+                    bestTour.Add(bestAnt.getTour()[i]);
+                return true;
+            }
+            return false;
+        }
+
+        // debug output for best tour
+        private void printBestTour(string context)
+        {
+            string str = "";
+            for (int i = 0; i < bestTour.Count; i++)
+                str += bestTour[i] + " ";
+            Debug.Log("["+ context +"] Best Dist: " + tourLength + " Tour: " + str);
+        }
+
+        // usage: set cities before the initialization
         public void setCities(List<City> cities)
         {
             this.cities = cities;
@@ -129,5 +130,14 @@ namespace AntAlgorithms
             return antin.getPheromones();
         }
 
+        public double getTourLength()
+        {
+            return tourLength;
+        }
+
+        public List<int> getTour()
+        {
+            return bestTour;
+        }
     }
 }
