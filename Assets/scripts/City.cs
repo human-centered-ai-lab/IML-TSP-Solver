@@ -8,8 +8,8 @@
 /* City represents a city in the TSP */
 using UnityEngine;
 
-public class City{
-
+public class City
+{
     private int id;
     private int xPosition;
     private int yPosition;

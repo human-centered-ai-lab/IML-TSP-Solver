@@ -5,7 +5,7 @@
  * Year: 2017
  *****************************************************/
 
- /* Pheromone represents the pheromones between cities */
+/* Pheromone represents the pheromones between cities */
 
 public class Pheromones
 {

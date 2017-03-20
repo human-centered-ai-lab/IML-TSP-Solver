@@ -9,8 +9,8 @@
 
 using System;
 
-public class ChoiceInfo {
-
+public class ChoiceInfo
+{
     // a matrix representing the choice of selecting a path
     private double[][] choiceInfo;
     private int size;

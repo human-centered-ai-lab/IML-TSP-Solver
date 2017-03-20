@@ -64,7 +64,7 @@ public class AntInteraction
 
         for (int i = 1; i < cities.Count; i++)
         {
-            if(!moveAnts(i))
+            if (!moveAnts(i))
                 Debug.LogError("No valid next city!");
         }
 
@@ -82,7 +82,7 @@ public class AntInteraction
 
         for (int k = 0; k < ants.Count; k++)
         {
-            int start = Random.Range(0, cities.Count); 
+            int start = Random.Range(0, cities.Count);
             ants[k].addCityToTour(cities[start].getId());
             ants[k].setCityVisited(cities[start].getId());
         }

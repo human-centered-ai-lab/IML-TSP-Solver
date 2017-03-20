@@ -47,7 +47,7 @@ public class AntAlgorithmSimpleTest
 
     [Test]
     public void Simple()
-    {       
+    {
         cities.Add(new City(2, 4, 0, "Vienna", cityGameObject));
         cities.Add(new City(1, 9, 1, "Graz", cityGameObject));
         cities.Add(new City(3, 8, 2, "Klagenfurt", cityGameObject));
@@ -57,11 +57,12 @@ public class AntAlgorithmSimpleTest
         aas.init();
         for (int i = 0; i < 20; i++)
             aas.step();
+        aas.printBestTour("SimpleTest");
         Assert.True(true);
     }
 
     [Test]
-    public void test10()
+    public void test8()
     {
         cities.Add(new City(2, 4, 0, "Vienna", cityGameObject));
         cities.Add(new City(1, 9, 1, "Graz", cityGameObject));
@@ -77,6 +78,7 @@ public class AntAlgorithmSimpleTest
         aas.init();
         for (int i = 0; i < 400; i++)
             aas.iteration();
+        aas.printBestTour("test8");
         Assert.True(true);
     }
 
@@ -145,8 +147,9 @@ public class AntAlgorithmSimpleTest
 
         aas.setCities(cities);
         aas.init();
-        for(int i = 0; i < 120; i++)
+        for (int i = 0; i < 120; i++)
             aas.iteration();
+        aas.printBestTour("test50");
         Assert.True(true);
     }
 }

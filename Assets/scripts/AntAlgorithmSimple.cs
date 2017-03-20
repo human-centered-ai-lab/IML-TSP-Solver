@@ -53,9 +53,7 @@ namespace AntAlgorithms
             antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
-            Debug.Log("bbbbbbest!" + tourLength);
             checkBestTour();
-            printBestTour("init");
             algStep = 1;
         }
 
@@ -66,7 +64,6 @@ namespace AntAlgorithms
             antin.updateAnts();
             antin.updatePheromones();
             checkBestTour();
-            printBestTour("iteration");
         }
 
         // all ants are moving one city ahead. If the routes are completed, a new iteration is starting.
@@ -78,7 +75,6 @@ namespace AntAlgorithms
                 algStep = 1;
                 antin.updatePheromones();
                 checkBestTour();
-                printBestTour("step " + algStep);
             }
             else
             {
@@ -104,12 +100,12 @@ namespace AntAlgorithms
         }
 
         // debug output for best tour
-        private void printBestTour(string context)
+        public void printBestTour(string context)
         {
             string str = "";
             for (int i = 0; i < bestTour.Count; i++)
                 str += bestTour[i] + " ";
-            Debug.Log("["+ context +"] Best Dist: " + tourLength + " Tour: " + str);
+            Debug.Log("[" + context + "] Best Dist: " + tourLength + " Tour: " + str);
         }
 
         // usage: set cities before the initialization

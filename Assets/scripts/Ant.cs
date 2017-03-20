@@ -10,8 +10,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ant {
-     
+public class Ant
+{
     private int ID;
     // every ant has an own tour
     private List<int> tour;
@@ -55,7 +55,7 @@ public class Ant {
         {
             if (tour[i] == start)
             {
-               target = i;
+                target = i;
             }
         }
 
@@ -116,14 +116,14 @@ public class Ant {
 
     public bool isCityVisited(int i)
     {
-        if(visited[i])
+        if (visited[i])
             return true;
         return false;
     }
 
     public void unvisitAllCities()
     {
-        for(int i = 0; i < visited.Length; i++)
+        for (int i = 0; i < visited.Length; i++)
             visited[i] = false;
     }
 
