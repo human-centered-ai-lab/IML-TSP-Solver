@@ -13,6 +13,7 @@ using UnityEngine;
 public class AntInteraction
 {
     private static int noValidNextCity = -1;
+    private string errorMessage;
 
     private int alpha;
     private int beta;
@@ -26,11 +27,12 @@ public class AntInteraction
     private Pheromones pheromones;
     private Distances distances;
     private ChoiceInfo choiceInfo;
+    private int startCity;
 
     //helper flags
     private bool tourComplete = false;
 
-    public AntInteraction(int alpha, int beta, double rho, double q, int numOfAnts, List<City> cities)
+    public AntInteraction(int alpha, int beta, double rho, double q, int numOfAnts, List<City> cities, int firstCity)
     {
         this.cities = cities;
         this.alpha = alpha;
@@ -38,6 +40,7 @@ public class AntInteraction
         this.rho = rho;
         this.q = q;
         this.numOfAnts = numOfAnts;
+        this.startCity = firstCity;
 
         distances = new Distances(cities);
         initAnts();
@@ -65,7 +68,7 @@ public class AntInteraction
         for (int i = 1; i < cities.Count; i++)
         {
             if (!moveAnts(i))
-                Debug.LogError("No valid next city!");
+                Debug.LogError("No valid next city!" + errorMessage);
         }
 
         completeTours();
@@ -82,7 +85,7 @@ public class AntInteraction
 
         for (int k = 0; k < ants.Count; k++)
         {
-            int start = Random.Range(0, cities.Count);
+            int start = startCity;//Random.Range(0, cities.Count);
             ants[k].addCityToTour(cities[start].getId());
             ants[k].setCityVisited(cities[start].getId());
         }
@@ -126,7 +129,6 @@ public class AntInteraction
             int nextCityIndex = asDecisionRule(currentCityPos, k);
             if (nextCityIndex == noValidNextCity)
                 return false;
-            //Debug.Log("Ant " + k + " Tour: [" + ants[k].ToString + "] NextCity:"+ nextCityIndex);
 
             ants[k].addCityToTour(nextCityIndex);
             ants[k].setCityVisited(nextCityIndex);
@@ -139,7 +141,7 @@ public class AntInteraction
     {
         double[] selectionProbability = new double[cities.Count];
         double sumProbabilities = 0.0;
-        int lastCity = ants[antIndex].getCityOfTour(currCityIndex - 1);
+        int currentCity = ants[antIndex].getCityOfTour(currCityIndex - 1);
 
         for (int i = 0; i < selectionProbability.Length; i++)
         {
@@ -149,7 +151,7 @@ public class AntInteraction
             }
             else
             {
-                selectionProbability[i] = choiceInfo.getChoice(lastCity, i);
+                selectionProbability[i] = choiceInfo.getChoice(currentCity, i);
                 sumProbabilities += selectionProbability[i];
             }
         }
@@ -164,12 +166,15 @@ public class AntInteraction
         for (int i = 0; i < selectionProbability.Length; i++)
             cumulativeProbs[i + 1] = cumulativeProbs[i] + probs[i];
 
-        double p = Random.Range(0.0f, 1.0f);
+        //just to make sure
+        cumulativeProbs[cumulativeProbs.Length-1] = 1.0f;
+
+        double p = Random.value;
 
         for (int i = 0; i < cumulativeProbs.Length - 1; i++)
             if (p >= cumulativeProbs[i] && p <= cumulativeProbs[i + 1])
                 return cities[i].getId();
-
+        errorMessage = "Error: p=" + p + " ant=" + antIndex + " city=" + currCityIndex;
         return noValidNextCity;
     }
 
@@ -204,8 +209,8 @@ public class AntInteraction
         choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
         tourComplete = false;
 
-        Debug.Log("Choices: " + choiceInfo.ToString);
-        Debug.Log("UPDATE PHEROMONE" + pheromones.ToString);
+        //Debug.Log("Choices: " + choiceInfo.ToString);
+        //Debug.Log("UPDATE PHEROMONE" + pheromones.ToString);
     }
 
     // finds the ant with the best tour
