@@ -21,13 +21,13 @@ namespace AntAlgorithms
     public class AntAlgorithmSimple : MonoBehaviour
     {
         // influence of pheromone for decision
-        public int alpha = 3;
+        public int alpha = 1;
         // influence of distance for decision
         public int beta = 2;
         // pheromone decrease factor
-        public double rho = 0.01;
+        public double rho = 0.07;
         // pheromone increase factor
-        public double q = 2.0;
+        public double q = 100;
 
         private List<City> cities;
         // Ant interactions
@@ -44,13 +44,13 @@ namespace AntAlgorithms
         private List<int> bestTour;
 
         //helper
-        public int algStep = 1;
+        private int algStep = 1;
 
         // inits step of the algorithm
         // usage: use it once for initialization
         public void init()
         {
-            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities);
+            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();

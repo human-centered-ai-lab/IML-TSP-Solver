@@ -43,7 +43,8 @@ public class Distances
             for (int j = 0; j < cities.Count; j++)
             {
                 // distance matrix from cityA to cityB
-                double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
+               double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
+
                 distances[i][j] = distance;
                 distances[j][i] = distance;
                 str += distances[i][j] + " ";
@@ -51,7 +52,7 @@ public class Distances
             }
             str += "\n";
         }
-        Debug.Log("Distance matrix: " + str);
+        //Debug.Log("Distance matrix: " + str);
     }
 
     /* Calculate all nearest neigbours of all cities in array order 
@@ -103,14 +104,14 @@ public class Distances
             }
             str += "\n";
         }
-        Debug.Log("NearestNeighbours matrix: " + str);
+        //Debug.Log("NearestNeighbours matrix: " + str);
 
     }
 
     // Calculate the the vpoint distance between 2 cities with 2D coordinates
     private double calculateCityDistance(int cityAID, int cityBID)
     {
-        return (Math.Pow(cities[cityAID].getXPosition() - cities[cityBID].getXPosition(), 2) + Math.Pow(cities[cityAID].getYPosition() - cities[cityBID].getYPosition(), 2));
+        return Math.Sqrt(Math.Pow(cities[cityAID].getXPosition() - cities[cityBID].getXPosition(), 2) + Math.Pow(cities[cityAID].getYPosition() - cities[cityBID].getYPosition(), 2));
     }
 
     // returns the distance between two cities

@@ -46,18 +46,24 @@ public class AntAlgorithmSimpleTest
     }
 
     [Test]
-    public void Simple()
+    public void Eil51()
     {
-        cities.Add(new City(2, 4, 0, "Vienna", cityGameObject));
-        cities.Add(new City(1, 9, 1, "Graz", cityGameObject));
-        cities.Add(new City(3, 8, 2, "Klagenfurt", cityGameObject));
-        cities.Add(new City(9, 1, 3, "Innsbruck", cityGameObject));
-
-        aas.setCities(cities);
+        aas.setCities(TSPImporter.importTsp("eil51.tsp"));
         aas.init();
-        for (int i = 0; i < 20; i++)
-            aas.step();
+        for (int i = 0; i < 3000; i++)
+            aas.iteration();
         aas.printBestTour("SimpleTest");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Berlin52()
+    {
+        aas.setCities(TSPImporter.importTsp("berlin52.tsp"));
+        aas.init();
+        for (int i = 0; i < 3000; i++)
+            aas.iteration();
+        aas.printBestTour("berlin52");
         Assert.True(true);
     }
 
@@ -150,6 +156,69 @@ public class AntAlgorithmSimpleTest
         for (int i = 0; i < 120; i++)
             aas.iteration();
         aas.printBestTour("test50");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void dantzig42()
+    {
+
+        cities.Add(new City(170, 85, 0, "D1", cityGameObject));
+        cities.Add(new City(166, 88, 1, "D2", cityGameObject));
+        cities.Add(new City(133, 73, 2, "D3", cityGameObject));
+        cities.Add(new City(140, 70, 3, "D4", cityGameObject));
+        cities.Add(new City(142, 55, 4, "D5", cityGameObject));
+
+        cities.Add(new City(126, 53, 5, "D6", cityGameObject));
+        cities.Add(new City(125, 60, 6, "D7", cityGameObject));
+        cities.Add(new City(119, 68, 7, "D8", cityGameObject));
+        cities.Add(new City(117, 74, 8, "D9", cityGameObject));
+        cities.Add(new City(99,  83, 9, "D10", cityGameObject));
+
+        cities.Add(new City(73, 79, 10, "D11", cityGameObject));
+        cities.Add(new City(72, 91, 11, "D12", cityGameObject));
+        cities.Add(new City(37, 94, 12, "D13", cityGameObject));
+        cities.Add(new City(6, 106, 13, "D14", cityGameObject));
+        cities.Add(new City(3, 97, 14, "D15", cityGameObject));
+
+        cities.Add(new City(21, 82, 15, "D16", cityGameObject));
+        cities.Add(new City(33, 67, 16, "D17", cityGameObject));
+        cities.Add(new City(4, 66, 17, "D18", cityGameObject));
+        cities.Add(new City(3,  42, 18, "D19", cityGameObject));
+        cities.Add(new City(27,  33, 19, "D20", cityGameObject));
+
+        cities.Add(new City(52,  41, 20, "D21", cityGameObject));
+        cities.Add(new City(57,  59, 21, "D22", cityGameObject));
+        cities.Add(new City(58,  66, 22, "D23", cityGameObject));
+        cities.Add(new City(88,  65, 23, "D24", cityGameObject));
+        cities.Add(new City(99,  67, 24, "D25", cityGameObject));
+
+        cities.Add(new City(95,  55, 25, "D26", cityGameObject));
+        cities.Add(new City(89,  55, 26, "D27", cityGameObject));
+        cities.Add(new City(83,  38, 27, "D28", cityGameObject));
+        cities.Add(new City(85,  25, 28, "D29", cityGameObject));
+        cities.Add(new City(104,  35, 29, "D30", cityGameObject));
+
+        cities.Add(new City(112,  37, 30, "D31", cityGameObject));
+        cities.Add(new City(112,  24, 31, "D32", cityGameObject));
+        cities.Add(new City(113,  13, 32, "D33", cityGameObject));
+        cities.Add(new City(125,  30, 33, "D34", cityGameObject));
+        cities.Add(new City(135,  32, 34, "D35", cityGameObject));
+
+        cities.Add(new City(147,  18, 35, "D36", cityGameObject));
+        cities.Add(new City(147,  36, 36, "D37", cityGameObject));
+        cities.Add(new City(154,  45, 37, "D38", cityGameObject));
+        cities.Add(new City(157,  54, 38, "D39", cityGameObject));
+        cities.Add(new City(158,  61, 39, "D40", cityGameObject));
+
+        cities.Add(new City(172,  82, 40, "D41", cityGameObject));
+        cities.Add(new City(174,  87, 41, "D42", cityGameObject));  
+
+        aas.setCities(cities);
+        aas.init();
+        for (int i = 0; i < 120; i++)
+            aas.iteration();
+        aas.printBestTour("dantzig42");
         Assert.True(true);
     }
 }
