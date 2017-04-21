@@ -13,11 +13,11 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 [TestFixture]
-public class AntAlgorithmSimpleTest
+public class ASTest
 {
     private List<City> cities;
     GameObject cityGameObject;
-    AntAlgorithms.AntAlgorithmSimple aas;
+    AntAlgorithms.ASAlgorithm asa;
 
     [TestFixtureSetUp]
     public void Init()
@@ -36,7 +36,7 @@ public class AntAlgorithmSimpleTest
     {
         cityGameObject = new GameObject();
         cities = new List<City>();
-        aas = Camera.main.GetComponent<AntAlgorithms.AntAlgorithmSimple>();
+        asa = Camera.main.GetComponent<AntAlgorithms.ASAlgorithm>();
     }
 
     [TearDown]
@@ -48,22 +48,22 @@ public class AntAlgorithmSimpleTest
     [Test]
     public void Eil51()
     {
-        aas.setCities(TSPImporter.importTsp("eil51.tsp"));
-        aas.init();
+        asa.setCities(TSPImporter.importTsp("eil51.tsp"));
+        asa.init();
         for (int i = 0; i < 3000; i++)
-            aas.iteration();
-        aas.printBestTour("SimpleTest");
+            asa.iteration();
+        asa.printBestTour("SimpleTest");
         Assert.True(true);
     }
 
     [Test]
     public void Berlin52()
     {
-        aas.setCities(TSPImporter.importTsp("berlin52.tsp"));
-        aas.init();
+        asa.setCities(TSPImporter.importTsp("berlin52.tsp"));
+        asa.init();
         for (int i = 0; i < 3000; i++)
-            aas.iteration();
-        aas.printBestTour("berlin52");
+            asa.iteration();
+        asa.printBestTour("berlin52");
         Assert.True(true);
     }
 
@@ -80,11 +80,11 @@ public class AntAlgorithmSimpleTest
         cities.Add(new City(1, 11, 6, "Graz", cityGameObject));
         cities.Add(new City(3, 4, 7, "Klagenfurt", cityGameObject));
 
-        aas.setCities(cities);
-        aas.init();
+        asa.setCities(cities);
+        asa.init();
         for (int i = 0; i < 400; i++)
-            aas.iteration();
-        aas.printBestTour("test8");
+            asa.iteration();
+        asa.printBestTour("test8");
         Assert.True(true);
     }
 
@@ -151,11 +151,11 @@ public class AntAlgorithmSimpleTest
         cities.Add(new City(49, 41, 48, "Innsbruck", cityGameObject));
         cities.Add(new City(39, 41, 49, "Innsbruck", cityGameObject));
 
-        aas.setCities(cities);
-        aas.init();
+        asa.setCities(cities);
+        asa.init();
         for (int i = 0; i < 120; i++)
-            aas.iteration();
-        aas.printBestTour("test50");
+            asa.iteration();
+        asa.printBestTour("test50");
         Assert.True(true);
     }
 
@@ -212,13 +212,13 @@ public class AntAlgorithmSimpleTest
         cities.Add(new City(158,  61, 39, "D40", cityGameObject));
 
         cities.Add(new City(172,  82, 40, "D41", cityGameObject));
-        cities.Add(new City(174,  87, 41, "D42", cityGameObject));  
+        cities.Add(new City(174,  87, 41, "D42", cityGameObject));
 
-        aas.setCities(cities);
-        aas.init();
+        asa.setCities(cities);
+        asa.init();
         for (int i = 0; i < 120; i++)
-            aas.iteration();
-        aas.printBestTour("dantzig42");
+            asa.iteration();
+        asa.printBestTour("dantzig42");
         Assert.True(true);
     }
 }

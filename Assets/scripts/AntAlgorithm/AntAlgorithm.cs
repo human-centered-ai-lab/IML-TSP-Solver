@@ -18,20 +18,20 @@ namespace AntAlgorithms
         normal
     }
 
-    public class AntAlgorithmSimple : MonoBehaviour
+    public abstract class AntAlgorithm : MonoBehaviour
     {
         // influence of pheromone for decision
-        public int alpha = 1;
+        public int alpha;
         // influence of distance for decision
-        public int beta = 2;
+        public int beta;
         // pheromone decrease factor
-        public double rho = 0.07;
+        public double rho;
         // pheromone increase factor
-        public double q = 100;
+        public double q;
 
-        private List<City> cities;
+        protected List<City> cities;
         // Ant interactions
-        private AntInteraction antin;
+        protected AntInteraction antin;
 
         public int numOfAnts;
         public int firstCity;
@@ -40,50 +40,34 @@ namespace AntAlgorithms
         public Mode mode;
 
         // output - updateing after every algorithm iteration
-        private double tourLength;
-        private List<int> bestTour;
+        protected double tourLength;
+        protected List<int> bestTour;
 
         //helper
-        private int algStep = 1;
+        protected int algStep = 1;
 
         // inits step of the algorithm
         // usage: use it once for initialization
-        public void init()
-        {
-            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity);
-            bestTour = new List<int>();
-            tourLength = double.MaxValue;
-            checkBestTour();
-            algStep = 1;
-        }
+        public abstract void init();
 
         // iteration step of the algorithm - calculates a complete tour for every ant
         // usage: you can use it several times
-        public void iteration()
-        {
-            antin.updateAnts();
-            antin.updatePheromones();
-            checkBestTour();
-        }
+        public abstract void iteration();
 
         // all ants are moving one city ahead. If the routes are completed, a new iteration is starting.
         // usage: small part of the iteration. you should use it several times to complete an iteration
-        public void step()
+        public abstract void step();
+
+        // debug output for best tour
+        public void printBestTour(string context)
         {
-            if (antin.updateAntsStepwise(algStep))
-            {
-                algStep = 1;
-                antin.updatePheromones();
-                checkBestTour();
-            }
-            else
-            {
-                algStep++;
-            }
+            string str = "";
+            for (int i = 0; i < bestTour.Count; i++)
+                str += bestTour[i] + " ";
+            Debug.Log("[" + context + "] Best Dist: " + tourLength + " Tour: " + str);
         }
 
-        // checks best tour so far
-        private bool checkBestTour()
+        protected bool checkBestTour()
         {
             Ant bestAnt = antin.findBestAnt();
             double tourLengthTemp = bestAnt.getTourLength();
@@ -97,15 +81,6 @@ namespace AntAlgorithms
                 return true;
             }
             return false;
-        }
-
-        // debug output for best tour
-        public void printBestTour(string context)
-        {
-            string str = "";
-            for (int i = 0; i < bestTour.Count; i++)
-                str += bestTour[i] + " ";
-            Debug.Log("[" + context + "] Best Dist: " + tourLength + " Tour: " + str);
         }
 
         // usage: set cities before the initialization
