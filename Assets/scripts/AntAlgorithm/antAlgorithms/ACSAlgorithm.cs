@@ -5,25 +5,28 @@
  * Year: 2017
  *****************************************************/
 
-/* AntAlgorithmSimple is a wrapper class for the Ant Algorithm 
-   -> use this script in your Unity scene */
+/* ACSAlgorithm represents the ACS ant algorithm implementation:
+   "Ant colony system: a cooperative learning approach to the traveling salesman problem" - 1996*/
 
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AntAlgorithms
 {
-    public class ASAlgorithm : AntAlgorithm
+    public class ACSAlgorithm : AntAlgorithm
     {
+        public ACSAlgorithm(int alpha, int beta, double rho, double q, int numOfAnts, int firstCity, double acsQ0)
+        {
+            this.alpha = alpha;
+            this.beta = beta;
+            this.rho = rho;
+            this.q = q;
+            this.numOfAnts = numOfAnts;
+            this.firstCity = firstCity;
+            this.acsQ0 = acsQ0;
+        }
         public override void init()
         {
-            alpha = 1;
-            beta = 2;
-            rho = 0.07;
-            q = 100;
-
-            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity);
+            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity, acsQ0);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();
@@ -39,16 +42,7 @@ namespace AntAlgorithms
 
         public override void step()
         {
-            if (antin.updateAntsStepwise(algStep))
-            {
-                algStep = 1;
-                antin.updatePheromones();
-                checkBestTour();
-            }
-            else
-            {
-                algStep++;
-            }
         }
     }
 }
+	

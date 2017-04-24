@@ -19,6 +19,7 @@ public class AntInteraction
     private int beta;
     private double rho;
     private double q;
+    private double acsQ0;
 
     private int numOfAnts;
     private List<Ant> ants;
@@ -28,6 +29,9 @@ public class AntInteraction
     private Distances distances;
     private ChoiceInfo choiceInfo;
     private int startCity;
+
+    string str = "";
+
 
     //helper flags
     private bool tourComplete = false;
@@ -49,7 +53,25 @@ public class AntInteraction
         choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
         Debug.Log("Choices: " + choiceInfo.ToString);
     }
+    public AntInteraction(int alpha, int beta, double rho, double q, int numOfAnts, List<City> cities, int firstCity, double acsQ0)
+    {
+        this.cities = cities;
+        this.alpha = alpha;
+        this.beta = beta;
+        this.rho = rho;
+        this.q = q;
+        this.numOfAnts = numOfAnts;
+        this.startCity = firstCity;
+        this.acsQ0 = acsQ0;
 
+        distances = new Distances(cities);
+        initAnts();
+        pheromones = new Pheromones(cities.Count);
+        choiceInfo = new ChoiceInfo(cities.Count);
+        choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
+        Debug.Log("Choices: " + choiceInfo.ToString);
+    }
+    
     //init the ants with random tours
     private void initAnts()
     {
@@ -65,10 +87,11 @@ public class AntInteraction
     {
         initAntUpdate();
 
-        for (int i = 1; i < cities.Count; i++)
         {
             if (!moveAnts(i))
+            {
                 Debug.LogError("No valid next city!" + errorMessage);
+            }
         }
 
         completeTours();
@@ -136,6 +159,68 @@ public class AntInteraction
         return true;
     }
 
+    private int acsDecisionRule(int currCityIndex, int antIndex)
+    {
+        double[] selectionProbability = new double[cities.Count];
+        double sumProbabilities = 0.0;
+        int currentCity = ants[antIndex].getCityOfTour(currCityIndex - 1);
+
+        for (int i = 0; i < selectionProbability.Length; i++)
+        {
+            if (ants[antIndex].isCityVisited(i))
+            {
+                selectionProbability[i] = 0.0;
+            }
+            else
+            {
+                selectionProbability[i] = choiceInfo.getChoice(currentCity, i);
+                sumProbabilities += selectionProbability[i];
+            }
+        }
+
+        double[] probs = new double[cities.Count];
+        double prob_temp = 0.0;
+
+        int bestProbIndex = -1;
+        string str = "";
+        for (int i = 0; i < probs.Length; i++)
+        {
+            probs[i] = selectionProbability[i] / sumProbabilities;
+            str += probs[i]+" ";
+            if (probs[i] > prob_temp)
+            {
+                bestProbIndex = i;
+                prob_temp = probs[i];
+            }
+        }
+        /*Debug.Log("Best Prob Index: " + bestProbIndex);
+        Debug.Log("Probs: "+str);*/
+        double[] cumulativeProbs = new double[selectionProbability.Length + 1];
+
+        double q = Random.value;
+        // TODO: always with alpha = 1;
+        if (q <= acsQ0)
+        {
+            return cities[bestProbIndex].getId();
+        }
+        else
+        {
+            // calculate the comulative probabilities
+            for (int i = 0; i < selectionProbability.Length; i++)
+                cumulativeProbs[i + 1] = cumulativeProbs[i] + probs[i];
+
+            //just to make sure
+            cumulativeProbs[cumulativeProbs.Length - 1] = 1.0f;
+
+            double p = Random.value;
+
+            for (int i = 0; i < cumulativeProbs.Length - 1; i++)
+                if (p >= cumulativeProbs[i] && p <= cumulativeProbs[i + 1])
+                    return cities[i].getId();               
+            errorMessage = "Error: p=" + p + " ant=" + antIndex + " city=" + currCityIndex + " probabilities:" + str;
+            return noValidNextCity;
+        }
+    }
     // the core of the ant algorithm: what city should the ant select next
     private int asDecisionRule(int currCityIndex, int antIndex)
     {
@@ -157,8 +242,12 @@ public class AntInteraction
         }
 
         double[] probs = new double[cities.Count];
+
         for (int i = 0; i < probs.Length; i++)
+        {
             probs[i] = selectionProbability[i] / sumProbabilities;
+
+        }
 
         double[] cumulativeProbs = new double[selectionProbability.Length + 1];
 
@@ -174,7 +263,17 @@ public class AntInteraction
         for (int i = 0; i < cumulativeProbs.Length - 1; i++)
             if (p >= cumulativeProbs[i] && p <= cumulativeProbs[i + 1])
                 return cities[i].getId();
-        errorMessage = "Error: p=" + p + " ant=" + antIndex + " city=" + currCityIndex;
+        errorMessage = "Error: p=" + p + " ant=" + antIndex + " city=" + currCityIndex + " probabilities= ";
+        for(int i = 0; i < probs.Length; i++)
+        {
+            errorMessage += probs[i] + " ";
+        }
+        errorMessage += " sumProbabilities: " + sumProbabilities + "selectionProbability: ";
+        for (int i = 0; i < probs.Length; i++)
+        {
+            errorMessage += selectionProbability[i] + " citycount " + cities.Count;
+        }
+       
         return noValidNextCity;
     }
 

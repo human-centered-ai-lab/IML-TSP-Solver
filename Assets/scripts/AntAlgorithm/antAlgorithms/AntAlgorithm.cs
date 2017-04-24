@@ -5,36 +5,33 @@
  * Year: 2017
  *****************************************************/
 
-/* AntAlgorithmSimple is a wrapper class for the Ant Algorithm 
-   -> use this script in your Unity scene */
+/* AntAlgorithm is an abstract class for all antAlgorithms 
+*/
 
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AntAlgorithms
 {
-    public enum Mode
-    {
-        normal
-    }
-
-    public abstract class AntAlgorithm : MonoBehaviour
+    public abstract class AntAlgorithm
     {
         // influence of pheromone for decision
-        public int alpha;
+        protected int alpha;
         // influence of distance for decision
-        public int beta;
+        protected int beta;
         // pheromone decrease factor
-        public double rho;
+        protected double rho;
         // pheromone increase factor
-        public double q;
+        protected double q;
+        // parameter for the ACS implementation for the pseudorandom decision rule (balance between "best so far" and "explore" tour based decision)
+        protected double acsQ0;
 
         protected List<City> cities;
         // Ant interactions
         protected AntInteraction antin;
 
-        public int numOfAnts;
-        public int firstCity;
+        protected int numOfAnts;
+        protected int firstCity;
 
         //placeholder
         public Mode mode;
@@ -44,7 +41,7 @@ namespace AntAlgorithms
         protected List<int> bestTour;
 
         //helper
-        protected int algStep = 1;
+        protected int algStep;
 
         // inits step of the algorithm
         // usage: use it once for initialization
