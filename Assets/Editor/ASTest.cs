@@ -16,8 +16,10 @@ using NUnit.Framework;
 public class ASTest
 {
     private List<City> cities;
-    GameObject cityGameObject;
-    AntAlgorithms.ASAlgorithm asa;
+    private GameObject cityGameObject;
+    private AntAlgorithms.AntAlgorithmController aac;
+    private AntAlgorithms.AntAlgorithm aa;
+
 
     [TestFixtureSetUp]
     public void Init()
@@ -36,7 +38,9 @@ public class ASTest
     {
         cityGameObject = new GameObject();
         cities = new List<City>();
-        asa = Camera.main.GetComponent<AntAlgorithms.ASAlgorithm>();
+        aac = Camera.main.GetComponent<AntAlgorithms.AntAlgorithmController>();
+        aac.initAlgorithm();
+        aa = aac.getAlgorithm();
     }
 
     [TearDown]
@@ -48,22 +52,25 @@ public class ASTest
     [Test]
     public void Eil51()
     {
-        asa.setCities(TSPImporter.importTsp("eil51.tsp"));
-        asa.init();
-        for (int i = 0; i < 3000; i++)
-            asa.iteration();
-        asa.printBestTour("SimpleTest");
+        aa.setCities(TSPImporter.importTsp("eil51.tsp"));
+        aa.init();
+        for (int i = 0; i < 699; i++)
+        {
+            aa.iteration();
+            Debug.Log(i);
+        }
+        aa.printBestTour("SimpleTest");
         Assert.True(true);
     }
 
     [Test]
     public void Berlin52()
     {
-        asa.setCities(TSPImporter.importTsp("berlin52.tsp"));
-        asa.init();
+        aa.setCities(TSPImporter.importTsp("berlin52.tsp"));
+        aa.init();
         for (int i = 0; i < 3000; i++)
-            asa.iteration();
-        asa.printBestTour("berlin52");
+            aa.iteration();
+        aa.printBestTour("berlin52");
         Assert.True(true);
     }
 
@@ -80,11 +87,11 @@ public class ASTest
         cities.Add(new City(1, 11, 6, "Graz", cityGameObject));
         cities.Add(new City(3, 4, 7, "Klagenfurt", cityGameObject));
 
-        asa.setCities(cities);
-        asa.init();
+        aa.setCities(cities);
+        aa.init();
         for (int i = 0; i < 400; i++)
-            asa.iteration();
-        asa.printBestTour("test8");
+            aa.iteration();
+        aa.printBestTour("test8");
         Assert.True(true);
     }
 
@@ -151,11 +158,11 @@ public class ASTest
         cities.Add(new City(49, 41, 48, "Innsbruck", cityGameObject));
         cities.Add(new City(39, 41, 49, "Innsbruck", cityGameObject));
 
-        asa.setCities(cities);
-        asa.init();
+        aa.setCities(cities);
+        aa.init();
         for (int i = 0; i < 120; i++)
-            asa.iteration();
-        asa.printBestTour("test50");
+            aa.iteration();
+        aa.printBestTour("test50");
         Assert.True(true);
     }
 
@@ -214,11 +221,11 @@ public class ASTest
         cities.Add(new City(172,  82, 40, "D41", cityGameObject));
         cities.Add(new City(174,  87, 41, "D42", cityGameObject));
 
-        asa.setCities(cities);
-        asa.init();
+        aa.setCities(cities);
+        aa.init();
         for (int i = 0; i < 120; i++)
-            asa.iteration();
-        asa.printBestTour("dantzig42");
+            aa.iteration();
+        aa.printBestTour("dantzig42");
         Assert.True(true);
     }
 }

@@ -87,6 +87,7 @@ public class AntInteraction
     {
         initAntUpdate();
 
+        for (int i = 1; i < cities.Count; i++)
         {
             if (!moveAnts(i))
             {
