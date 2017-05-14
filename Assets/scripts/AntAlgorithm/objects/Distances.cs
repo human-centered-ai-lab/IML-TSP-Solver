@@ -9,7 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Distances
 {
@@ -43,7 +42,7 @@ public class Distances
             for (int j = 0; j < cities.Count; j++)
             {
                 // distance matrix from cityA to cityB
-               double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
+                double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
 
                 distances[i][j] = distance;
                 distances[j][i] = distance;
@@ -56,6 +55,7 @@ public class Distances
     }
 
     /* Calculate all nearest neigbours of all cities in array order 
+     * (for performance increasing pruposes)
     * example: cityB is the nearest neighbour of cityA and cityC the 2nd nearest neighbour of cityA
     *          nn[cityAid][0] = cityBid
     *          nn[cityAid][1] = cityCid

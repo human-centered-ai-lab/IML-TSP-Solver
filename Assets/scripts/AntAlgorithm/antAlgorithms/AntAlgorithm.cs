@@ -33,9 +33,6 @@ namespace AntAlgorithms
         protected int numOfAnts;
         protected int firstCity;
 
-        //placeholder
-        public Mode mode;
-
         // output - updateing after every algorithm iteration
         protected double tourLength;
         protected List<int> bestTour;

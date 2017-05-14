@@ -13,7 +13,6 @@ using System;
 
 public static class TSPImporter
 {
-
     private static string tspLibFolderName = "tspLib";
     private static string pointSection = "NODE_COORD_SECTION";
 
@@ -35,7 +34,7 @@ public static class TSPImporter
             string[] cityParameter = line.Split(delimiterChars);
             if (cityParameter.Length == 3)
             {
-                cities.Add(new City(Int32.Parse(cityParameter[1]), Int32.Parse(cityParameter[2]), count, "city " + count, new GameObject()));
+                cities.Add(new City(Int32.Parse(cityParameter[1]), Int32.Parse(cityParameter[2]), count));
             }
             count++;
         }

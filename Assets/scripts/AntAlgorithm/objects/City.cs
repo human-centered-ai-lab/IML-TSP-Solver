@@ -6,16 +6,14 @@
  *****************************************************/
 
 /* City represents a city in the TSP */
-using UnityEngine;
 
 public class City
 {
     private int id;
     private int xPosition;
     private int yPosition;
-    private GameObject city;
 
-    public City(int xPosition, int yPosition, int id, string name, GameObject gameObject)
+    public City(int xPosition, int yPosition, int id)
     {
         this.id = id;
         this.xPosition = xPosition;

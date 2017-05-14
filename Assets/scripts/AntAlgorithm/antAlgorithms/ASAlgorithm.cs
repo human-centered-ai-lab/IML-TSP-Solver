@@ -8,9 +8,7 @@
 /* ASAlgorithm represents the AS ant algorithm implementation:
    "An  investigation  of  some  properties of an Ant algorithm" - 1992*/
 
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AntAlgorithms
 {
@@ -28,7 +26,7 @@ namespace AntAlgorithms
 
         public override void init()
         {
-            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity);
+            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity, 0);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();

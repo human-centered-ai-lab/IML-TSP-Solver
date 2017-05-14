@@ -7,8 +7,8 @@
 
 /* Ant represents an ant in the Ant Algorihtm */
 
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Ant
 {
@@ -20,9 +20,11 @@ public class Ant
     private bool[] visited;
 
     private Distances distances;
+    private Random random;
 
     public Ant(int ID, int numOfCities, int firstCity, Distances distances)
     {
+        random = new Random();
         this.ID = ID;
         tour = new List<int>();
         visited = new bool[numOfCities];
@@ -42,9 +44,9 @@ public class Ant
         //shuffle
         for (int i = 0; i < numOfCities; i++)
         {
-            int random = Random.Range(i, numOfCities);
-            int tmpC1 = tour[random];
-            tour[random] = tour[i];
+            int rand = random.Next(i, numOfCities);
+            int tmpC1 = tour[rand];
+            tour[rand] = tour[i];
             tour[i] = tmpC1;
         }
 
@@ -100,6 +102,9 @@ public class Ant
             str += "ANT " + ID + ": Tour length: " + tourLength + " CityOrder: ";
             for (int i = 0; i < tour.Count; i++)
                 str += tour[i] + " ";
+            str += " visited: ";
+            for (int i = 0; i < visited.Length; i++)
+                str += visited[i] + " ";
             return str;
         }
     }
