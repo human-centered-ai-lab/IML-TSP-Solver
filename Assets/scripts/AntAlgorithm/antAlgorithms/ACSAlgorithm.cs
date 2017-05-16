@@ -30,7 +30,7 @@ namespace AntAlgorithms
             this.firstCity = firstCity;
             this.acsQ0 = acsQ0;
             this.tau0 = tau0;
-
+            this.xi = xi;
         }
 
         public override void init()

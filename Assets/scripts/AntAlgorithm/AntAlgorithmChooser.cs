@@ -12,6 +12,9 @@
    "An  investigation  of  some  properties of an Ant algorithm" - 1992 
     */
 
+using System.Reflection;
+[assembly: AssemblyVersionAttribute("0.1")]
+
 namespace AntAlgorithms
 {
     public enum Mode

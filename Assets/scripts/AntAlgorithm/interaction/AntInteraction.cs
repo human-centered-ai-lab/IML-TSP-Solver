@@ -14,7 +14,6 @@ using System.Diagnostics;
 public class AntInteraction
 {
     private static int noValidNextCity = -1;
-    private string errorMessage;
 
     private int alpha;
     private int beta;
@@ -35,8 +34,6 @@ public class AntInteraction
     private int startCity;
     private AntAlgorithms.Mode mode;
     private double pheromoneTrailInitialValue;
-
-    string str = "";
 
     //helper
     private double[] selectionProbability;
@@ -75,19 +72,18 @@ public class AntInteraction
                 case AntAlgorithms.Mode.antSystem:
                     if (!moveAntsAS(i))
                     {
-                        Debug.WriteLine("No valid next city!" + errorMessage);
+                        Debug.WriteLine("No valid next city!");
                     }
                     break;
                 case AntAlgorithms.Mode.antColonySystem:
                     if (!moveAntsACS(i))
                     {
-                        Debug.WriteLine("No valid next city!" + errorMessage);
+                        Debug.WriteLine("No valid next city!");
                     }
                     break;
             }
-
-            completeTours();
         }
+        completeTours();
     }
 
     // updates an ant stepwise every city

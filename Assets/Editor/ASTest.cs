@@ -10,6 +10,8 @@
 
 using System.Collections.Generic;
 using NUnit.Framework;
+using System.Reflection;
+[assembly: AssemblyVersionAttribute("0.1")]
 
 [TestFixture]
 public class ASTest
@@ -35,7 +37,7 @@ public class ASTest
     public void SetUp()
     {
         cities = new List<City>();
-        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antSystem, 1, 2, 0.7, 100, 300, 0, 0.1, 0.5, 0.1, 0.005);
+        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antColonySystem, 1, 2, 0.7, 100, 300, 0, 0.1, 0.5, 0.1, 0.005);
         aa = aac.getAlgorithm();
     }
 
