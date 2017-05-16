@@ -14,7 +14,7 @@ namespace AntAlgorithms
 {
     public class ASAlgorithm : AntAlgorithm
     {
-        public ASAlgorithm(int alpha, int beta, double rho, double q, int numOfAnts, int firstCity)
+        public ASAlgorithm(int alpha, int beta, double rho, double q, int numOfAnts, int firstCity, double pheromoneTrailInitialValue)
         {
             this.alpha = alpha;
             this.beta = beta;
@@ -22,11 +22,12 @@ namespace AntAlgorithms
             this.q = q;
             this.numOfAnts = numOfAnts;
             this.firstCity = firstCity;
+            this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
         }
 
         public override void init()
         {
-            antin = new AntInteraction(alpha, beta, rho, q, numOfAnts, cities, firstCity, 0);
+            antin = new AntInteraction(Mode.antSystem, alpha, beta, rho, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();
@@ -36,7 +37,7 @@ namespace AntAlgorithms
         public override void iteration()
         {
             antin.updateAnts();
-            antin.updatePheromones();
+            antin.updatePheromonesAS();
             checkBestTour();
         }
 
@@ -45,7 +46,7 @@ namespace AntAlgorithms
             if (antin.updateAntsStepwise(algStep))
             {
                 algStep = 1;
-                antin.updatePheromones();
+                antin.updatePheromonesAS();
                 checkBestTour();
             }
             else

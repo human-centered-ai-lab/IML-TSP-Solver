@@ -42,6 +42,11 @@ public class ChoiceInfo
         }
     }
 
+    public void setChoice(int i, int j, double value)
+    {
+        choiceInfo[j][i] = value;
+    }
+
     public new string ToString
     {
         get

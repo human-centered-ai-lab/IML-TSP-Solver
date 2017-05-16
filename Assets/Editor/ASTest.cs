@@ -8,7 +8,6 @@
 
 /* AntAlgorithSimpleTest */
 
-using UnityEngine;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -16,7 +15,7 @@ using NUnit.Framework;
 public class ASTest
 {
     private List<City> cities;
-    private AntAlgorithms.AntAlgorithmController aac;
+    private AntAlgorithms.AntAlgorithmChooser aac;
     private AntAlgorithms.AntAlgorithm aa;
 
 
@@ -36,8 +35,7 @@ public class ASTest
     public void SetUp()
     {
         cities = new List<City>();
-        aac = new AntAlgorithms.AntAlgorithmController(AntAlgorithms.Mode.antSystem, 1, 2, 0.7, 100, 300, 0, 0.5);
-        aac.initAlgorithm();
+        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antSystem, 1, 2, 0.7, 100, 300, 0, 0.1, 0.5, 0.1, 0.005);
         aa = aac.getAlgorithm();
     }
 
@@ -52,7 +50,7 @@ public class ASTest
     {
         aa.setCities(TSPImporter.importTsp("eil51.tsp"));
         aa.init();
-        for (int i = 0; i < 6000; i++)
+        for (int i = 0; i < 3000; i++)
         {
             aa.iteration();
         }

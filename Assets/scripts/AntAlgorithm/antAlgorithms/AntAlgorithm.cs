@@ -23,8 +23,6 @@ namespace AntAlgorithms
         protected double rho;
         // pheromone increase factor
         protected double q;
-        // parameter for the ACS implementation for the pseudorandom decision rule (balance between "best so far" and "explore" tour based decision)
-        protected double acsQ0;
 
         protected List<City> cities;
         // Ant interactions
@@ -32,6 +30,7 @@ namespace AntAlgorithms
 
         protected int numOfAnts;
         protected int firstCity;
+        protected double pheromoneTrailInitialValue;
 
         // output - updateing after every algorithm iteration
         protected double tourLength;
