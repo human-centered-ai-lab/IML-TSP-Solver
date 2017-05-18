@@ -33,8 +33,8 @@ public class ChoiceInfo
                 choiceInfo[i][j] = Math.Pow(pheromones.getPheromone(i, j), alpha) *
                                    Math.Pow((1.0 / distances.getDistance(i, j)), beta);
                 // To avoid small or high values
-                if (choiceInfo[i][j] < 0.0001)
-                    choiceInfo[i][j] = 0.0001;
+                if (choiceInfo[i][j] < 0.000001)
+                    choiceInfo[i][j] = 0.000001;
                 else if (choiceInfo[i][j] > (double.MaxValue / 100))
                     choiceInfo[i][j] = double.MaxValue / 100;
                 choiceInfo[j][i] = choiceInfo[i][j];

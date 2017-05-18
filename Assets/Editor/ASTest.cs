@@ -21,13 +21,13 @@ public class ASTest
     private AntAlgorithms.AntAlgorithm aa;
 
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void Init()
     {
         //Init runs once before running test cases.
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void CleanUp()
     {
         //CleanUp runs once after all test cases are finished.
@@ -37,7 +37,7 @@ public class ASTest
     public void SetUp()
     {
         cities = new List<City>();
-        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antSystem, 1, 2, 0.1, 1, 0, 0.9, 0.1, 0.1);
+        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antColonySystem, 1, 2, 0.1, 10, 0.9, 0.000088, 0.000088);
         aa = aac.getAlgorithm();
     }
 
@@ -52,11 +52,24 @@ public class ASTest
     {
         aa.setCities(TSPImporter.importTsp("eil51.tsp"));
         aa.init();
-        for (int i = 0; i < 30000; i++)
+        for (int i = 0; i < 3000; i++)
         {
             aa.iteration();
         }
         aa.printBestTour("Eil51");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Oliver30()
+    {
+        aa.setCities(TSPImporter.importTsp("oliver30.tsp"));
+        aa.init();
+        for (int i = 0; i < 2500; i++)
+        {
+            aa.iteration();
+        }
+        aa.printBestTour("oliver30");
         Assert.True(true);
     }
 

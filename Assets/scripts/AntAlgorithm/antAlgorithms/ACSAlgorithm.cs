@@ -19,13 +19,12 @@ namespace AntAlgorithms
         //increasing parameter for the local pheromone update
         private double tau0;
 
-        public ACSAlgorithm(int alpha, int beta, double q, int numOfAnts, int firstCity, double pheromoneTrailInitialValue, double acsQ0, double tau0)
+        public ACSAlgorithm(int alpha, int beta, double q, int numOfAnts, double pheromoneTrailInitialValue, double acsQ0, double tau0)
         {
             this.alpha = alpha;
             this.beta = beta;
             this.q = q;
             this.numOfAnts = numOfAnts;
-            this.firstCity = firstCity;
             this.acsQ0 = acsQ0;
             this.tau0 = tau0;
             this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
@@ -33,7 +32,7 @@ namespace AntAlgorithms
 
         public override void init()
         {
-            antin = new AntInteraction(Mode.antColonySystem, alpha, beta, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue, acsQ0, tau0);
+            antin = new AntInteraction(Mode.antColonySystem, alpha, beta, q, numOfAnts, cities, pheromoneTrailInitialValue, acsQ0, tau0);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();
@@ -49,6 +48,16 @@ namespace AntAlgorithms
 
         public override void step()
         {
+            if (antin.updateAntsStepwise(algStep))
+            {
+                algStep = 1;
+                antin.globalPheromoneUpdateACS();
+                checkBestTour();
+            }
+            else
+            {
+                algStep++;
+            }
         }
     }
 }

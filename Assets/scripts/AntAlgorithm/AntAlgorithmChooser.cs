@@ -26,16 +26,16 @@ namespace AntAlgorithms
     {
         private AntAlgorithm aa;
 
-        public AntAlgorithmChooser(Mode mode, int alpha, int beta, double q, int numOfAnts, int firstCity, double acsQ0, double pheromoneTrailInitialValue, double tau0)
+        public AntAlgorithmChooser(Mode mode, int alpha, int beta, double q, int numOfAnts, double acsQ0, double pheromoneTrailInitialValue, double tau0)
         {
             // TODO: intelligent switch due to parameters
             switch (mode)
             {
                 case Mode.antSystem:
-                    aa = new ASAlgorithm(alpha, beta, q, numOfAnts, firstCity, pheromoneTrailInitialValue);
+                    aa = new ASAlgorithm(alpha, beta, q, numOfAnts, pheromoneTrailInitialValue);
                     break;
                 case Mode.antColonySystem:
-                    aa = new ACSAlgorithm(alpha, beta, q, numOfAnts, firstCity, pheromoneTrailInitialValue, acsQ0,  tau0);
+                    aa = new ACSAlgorithm(alpha, beta, q, numOfAnts, pheromoneTrailInitialValue, acsQ0,  tau0);
                     break;
             }
         }

@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Distances
 {
@@ -26,6 +27,35 @@ public class Distances
         calculateDistances();
         //build the nearestNeighbour matix
         calculateNearestNeighbours();
+    }
+
+    // calculates the nearest neighbour heuristic of the tsp graph
+    public double calculateNNHeuristic()
+    {
+        bool[] visited = new bool[cities.Count];
+        double nnHeuristic = 0;
+        int cityIndexTemp = 0;
+        int startCityIndex = 0;
+
+        visited[0] = true;
+        for (int i = 0; i < cities.Count - 1; i++)
+        {
+            double distance = Double.MaxValue;
+            for (int j = 0; j < cities.Count ;j++)
+            {
+                if (!visited[j] && distances[startCityIndex][j] < distance)
+                {
+                    distance = distances[startCityIndex][j];
+                    cityIndexTemp = j;
+                }
+            }
+            visited[cityIndexTemp] = true;
+            startCityIndex = cityIndexTemp;
+
+            nnHeuristic += distance;
+        }
+        nnHeuristic += distances[startCityIndex][0];
+        return nnHeuristic;
     }
 
     // Calculate the initial distances between cities in array order 
