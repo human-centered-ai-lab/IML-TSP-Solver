@@ -16,26 +16,24 @@ namespace AntAlgorithms
     {
         // parameter for the ACS implementation for the pseudorandom decision rule (balance between "best so far" and "explore" tour based decision)
         private double acsQ0;
-        // parameter for the local phermone update
-        private double xi;
+        //increasing parameter for the local pheromone update
         private double tau0;
 
-        public ACSAlgorithm(int alpha, int beta, double rho, double q, int numOfAnts, int firstCity, double pheromoneTrailInitialValue, double acsQ0, double xi, double tau0)
+        public ACSAlgorithm(int alpha, int beta, double q, int numOfAnts, int firstCity, double pheromoneTrailInitialValue, double acsQ0, double tau0)
         {
             this.alpha = alpha;
             this.beta = beta;
-            this.rho = rho;
             this.q = q;
             this.numOfAnts = numOfAnts;
             this.firstCity = firstCity;
             this.acsQ0 = acsQ0;
             this.tau0 = tau0;
-            this.xi = xi;
+            this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
         }
 
         public override void init()
         {
-            antin = new AntInteraction(Mode.antColonySystem, alpha, beta, rho, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue, acsQ0, xi, tau0);
+            antin = new AntInteraction(Mode.antColonySystem, alpha, beta, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue, acsQ0, tau0);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();

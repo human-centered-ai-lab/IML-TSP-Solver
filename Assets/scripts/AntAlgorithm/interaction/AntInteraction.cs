@@ -9,7 +9,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using UnityEngine;
 
 public class AntInteraction
 {
@@ -17,11 +17,9 @@ public class AntInteraction
 
     private int alpha;
     private int beta;
-    private double rho;
     private double q;
     private double acsQ0;
 
-    private double xi;
     private double tau0;
 
     private int numOfAnts;
@@ -45,50 +43,50 @@ public class AntInteraction
     //helper flags
     private bool tourComplete = false;
 
-    private Random random = new Random();
+    private System.Random random = new System.Random();
 
-    public AntInteraction(AntAlgorithms.Mode mode, int alpha, int beta, double rho, double q, int numOfAnts, List<City> cities, int firstCity, double pheromoneTrailInitialValue, double acsQ0, double xi, double tau0)
+    public AntInteraction(AntAlgorithms.Mode mode, int alpha, int beta, double q, int numOfAnts, List<City> cities, int firstCity, double pheromoneTrailInitialValue, double acsQ0, double tau0)
     {
-        initAntInteractionForAS(mode, alpha, beta, rho, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
+        initAntInteractionForAS(mode, alpha, beta, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
         this.acsQ0 = acsQ0;
-        this.xi = xi;
         this.tau0 = tau0;
     }
 
-    public AntInteraction(AntAlgorithms.Mode mode, int alpha, int beta, double rho, double q, int numOfAnts, List<City> cities, int firstCity, double pheromoneTrailInitialValue)
+    public AntInteraction(AntAlgorithms.Mode mode, int alpha, int beta, double q, int numOfAnts, List<City> cities, int firstCity, double pheromoneTrailInitialValue)
     {
-        initAntInteractionForAS(mode, alpha, beta, rho, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
+        initAntInteractionForAS(mode, alpha, beta, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
     }
 
     //update the tours of ants by considering the pheromones
     public void updateAnts()
     {
         initAntUpdate();
+        bool error = true;
 
         for (int i = 1; i < cities.Count; i++)
         {
             switch (mode)
             {
                 case AntAlgorithms.Mode.antSystem:
-                    if (!moveAntsAS(i))
-                    {
-                        Debug.WriteLine("No valid next city!");
-                    }
+                    error = moveAntsAS(i);
                     break;
                 case AntAlgorithms.Mode.antColonySystem:
-                    if (!moveAntsACS(i))
-                    {
-                        Debug.WriteLine("No valid next city!");
-                    }
+                    error = moveAntsACS(i);
                     break;
             }
+
+            if (!error)
+                throw new Exception("No valid next city!");
         }
+
         completeTours();
     }
 
     // updates an ant stepwise every city
     public bool updateAntsStepwise(int citiesSoFar)
     {
+        bool lastCity = false;
+
         if (!tourComplete)
         {
             if (citiesSoFar == 1)
@@ -98,25 +96,21 @@ public class AntInteraction
                 switch (mode)
                 {
                     case AntAlgorithms.Mode.antSystem:
-                        if (!moveAntsAS(citiesSoFar - 1))
-                        {
-                            completeTours();
-                        }
+                        lastCity = !moveAntsAS(citiesSoFar - 1);
                         break;
                     case AntAlgorithms.Mode.antColonySystem:
-                        if (!moveAntsACS(citiesSoFar - 1))
-                        {
-                            completeTours();
-                        }
+                        lastCity = !moveAntsACS(citiesSoFar - 1);
                         break;
                 }
+                if (lastCity)
+                    completeTours();
             }
         }
         return tourComplete;
     }
 
     /*###################################
-     *   ANT SYSTEM(AS) INTERACTION
+     *   ANT SYSTEM (AS) INTERACTION
      *###################################
      **/
 
@@ -142,39 +136,23 @@ public class AntInteraction
         return explorationDecision();
     }
 
+
     //updates the pheromones
     public void updatePheromonesAS()
     {
-        double decreaseFactor = 1.0 - rho;
         double increaseFactor = 0;
 
-        for (int i = 0; i < cities.Count; i++)
-        {
-            for (int j = i + 1; j < cities.Count; j++)
-            {
-                pheromones.decreasePheromoneAS(i, j, decreaseFactor);
-                pheromones.decreasePheromoneAS(j, i, decreaseFactor);
-            }
-        }
+        evaporatePheromones();
+
         for (int k = 0; k < ants.Count; k++)
         {
-            increaseFactor = (1.0 / ants[k].getTourLength()) * q;
+            increaseFactor = (1.0 / ants[k].getTourLength());
 
-            for (int i = 0; i < cities.Count; i++)
-            {
-                int j = ants[k].getCityOfTour(i);
-                int l = ants[k].getCityOfTour(i + 1);
-
-                pheromones.increasePheromoneAS(j, l, increaseFactor);
-                pheromones.increasePheromoneAS(l, j, increaseFactor);
-            }
+            depositPheromones(k, increaseFactor);
         }
 
-        choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
-        tourComplete = false;
-
-        //Debug.Log("Choices: " + choiceInfo.ToString);
-        //Debug.Log("UPDATE PHEROMONE" + pheromones.ToString);
+        Debug.Log("Pheromones:" + pheromones.ToString);
+        finishIteration();
     }
 
     /*########################################
@@ -218,43 +196,29 @@ public class AntInteraction
     //updates the pheromones for ACS
     public void globalPheromoneUpdateACS()
     {
-        double decreaseFactor = 1.0 - rho;
-        double increaseFactor = 0;
-        int bestAntIndex = findBestAntIndex();
+        int bestAntIndex = findBestAnt().getID();
 
-        for (int i = 0; i < cities.Count; i++)
-        {
-            for (int j = i + 1; j < cities.Count; j++)
-            {
-                pheromones.decreasePheromoneAS(i, j, decreaseFactor);
-                pheromones.decreasePheromoneAS(j, i, decreaseFactor);
-            }
-        }
+        evaporatePheromones();
 
-        increaseFactor = (1.0 / ants[bestAntIndex].getTourLength()) * q;
+        double increaseFactor = (1.0 / ants[bestAntIndex].getTourLength()) * q;
 
-        for (int i = 0; i < cities.Count; i++)
-        {
-            int j = ants[bestAntIndex].getCityOfTour(i);
-            int l = ants[bestAntIndex].getCityOfTour(i + 1);
+        depositPheromones(bestAntIndex, increaseFactor);
 
-            pheromones.increasePheromoneAS(j, l, increaseFactor);
-            pheromones.increasePheromoneAS(l, j, increaseFactor);
-        }
+        //Debug.Log("Pheromones:" + pheromones.ToString);
 
-        choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
-        tourComplete = false;
-
+        finishIteration();
     }
-    
+
+    // the local pheromone update is done after each step (each ant one city step)
     private void localPheromoneUpdateACS(int antIndex, int currentCityPos)
     {
         int prevCity = ants[antIndex].getCityOfTour(currentCityPos - 1);
         int currentCity = ants[antIndex].getCityOfTour(currentCityPos);
-        pheromones.setPheromone(prevCity, currentCity, ((1.0 - xi) * pheromones.getPheromone(prevCity, currentCity)) + (xi * tau0));
+
+        pheromones.setPheromone(prevCity, currentCity, ((1.0 - q) * pheromones.getPheromone(prevCity, currentCity)) + (q * tau0));
         pheromones.setPheromone(currentCity, prevCity, pheromones.getPheromone(prevCity, currentCity));
-        choiceInfo.setChoice(prevCity, currentCity, pheromones.getPheromone(prevCity, currentCity) * Math.Pow(1.0 / distances.getDistance(prevCity, currentCity), beta));
-        choiceInfo.setChoice(currentCity, prevCity, choiceInfo.getChoice(prevCity, currentCity));
+        //  choiceInfo.setChoice(prevCity, currentCity, pheromones.getPheromone(prevCity, currentCity) * Math.Pow(1.0 / distances.getDistance(prevCity, currentCity), beta));
+        // choiceInfo.setChoice(currentCity, prevCity, choiceInfo.getChoice(prevCity, currentCity));
     }
 
     // finds the ant with the best tour
@@ -274,25 +238,6 @@ public class AntInteraction
             }
         }
         return ants[minTourLengthIndex];
-    }
-
-    // finds the ant index with the best tour
-    public int findBestAntIndex()
-    {
-        double minTourLength;
-        int minTourLengthIndex;
-
-        minTourLength = ants[0].getTourLength();
-        minTourLengthIndex = 0;
-        for (int i = 1; i < ants.Count; i++)
-        {
-            if (ants[i].getTourLength() < minTourLength)
-            {
-                minTourLength = ants[i].getTourLength();
-                minTourLengthIndex = i;
-            }
-        }
-        return minTourLengthIndex;
     }
 
     //the init step of the ant update
@@ -325,20 +270,81 @@ public class AntInteraction
     }
 
     //init the ants with random tours
-    private void initAnts()
+    private void initAnts(bool randomPlacement)
     {
         ants = new List<Ant>();
         for (int i = 0; i < numOfAnts; i++)
         {
-            ants.Add(new Ant(i, cities.Count, 0, distances));
+            if (!randomPlacement)
+            {
+                ants.Add(new Ant(i, cities.Count, 0, distances));
+            }
+            else
+            {
+                int r = random.Next(0, cities.Count);
+                ants.Add(new Ant(i, cities.Count, r, distances));
+            }
+
         }
     }
 
     //init the pheromones
     private void initPheromones()
     {
-        pheromones = new Pheromones(cities.Count, 10.0);
+        pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue);
         pheromones.init();
+        Debug.Log("Pheromones:" + pheromones.ToString);
+
+    }
+
+    // evaporation of pheromones
+    private void evaporatePheromones()
+    {
+        double decreaseFactor = 1.0 - q;
+
+        for (int i = 0; i < cities.Count; i++)
+        {
+            for (int j = i + 1; j < cities.Count; j++)
+            {
+                pheromones.decreasePheromoneAS(i, j, decreaseFactor);
+                pheromones.decreasePheromoneAS(j, i, decreaseFactor);
+            }
+        }
+    }
+
+    // evaporation of pheromones
+    private void evaporatePheromones(int antIndex)
+    {
+        double decreaseFactor = 1.0 - q;
+
+        for (int i = 0; i < cities.Count; i++)
+        {
+            int j = ants[antIndex].getCityOfTour(i);
+            int l = ants[antIndex].getCityOfTour(i + 1);
+
+            pheromones.decreasePheromoneAS(j, l, decreaseFactor);
+            pheromones.decreasePheromoneAS(l, j, decreaseFactor);
+        }
+    }
+
+    // deposit procedure of pheromones
+    private void depositPheromones(int antIndex, double increaseFactor)
+    {
+        for (int i = 0; i < cities.Count; i++)
+        {
+            int j = ants[antIndex].getCityOfTour(i);
+            int l = ants[antIndex].getCityOfTour(i + 1);
+
+            pheromones.increasePheromoneAS(j, l, increaseFactor);
+            pheromones.increasePheromoneAS(l, j, increaseFactor);
+        }
+    }
+
+    // deposit procedure of pheromones
+    private void finishIteration()
+    {
+        choiceInfo.updateChoiceInfo(pheromones, distances, alpha, beta);
+        tourComplete = false;
     }
 
     private void calculateProbs(int currCityIndex, int antIndex)
@@ -389,12 +395,11 @@ public class AntInteraction
         return noValidNextCity;
     }
 
-    private void initAntInteractionForAS(AntAlgorithms.Mode mode, int alpha, int beta, double rho, double q, int numOfAnts, List<City> cities, int firstCity, double pheromoneTrailInitialValue)
+    private void initAntInteractionForAS(AntAlgorithms.Mode mode, int alpha, int beta, double q, int numOfAnts, List<City> cities, int firstCity, double pheromoneTrailInitialValue)
     {
         this.cities = cities;
         this.alpha = alpha;
         this.beta = beta;
-        this.rho = rho;
         this.q = q;
         this.numOfAnts = numOfAnts;
         this.startCity = firstCity;
@@ -403,7 +408,7 @@ public class AntInteraction
         //calculates distances
         distances = new Distances(cities);
 
-        initAnts();
+        initAnts(true);
         initPheromones();
 
         choiceInfo = new ChoiceInfo(cities.Count);

@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 public class Ant
 {
-    private int ID;
+    private int id;
     // every ant has an own tour
     private List<int> tour;
     private double tourLength;
@@ -22,10 +22,10 @@ public class Ant
     private Distances distances;
     private Random random;
 
-    public Ant(int ID, int numOfCities, int firstCity, Distances distances)
+    public Ant(int id, int numOfCities, int firstCity, Distances distances)
     {
         random = new Random();
-        this.ID = ID;
+        this.id = id;
         tour = new List<int>();
         visited = new bool[numOfCities];
         this.distances = distances;
@@ -99,7 +99,7 @@ public class Ant
         get
         {
             string str = "";
-            str += "ANT " + ID + ": Tour length: " + tourLength + " CityOrder: ";
+            str += "ANT " + id + ": Tour length: " + tourLength + " CityOrder: ";
             for (int i = 0; i < tour.Count; i++)
                 str += tour[i] + " ";
             str += " visited: ";
@@ -155,5 +155,10 @@ public class Ant
     public int getCityOfTour(int i)
     {
         return tour[i];
+    }
+
+    public int getID()
+    {
+        return id;
     }
 }

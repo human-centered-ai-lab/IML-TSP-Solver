@@ -19,9 +19,7 @@ namespace AntAlgorithms
         protected int alpha;
         // influence of distance for decision
         protected int beta;
-        // pheromone decrease factor
-        protected double rho;
-        // pheromone increase factor
+        // pheromone increase/decrease factor
         protected double q;
 
         protected List<City> cities;

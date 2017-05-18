@@ -14,11 +14,10 @@ namespace AntAlgorithms
 {
     public class ASAlgorithm : AntAlgorithm
     {
-        public ASAlgorithm(int alpha, int beta, double rho, double q, int numOfAnts, int firstCity, double pheromoneTrailInitialValue)
+        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts, int firstCity, double pheromoneTrailInitialValue)
         {
             this.alpha = alpha;
             this.beta = beta;
-            this.rho = rho;
             this.q = q;
             this.numOfAnts = numOfAnts;
             this.firstCity = firstCity;
@@ -27,7 +26,7 @@ namespace AntAlgorithms
 
         public override void init()
         {
-            antin = new AntInteraction(Mode.antSystem, alpha, beta, rho, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
+            antin = new AntInteraction(Mode.antSystem, alpha, beta, q, numOfAnts, cities, firstCity, pheromoneTrailInitialValue);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();

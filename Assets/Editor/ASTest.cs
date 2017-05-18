@@ -37,7 +37,7 @@ public class ASTest
     public void SetUp()
     {
         cities = new List<City>();
-        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antColonySystem, 1, 2, 0.7, 100, 300, 0, 0.1, 0.5, 0.1, 0.005);
+        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antSystem, 1, 2, 0.1, 1, 0, 0.9, 0.1, 0.1);
         aa = aac.getAlgorithm();
     }
 
@@ -52,7 +52,7 @@ public class ASTest
     {
         aa.setCities(TSPImporter.importTsp("eil51.tsp"));
         aa.init();
-        for (int i = 0; i < 3000; i++)
+        for (int i = 0; i < 30000; i++)
         {
             aa.iteration();
         }
@@ -65,7 +65,7 @@ public class ASTest
     {
         aa.setCities(TSPImporter.importTsp("berlin52.tsp"));
         aa.init();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 1; i++)
             aa.iteration();
         aa.printBestTour("berlin52");
         Assert.True(true);
