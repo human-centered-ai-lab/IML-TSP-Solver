@@ -23,9 +23,18 @@ namespace AntAlgorithms
             this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
         }
 
+        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts)     
+        {
+            this.alpha = alpha;
+            this.beta = beta;
+            this.q = q;
+            this.numOfAnts = numOfAnts;
+            this.pheromoneTrailInitialValue = AntAlgorithmChooser.PHERDEFAULTINITVALUE;
+        }
+
         public override void init()
         {
-            antin = new AntInteraction(Mode.antSystem, alpha, beta, q, numOfAnts, cities, pheromoneTrailInitialValue);
+            antin = new AntInteraction(Mode.antSystem, alpha, beta, q, numOfAnts, cities, pheromoneTrailInitialValue, 0, 0);
             bestTour = new List<int>();
             tourLength = double.MaxValue;
             checkBestTour();

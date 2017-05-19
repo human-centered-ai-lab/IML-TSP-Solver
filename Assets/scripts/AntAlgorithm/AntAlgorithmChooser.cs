@@ -24,6 +24,8 @@ namespace AntAlgorithms
 
     public class AntAlgorithmChooser
     {
+        public static double PHERDEFAULTINITVALUE = 0.1;
+
         private AntAlgorithm aa;
 
         public AntAlgorithmChooser(Mode mode, int alpha, int beta, double q, int numOfAnts, double acsQ0, double pheromoneTrailInitialValue, double tau0)
@@ -38,6 +40,16 @@ namespace AntAlgorithms
                     aa = new ACSAlgorithm(alpha, beta, q, numOfAnts, pheromoneTrailInitialValue, acsQ0,  tau0);
                     break;
             }
+        }
+
+        public AntAlgorithmChooser(int alpha, int beta, double q, int numOfAnts)
+        {
+            aa = new ASAlgorithm(alpha, beta, q, numOfAnts);
+        }
+
+        public AntAlgorithmChooser(int alpha, int beta, double q, int numOfAnts,  double acsQ0)
+        {
+            aa = new ACSAlgorithm(alpha, beta, q, numOfAnts, acsQ0);
         }
 
         public AntAlgorithm getAlgorithm()

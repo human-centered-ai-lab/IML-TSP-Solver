@@ -17,7 +17,7 @@ namespace AntAlgorithms
         // parameter for the ACS implementation for the pseudorandom decision rule (balance between "best so far" and "explore" tour based decision)
         private double acsQ0;
         //increasing parameter for the local pheromone update
-        private double tau0;
+        private double tau0 = -1;
 
         public ACSAlgorithm(int alpha, int beta, double q, int numOfAnts, double pheromoneTrailInitialValue, double acsQ0, double tau0)
         {
@@ -28,6 +28,15 @@ namespace AntAlgorithms
             this.acsQ0 = acsQ0;
             this.tau0 = tau0;
             this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
+        }
+
+        public ACSAlgorithm(int alpha, int beta, double q, int numOfAnts, double acsQ0)
+        {
+            this.alpha = alpha;
+            this.beta = beta;
+            this.q = q;
+            this.numOfAnts = numOfAnts;
+            this.acsQ0 = acsQ0;
         }
 
         public override void init()

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: AssemblyVersionAttribute("0.1")]
 
 [TestFixture]
-public class ASTest
+public class AntTest
 {
     private List<City> cities;
     private AntAlgorithms.AntAlgorithmChooser aac;
@@ -37,8 +37,7 @@ public class ASTest
     public void SetUp()
     {
         cities = new List<City>();
-        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antColonySystem, 1, 2, 0.1, 10, 0.9, 0.000088, 0.000088);
-        aa = aac.getAlgorithm();
+
     }
 
     [TearDown]
@@ -48,37 +47,88 @@ public class ASTest
     }
 
     [Test]
-    public void Eil51()
+    public void Eil51ACS()
     {
+        aac = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 20, 0.9);
+        aa = aac.getAlgorithm();
+        aa.setCities(TSPImporter.importTsp("eil51.tsp"));
+        aa.init();
+        for (int i = 0; i < 1000; i++)
+        {
+            aa.iteration();
+        }
+        aa.printBestTour("Eil51ACS");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Eil51AS()
+    {
+        aac = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.7, 100);
+        aa = aac.getAlgorithm();
         aa.setCities(TSPImporter.importTsp("eil51.tsp"));
         aa.init();
         for (int i = 0; i < 3000; i++)
         {
             aa.iteration();
         }
-        aa.printBestTour("Eil51");
+        aa.printBestTour("Eil51AS");
         Assert.True(true);
     }
 
     [Test]
-    public void Oliver30()
+    public void Oliver30ACS()
     {
+        aac = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 10, 0.9);
+        aa = aac.getAlgorithm();
+        aa.setCities(TSPImporter.importTsp("oliver30.tsp"));
+        aa.init();
+        for (int i = 0; i < 5000; i++)
+        {
+            aa.iteration();
+        }
+        aa.printBestTour("Oliver30ACS");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Oliver30AS()
+    {
+        aac = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.7, 10);
+        aa = aac.getAlgorithm();
         aa.setCities(TSPImporter.importTsp("oliver30.tsp"));
         aa.init();
         for (int i = 0; i < 2500; i++)
         {
             aa.iteration();
         }
-        aa.printBestTour("oliver30");
+        aa.printBestTour("Oliver30AS");
         Assert.True(true);
     }
 
     [Test]
-    public void Berlin52()
+    public void Oliver30ACSWithCustomPara()
     {
+        aac = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.antColonySystem, 1, 2, 0.1, 10, 0.9, 0.000088, 0.000088);
+        aa = aac.getAlgorithm();
+        aa.setCities(TSPImporter.importTsp("oliver30.tsp"));
+        aa.init();
+        for (int i = 0; i < 1000; i++)
+        {
+            aa.iteration();
+        }
+        aa.printBestTour("Oliver30ACSWithCustomPara");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Berlin52ACS()
+    {
+        aac = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 10, 0.9);
+        aa = aac.getAlgorithm();
         aa.setCities(TSPImporter.importTsp("berlin52.tsp"));
         aa.init();
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 200; i++)
             aa.iteration();
         aa.printBestTour("berlin52");
         Assert.True(true);
@@ -87,6 +137,9 @@ public class ASTest
     [Test]
     public void test8()
     {
+        aac = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 10, 0.9);
+        aa = aac.getAlgorithm();
+
         cities.Add(new City(2, 4, 0));
         cities.Add(new City(1, 9, 1));
         cities.Add(new City(3, 8, 2));

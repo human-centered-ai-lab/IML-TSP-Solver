@@ -27,7 +27,7 @@ namespace AntAlgorithms
         protected AntInteraction antin;
 
         protected int numOfAnts;
-        protected double pheromoneTrailInitialValue;
+        protected double pheromoneTrailInitialValue = -1;
 
         // output - updateing after every algorithm iteration
         protected double tourLength;
