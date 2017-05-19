@@ -29,6 +29,35 @@ public class Distances
         calculateNearestNeighbours();
     }
 
+    // calculates the nearest neighbour heuristic of the tsp graph
+    public double calculateNNHeuristic()
+    {
+        bool[] visited = new bool[cities.Count];
+        double nnHeuristic = 0;
+        int cityIndexTemp = 0;
+        int startCityIndex = 0;
+
+        visited[0] = true;
+        for (int i = 0; i < cities.Count - 1; i++)
+        {
+            double distance = Double.MaxValue;
+            for (int j = 0; j < cities.Count ;j++)
+            {
+                if (!visited[j] && distances[startCityIndex][j] < distance)
+                {
+                    distance = distances[startCityIndex][j];
+                    cityIndexTemp = j;
+                }
+            }
+            visited[cityIndexTemp] = true;
+            startCityIndex = cityIndexTemp;
+
+            nnHeuristic += distance;
+        }
+        nnHeuristic += distances[startCityIndex][0];
+        return nnHeuristic;
+    }
+
     // Calculate the initial distances between cities in array order 
     private void calculateDistances()
     {
@@ -43,7 +72,7 @@ public class Distances
             for (int j = 0; j < cities.Count; j++)
             {
                 // distance matrix from cityA to cityB
-               double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
+                double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
 
                 distances[i][j] = distance;
                 distances[j][i] = distance;
@@ -56,6 +85,7 @@ public class Distances
     }
 
     /* Calculate all nearest neigbours of all cities in array order 
+     * (for performance increasing pruposes)
     * example: cityB is the nearest neighbour of cityA and cityC the 2nd nearest neighbour of cityA
     *          nn[cityAid][0] = cityBid
     *          nn[cityAid][1] = cityCid

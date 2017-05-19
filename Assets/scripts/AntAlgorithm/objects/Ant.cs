@@ -7,12 +7,12 @@
 
 /* Ant represents an ant in the Ant Algorihtm */
 
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Ant
 {
-    private int ID;
+    private int id;
     // every ant has an own tour
     private List<int> tour;
     private double tourLength;
@@ -20,10 +20,12 @@ public class Ant
     private bool[] visited;
 
     private Distances distances;
+    private Random random;
 
-    public Ant(int ID, int numOfCities, int firstCity, Distances distances)
+    public Ant(int id, int numOfCities, int firstCity, Distances distances)
     {
-        this.ID = ID;
+        random = new Random();
+        this.id = id;
         tour = new List<int>();
         visited = new bool[numOfCities];
         this.distances = distances;
@@ -42,9 +44,9 @@ public class Ant
         //shuffle
         for (int i = 0; i < numOfCities; i++)
         {
-            int random = Random.Range(i, numOfCities);
-            int tmpC1 = tour[random];
-            tour[random] = tour[i];
+            int rand = random.Next(i, numOfCities);
+            int tmpC1 = tour[rand];
+            tour[rand] = tour[i];
             tour[i] = tmpC1;
         }
 
@@ -97,9 +99,12 @@ public class Ant
         get
         {
             string str = "";
-            str += "ANT " + ID + ": Tour length: " + tourLength + " CityOrder: ";
+            str += "ANT " + id + ": Tour length: " + tourLength + " CityOrder: ";
             for (int i = 0; i < tour.Count; i++)
                 str += tour[i] + " ";
+            str += " visited: ";
+            for (int i = 0; i < visited.Length; i++)
+                str += visited[i] + " ";
             return str;
         }
     }
@@ -150,5 +155,10 @@ public class Ant
     public int getCityOfTour(int i)
     {
         return tour[i];
+    }
+
+    public int getID()
+    {
+        return id;
     }
 }

@@ -10,17 +10,19 @@
 public class Pheromones
 {
     // initialization factor for pheromones
-    public static double initPheromoneValue = 10;
+    private double initPheromoneValue;
     // Matrix of pheromones between city x and city y
     private double[][] pheromones;
+    private int numOfCities;
 
-    public Pheromones(int numOfCities)
+    public Pheromones(int numOfCities, double initPheromoneValue)
     {
-        initPheromones(numOfCities);
+        this.numOfCities = numOfCities;
+        this.initPheromoneValue = initPheromoneValue;
     }
 
     // init of pheromones
-    private void initPheromones(int numOfCities)
+    public void init()
     {
         pheromones = new double[numOfCities][];
         for (int i = 0; i < numOfCities; i++)
@@ -46,15 +48,20 @@ public class Pheromones
     }
 
     // decrease the pheromone value between 2 particular cities by one ant 
-    public void decreasePheromone(int cityAId, int cityBId, double decreaseValue)
+    public void decreasePheromoneAS(int cityAId, int cityBId, double decreaseValue)
     {
         pheromones[cityAId][cityBId] = decreaseValue * pheromones[cityAId][cityBId];
     }
 
     // decrease the pheromone value between 2 particular cities by one ant 
-    public void increasePheromone(int cityAId, int cityBId, double increaseValue)
+    public void increasePheromoneAS(int cityAId, int cityBId, double increaseValue)
     {
         pheromones[cityAId][cityBId] = pheromones[cityAId][cityBId] + increaseValue;
+    }
+
+    public void setPheromone(int cityAId, int cityBId, double value)
+    {
+        pheromones[cityAId][cityBId] = value;
     }
 
     public double getPheromone(int cityAId, int cityBId)
