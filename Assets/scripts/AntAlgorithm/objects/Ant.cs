@@ -12,10 +12,7 @@ using System.Collections.Generic;
 
 public class Ant
 {
-    private int id;
-    // every ant has an own tour
-    private List<int> tour;
-    private double tourLength;
+    // every ant has it's own tour
     // if an ant is currently "on the road" you need to know the visited cities
     private bool[] visited;
 
@@ -25,73 +22,79 @@ public class Ant
     public Ant(int id, int numOfCities, int firstCity, Distances distances)
     {
         random = new Random();
-        this.id = id;
-        tour = new List<int>();
+        Id = id;
+        Tour = new List<int>();
         visited = new bool[numOfCities];
         this.distances = distances;
 
         // generate a random tour after initialization
-        generateRandomTour(numOfCities, firstCity);
-        calculateTourLength();
+        GenerateRandomTour(numOfCities, firstCity);
+        CalculateTourLength();
     }
 
     // Generates a random tour by shuffeling the cities
-    private void generateRandomTour(int numOfCities, int start)
+    private void GenerateRandomTour(int numOfCities, int start)
     {
         for (int i = 0; i < numOfCities; i++)
-            tour.Add(i);
+        {
+            Tour.Add(i);
+        }
 
         //shuffle
         for (int i = 0; i < numOfCities; i++)
         {
             int rand = random.Next(i, numOfCities);
-            int tmpC1 = tour[rand];
-            tour[rand] = tour[i];
-            tour[i] = tmpC1;
+            int tmpC1 = Tour[rand];
+            Tour[rand] = Tour[i];
+            Tour[i] = tmpC1;
         }
 
         int target = -1;
 
         // search for the index of the target city
-        for (int i = 0; i < tour.Count; i++)
+        for (int i = 0; i < Tour.Count; i++)
         {
-            if (tour[i] == start)
+            if (Tour[i] == start)
             {
                 target = i;
             }
         }
 
-        int tmpC2 = tour[0];
-        tour[0] = tour[target];
-        tour[target] = tmpC2;
-        tour.Add(tour[0]);
+        int tmpC2 = Tour[0];
+        Tour[0] = Tour[target];
+        Tour[target] = tmpC2;
+        Tour.Add(Tour[0]);
     }
 
     // Determines, if there is a path between two cities on the ants tour
-    public bool isEdge(int cityAID, int cityBID)
+    public bool IsEdge(int cityAID, int cityBID)
     {
-        for (int i = 0; i < tour.Count - 1; i++)
+        for (int i = 0; i < Tour.Count - 1; i++)
         {
-            if (tour[i] == cityAID && tour[i + 1] == cityBID)
+            if (Tour[i] == cityAID && Tour[i + 1] == cityBID)
+            {
                 return true;
-            else if (tour[i + 1] == cityAID && tour[i] == cityBID)
+            }
+            if (Tour[i + 1] == cityAID && Tour[i] == cityBID)
+            {
                 return true;
+            }
         }
 
         return false;
     }
 
     //Calculates the tour length of the current ant tour
-    public double calculateTourLength()
+    public double CalculateTourLength()
     {
-        tourLength = 0;
+        TourLength = 0;
 
-        for (int i = 0; i < tour.Count - 1; i++)
+        for (int i = 0; i < Tour.Count - 1; i++)
         {
-            tourLength += distances.getDistance(tour[i], tour[i + 1]);
+            TourLength += distances.GetDistance(Tour[i], Tour[i + 1]);
         }
 
-        return tourLength;
+        return TourLength;
     }
 
     public new string ToString
@@ -99,66 +102,56 @@ public class Ant
         get
         {
             string str = "";
-            str += "ANT " + id + ": Tour length: " + tourLength + " CityOrder: ";
-            for (int i = 0; i < tour.Count; i++)
-                str += tour[i] + " ";
+            str += "ANT " + Id + ": Tour length: " + TourLength + " CityOrder: ";
+            foreach (int cityIndex in Tour)
+            {
+                str += cityIndex + " ";
+            }
             str += " visited: ";
             for (int i = 0; i < visited.Length; i++)
+            {
                 str += visited[i] + " ";
+            }
             return str;
         }
     }
 
-    public double getTourLength()
-    {
-        return tourLength;
-    }
+    public double TourLength { get; private set; }
 
-    public void setCityVisited(int i)
+    public void SetCityVisited(int i)
     {
         visited[i] = true;
     }
 
-    public bool isCityVisited(int i)
+    public bool IsCityVisited(int i)
     {
-        if (visited[i])
-            return true;
-        return false;
+        return visited[i];
     }
 
-    public void unvisitAllCities()
+    public void UnvisitAllCities()
     {
         for (int i = 0; i < visited.Length; i++)
+        {
             visited[i] = false;
+        }
     }
 
-    public void clearTour()
+    public void ClearTour()
     {
-        this.tour.Clear();
+        Tour.Clear();
     }
 
-    public void addCityToTour(int i)
+    public void AddCityToTour(int i)
     {
-        tour.Add(i);
+        Tour.Add(i);
     }
 
-    public List<int> getTour()
+    public List<int> Tour { get; set; }
+
+    public int GetCityOfTour(int i)
     {
-        return tour;
+        return Tour[i];
     }
 
-    public void setTour(List<int> tour)
-    {
-        this.tour = tour;
-    }
-
-    public int getCityOfTour(int i)
-    {
-        return tour[i];
-    }
-
-    public int getID()
-    {
-        return id;
-    }
+    public int Id { get; private set; }
 }

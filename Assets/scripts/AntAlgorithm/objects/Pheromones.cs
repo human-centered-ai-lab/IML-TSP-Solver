@@ -22,7 +22,7 @@ public class Pheromones
     }
 
     // init of pheromones
-    public void init()
+    public void Init()
     {
         pheromones = new double[numOfCities][];
         for (int i = 0; i < numOfCities; i++)
@@ -48,23 +48,23 @@ public class Pheromones
     }
 
     // decrease the pheromone value between 2 particular cities by one ant 
-    public void decreasePheromoneAS(int cityAId, int cityBId, double decreaseValue)
+    public void DecreasePheromoneAs(int cityAId, int cityBId, double decreaseValue)
     {
         pheromones[cityAId][cityBId] = decreaseValue * pheromones[cityAId][cityBId];
     }
 
     // decrease the pheromone value between 2 particular cities by one ant 
-    public void increasePheromoneAS(int cityAId, int cityBId, double increaseValue)
+    public void IncreasePheromoneAs(int cityAId, int cityBId, double increaseValue)
     {
         pheromones[cityAId][cityBId] = pheromones[cityAId][cityBId] + increaseValue;
     }
 
-    public void setPheromone(int cityAId, int cityBId, double value)
+    public void SetPheromone(int cityAId, int cityBId, double value)
     {
         pheromones[cityAId][cityBId] = value;
     }
 
-    public double getPheromone(int cityAId, int cityBId)
+    public double GetPheromone(int cityAId, int cityBId)
     {
         return pheromones[cityAId][cityBId];
     }
