@@ -24,14 +24,14 @@ public class ChoiceInfo
     }
 
     // choice update
-    public void updateChoiceInfo(Pheromones pheromones, Distances distances, int alpha, int beta)
+    public void UpdateChoiceInfo(Pheromones pheromones, Distances distances, int alpha, int beta)
     {
         for (int i = 0; i < size; i++)
         {
             for (int j = i + 1; j < size; j++)
             {
-                choiceInfo[i][j] = Math.Pow(pheromones.getPheromone(i, j), alpha) *
-                                   Math.Pow((1.0 / distances.getDistance(i, j)), beta);
+                choiceInfo[i][j] = Math.Pow(pheromones.GetPheromone(i, j), alpha) *
+                                   Math.Pow((1.0 / distances.GetDistance(i, j)), beta);
                 // To avoid small or high values
                 if (choiceInfo[i][j] <= 0.000001)
                     choiceInfo[i][j] = 0.000001;
@@ -42,7 +42,7 @@ public class ChoiceInfo
         }
     }
 
-    private void normalizeChoiceInfo()
+    private void NormalizeChoiceInfo()
     {
         double rowSize;
         for (int i = 0; i < size; i++)
@@ -59,7 +59,7 @@ public class ChoiceInfo
         }
     }
 
-    public void setChoice(int i, int j, double value)
+    public void SetChoice(int i, int j, double value)
     {
         choiceInfo[i][j] = value;
     }
@@ -79,7 +79,7 @@ public class ChoiceInfo
         }
     }
 
-    public double getChoice(int cityA, int cityB)
+    public double GetChoice(int cityA, int cityB)
     {
         return choiceInfo[cityA][cityB];
     }

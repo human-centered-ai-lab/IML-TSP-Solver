@@ -9,7 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Distances
 {
@@ -24,13 +23,13 @@ public class Distances
     {
         this.cities = cities;
         //build the distance matix
-        calculateDistances();
+        CalculateDistances();
         //build the nearestNeighbour matix
-        calculateNearestNeighbours();
+        CalculateNearestNeighbours();
     }
 
     // calculates the nearest neighbour heuristic of the tsp graph
-    public double calculateNNHeuristic()
+    public double CalculateNNHeuristic()
     {
         bool[] visited = new bool[cities.Count];
         double nnHeuristic = 0;
@@ -41,7 +40,7 @@ public class Distances
         for (int i = 0; i < cities.Count - 1; i++)
         {
             double distance = Double.MaxValue;
-            for (int j = 0; j < cities.Count ;j++)
+            for (int j = 0; j < cities.Count; j++)
             {
                 if (!visited[j] && distances[startCityIndex][j] < distance)
                 {
@@ -59,20 +58,22 @@ public class Distances
     }
 
     // Calculate the initial distances between cities in array order 
-    private void calculateDistances()
+    private void CalculateDistances()
     {
         distances = new double[cities.Count][];
         String str = "";
 
         for (int i = 0; i < cities.Count; i++)
+        {
             distances[i] = new double[cities.Count];
+        }
 
         for (int i = 0; i < cities.Count; i++)
         {
             for (int j = 0; j < cities.Count; j++)
             {
                 // distance matrix from cityA to cityB
-                double distance = calculateCityDistance(cities[i].getId(), cities[j].getId());
+                double distance = CalculateCityDistance(cities[i].Id, cities[j].Id);
 
                 distances[i][j] = distance;
                 distances[j][i] = distance;
@@ -90,7 +91,7 @@ public class Distances
     *          nn[cityAid][0] = cityBid
     *          nn[cityAid][1] = cityCid
     */
-    private void calculateNearestNeighbours()
+    private void CalculateNearestNeighbours()
     {
         nearestNeighbours = new int[cities.Count][];
         double lowestValue = double.MaxValue;
@@ -139,15 +140,14 @@ public class Distances
     }
 
     // Calculate the the vpoint distance between 2 cities with 2D coordinates
-    private double calculateCityDistance(int cityAID, int cityBID)
+    private double CalculateCityDistance(int cityAID, int cityBID)
     {
-        return Math.Sqrt(Math.Pow(cities[cityAID].getXPosition() - cities[cityBID].getXPosition(), 2) + Math.Pow(cities[cityAID].getYPosition() - cities[cityBID].getYPosition(), 2));
+        return Math.Sqrt(Math.Pow(cities[cityAID].XPosition - cities[cityBID].XPosition, 2) + Math.Pow(cities[cityAID].YPosition - cities[cityBID].YPosition, 2));
     }
 
     // returns the distance between two cities
-    public double getDistance(int cityAId, int cityBId)
+    public double GetDistance(int cityAId, int cityBId)
     {
         return distances[cityAId][cityBId];
-
     }
 }

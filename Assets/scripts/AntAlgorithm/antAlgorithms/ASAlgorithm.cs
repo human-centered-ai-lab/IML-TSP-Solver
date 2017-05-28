@@ -32,29 +32,29 @@ namespace AntAlgorithms
             this.pheromoneTrailInitialValue = AntAlgorithmChooser.PHERDEFAULTINITVALUE;
         }
 
-        public override void init()
+        public override void Init()
         {
-            antin = new AntInteraction(Mode.antSystem, alpha, beta, q, numOfAnts, cities, pheromoneTrailInitialValue, 0, 0);
-            bestTour = new List<int>();
-            tourLength = double.MaxValue;
-            checkBestTour();
+            antin = new AntInteraction(Mode.AntSystem, alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, 0, 0);
+            BestTour = new List<int>();
+            TourLength = double.MaxValue;
+            CheckBestTour();
             algStep = 1;
         }
 
-        public override void iteration()
+        public override void Iteration()
         {
-            antin.updateAnts();
-            antin.updatePheromonesAS();
-            checkBestTour();
+            antin.UpdateAnts();
+            antin.UpdatePheromonesAs();
+            CheckBestTour();
         }
 
-        public override void step()
+        public override void Step()
         {
-            if (antin.updateAntsStepwise(algStep))
+            if (antin.UpdateAntsStepwise(algStep))
             {
                 algStep = 1;
-                antin.updatePheromonesAS();
-                checkBestTour();
+                antin.UpdatePheromonesAs();
+                CheckBestTour();
             }
             else
             {

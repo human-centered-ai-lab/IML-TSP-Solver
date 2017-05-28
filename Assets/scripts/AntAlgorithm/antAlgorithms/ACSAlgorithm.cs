@@ -39,29 +39,29 @@ namespace AntAlgorithms
             this.acsQ0 = acsQ0;
         }
 
-        public override void init()
+        public override void Init()
         {
-            antin = new AntInteraction(Mode.antColonySystem, alpha, beta, q, numOfAnts, cities, pheromoneTrailInitialValue, acsQ0, tau0);
-            bestTour = new List<int>();
-            tourLength = double.MaxValue;
-            checkBestTour();
+            antin = new AntInteraction(Mode.AntColonySystem, alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, acsQ0, tau0);
+            BestTour = new List<int>();
+            TourLength = double.MaxValue;
+            CheckBestTour();
             algStep = 1;
         }
 
-        public override void iteration()
+        public override void Iteration()
         {
-            antin.updateAnts();
-            antin.globalPheromoneUpdateACS();
-            checkBestTour();
+            antin.UpdateAnts();
+            antin.GlobalPheromoneUpdateAcs();
+            CheckBestTour();
         }
 
-        public override void step()
+        public override void Step()
         {
-            if (antin.updateAntsStepwise(algStep))
+            if (antin.UpdateAntsStepwise(algStep))
             {
                 algStep = 1;
-                antin.globalPheromoneUpdateACS();
-                checkBestTour();
+                antin.GlobalPheromoneUpdateAcs();
+                CheckBestTour();
             }
             else
             {
