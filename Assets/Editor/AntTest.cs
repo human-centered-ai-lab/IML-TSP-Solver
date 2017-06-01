@@ -11,6 +11,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Reflection;
+using AntAlgorithm.tools;
+
 [assembly: AssemblyVersion("0.1")]
 
 [TestFixture]
@@ -19,6 +21,7 @@ public class AntTest
     private List<City> cities;
     private AntAlgorithms.AntAlgorithmChooser antAlgorithmChooser;
     private AntAlgorithms.AntAlgorithm antAlgorithm;
+    private TSPImporter tspImporter;
 
 
     [OneTimeSetUp]
@@ -37,7 +40,7 @@ public class AntTest
     public void SetUp()
     {
         cities = new List<City>();
-
+        tspImporter = new TSPImporter();
     }
 
     [TearDown]
