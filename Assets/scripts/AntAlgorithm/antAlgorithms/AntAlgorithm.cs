@@ -67,7 +67,7 @@ namespace AntAlgorithms
                 BestTour.Clear();
                 for (int i = 0; i < bestAnt.Tour.Count; i++)
                 {
-                    BestTour.Add(i);
+                    BestTour.Add(bestAnt.Tour[i]);
                 }
                 return true;
             }
