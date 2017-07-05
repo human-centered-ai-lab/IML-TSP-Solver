@@ -12,19 +12,12 @@ using System.Collections.Generic;
 
 namespace AntAlgorithms
 {
-    public class ASAlgorithm : AntAlgorithm
+    public class MinMaxAlgorithm : AntAlgorithm
     {
-        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts, double pheromoneTrailInitialValue)
+        private double pBest;
+        public MinMaxAlgorithm(int alpha, int beta, double q, int numOfAnts, double pBest)
         {
-            this.alpha = alpha;
-            this.beta = beta;
-            this.q = q;
-            this.numOfAnts = numOfAnts;
-            this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
-        }
-
-        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts)     
-        {
+            this.pBest = pBest;
             this.alpha = alpha;
             this.beta = beta;
             this.q = q;
@@ -34,7 +27,7 @@ namespace AntAlgorithms
 
         public override void Init()
         {
-            antin = new ASAntInteraction(alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue);
+            antin = new MinMaxAntInteraction(alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, pBest);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();

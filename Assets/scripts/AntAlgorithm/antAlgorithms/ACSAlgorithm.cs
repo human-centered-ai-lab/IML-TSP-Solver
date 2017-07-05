@@ -41,7 +41,7 @@ namespace AntAlgorithms
 
         public override void Init()
         {
-            antin = new AntInteraction(Mode.AntColonySystem, alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, acsQ0, tau0);
+            antin = new ACSAntInteraction(alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, acsQ0, tau0);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();
@@ -51,7 +51,7 @@ namespace AntAlgorithms
         public override void Iteration()
         {
             antin.UpdateAnts();
-            antin.GlobalPheromoneUpdateAcs();
+            antin.UpdatePheromones();
             CheckBestTour();
         }
 
@@ -60,7 +60,7 @@ namespace AntAlgorithms
             if (antin.UpdateAntsStepwise(algStep))
             {
                 algStep = 1;
-                antin.GlobalPheromoneUpdateAcs();
+                antin.UpdatePheromones();
                 CheckBestTour();
             }
             else

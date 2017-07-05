@@ -78,7 +78,7 @@ namespace AntAlgorithm.tools
             while (!www.downloadHandler.isDone)
                 yield return new WaitForEndOfFrame();
 
-            if (www.isNetworkError)
+            if (www.isError)
             {
                 Debug.Log(www.error);
             }

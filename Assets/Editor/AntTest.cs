@@ -52,7 +52,22 @@ public class AntTest
     [Test]
     public void Eil51ACS()
     {
-        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 20, 0.9);
+        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, 1, 2, 0.1, 10, -1, 0.9, -1);
+        antAlgorithm = antAlgorithmChooser.Algorithm;
+        antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
+        antAlgorithm.Init();
+        for (int i = 0; i < 10000; i++)
+        {
+            antAlgorithm.Iteration();
+        }
+        antAlgorithm.PrintBestTour("Eil51ACS");
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Eil51MM()
+    {
+        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 2, 0.02, 50, -1, 0.9, -1);
         antAlgorithm = antAlgorithmChooser.Algorithm;
         antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
         antAlgorithm.Init();
@@ -60,7 +75,7 @@ public class AntTest
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("Eil51ACS");
+        antAlgorithm.PrintBestTour("Eil51MM");
         Assert.True(true);
     }
 

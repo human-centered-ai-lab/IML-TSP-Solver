@@ -7,6 +7,8 @@
 
 /* Pheromone represents the pheromones between cities */
 
+using System;
+
 public class Pheromones
 {
     // initialization factor for pheromones
@@ -14,11 +16,23 @@ public class Pheromones
     // Matrix of pheromones between city x and city y
     private double[][] pheromones;
     private int numOfCities;
+    // for mmas
+    private double trailMin;
+    private double trailMax;
 
     public Pheromones(int numOfCities, double initPheromoneValue)
     {
         this.numOfCities = numOfCities;
         this.initPheromoneValue = initPheromoneValue;
+    }
+
+    public Pheromones(int numOfCities, double initPheromoneValue, double pBest)
+    {
+        this.numOfCities = numOfCities;
+        this.initPheromoneValue = initPheromoneValue;
+
+        trailMax = initPheromoneValue;
+        trailMin = (trailMax * (1.0 - Math.Pow(pBest, numOfCities))) / (((numOfCities / 2) - 1.0) * Math.Pow(pBest, numOfCities));
     }
 
     // init of pheromones
@@ -46,7 +60,32 @@ public class Pheromones
             return str;
         }
     }
+    
+    public void CheckPheromoneTrailLimits()
+    {
+        for (int i = 0; i < numOfCities; i++)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                if (pheromones[i][j] < trailMin)
+                {
+                    pheromones[i][j] = trailMin;
+                    pheromones[j][i] = trailMin;
+                }
+                else if (pheromones[i][j] > trailMax)
+                {
+                    pheromones[i][j] = trailMax;
+                    pheromones[j][i] = trailMax;
+                }
+            }
+        }
+    }
 
+    public void UpdateTrailLimits(double optimalLength, double rho, double pBest)
+    {
+        trailMax = 1.0/ (rho * optimalLength);
+        trailMin = (trailMax * (1.0 - Math.Pow(pBest, numOfCities))) / (((numOfCities / 2) - 1.0) * Math.Pow(pBest, numOfCities));
+    }
     // decrease the pheromone value between 2 particular cities by one ant 
     public void DecreasePheromoneAs(int cityAId, int cityBId, double decreaseValue)
     {
