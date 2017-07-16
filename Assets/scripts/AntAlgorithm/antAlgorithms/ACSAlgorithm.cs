@@ -41,7 +41,7 @@ namespace AntAlgorithms
 
         public override void Init()
         {
-            antin = new ACSAntInteraction(alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, acsQ0, tau0);
+            antin = new ACSAntInteraction(alpha, beta, q, numOfAnts, Cities, acsQ0);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();

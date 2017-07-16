@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class ASAntInteraction : AntInteraction
 {
-    public ASAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities, double pheromoneTrailInitialValue) : base(alpha, beta, rho, numOfAnts, cities, pheromoneTrailInitialValue)
+    public ASAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities) : base(alpha, beta, rho, numOfAnts, cities)
     {
+        pheromoneTrailInitialValue = numOfAnts / Distances.CalculateNNHeuristic();
         Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue);
         Pheromones.Init();
 
@@ -22,7 +23,7 @@ public class ASAntInteraction : AntInteraction
         for (int i = 1; i < cities.Count; i++)
         {
 
-            moveValid = MoveAntsAs(i);
+            moveValid = MoveAnts(i);
 
             if (!moveValid)
                 throw new Exception("No valid next city!");
@@ -40,9 +41,7 @@ public class ASAntInteraction : AntInteraction
                 InitAntUpdate();
             else
             {
-
-                lastCity = !MoveAntsAs(citiesSoFar - 1);
-
+                lastCity = !MoveAnts(citiesSoFar - 1);
             }
             if (lastCity)
                 CompleteTours();
@@ -51,11 +50,11 @@ public class ASAntInteraction : AntInteraction
         return tourComplete;
     }
     // moves all ants one city ahead. returns false, if no city is available
-    private bool MoveAntsAs(int currentCityPos)
+    private bool MoveAnts(int currentCityPos)
     {
         for (int k = 0; k < Ants.Count; k++)
         {
-            int nextCityIndex = AsDecisionRule(currentCityPos, k);
+            int nextCityIndex = DecisionRule(currentCityPos, k);
             if (nextCityIndex == noValidNextCity)
             {
                 return false;
@@ -68,13 +67,11 @@ public class ASAntInteraction : AntInteraction
     }
 
     // the core of the as algorithm: what city should the  ant select next
-    private int AsDecisionRule(int currCityIndex, int antIndex)
+    private int DecisionRule(int currCityIndex, int antIndex)
     {
         CalculateProbs(currCityIndex, antIndex);
         return ExplorationDecision();
     }
-
-   
 
     //updates the pheromones
     public override void UpdatePheromones()

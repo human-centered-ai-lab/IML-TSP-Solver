@@ -84,7 +84,7 @@ public class Pheromones
     public void UpdateTrailLimits(double optimalLength, double rho, double pBest)
     {
         trailMax = 1.0/ (rho * optimalLength);
-        trailMin = (trailMax * (1.0 - Math.Pow(pBest, numOfCities))) / (((numOfCities / 2) - 1.0) * Math.Pow(pBest, numOfCities));
+        trailMin = (trailMax * (1.0 - Math.Pow(pBest, 1.0 / numOfCities))) / (((numOfCities / 2) - 1.0) * Math.Pow(pBest, 1.0 / numOfCities));
     }
     // decrease the pheromone value between 2 particular cities by one ant 
     public void DecreasePheromoneAs(int cityAId, int cityBId, double decreaseValue)

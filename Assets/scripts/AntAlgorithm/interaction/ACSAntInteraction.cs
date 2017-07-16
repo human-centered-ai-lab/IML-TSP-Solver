@@ -9,15 +9,11 @@ public class ACSAntInteraction : AntInteraction
     private double acsQ0;
     private double tau0;
 
-    public ACSAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities, double pheromoneTrailInitialValue, double acsQ0, double tau0) : base( alpha, beta, rho, numOfAnts, cities, pheromoneTrailInitialValue)
+    public ACSAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities, double acsQ0) : base( alpha, beta, rho, numOfAnts, cities)
     {
-        this.tau0 = tau0;
         this.acsQ0 = acsQ0;
-
-        if (tau0 == -1)
-            this.tau0 = 1.0f / (cities.Count * Distances.CalculateNNHeuristic());
-        if (pheromoneTrailInitialValue == -1)
-            this.pheromoneTrailInitialValue = this.tau0;
+        tau0 = 1.0f / (cities.Count * Distances.CalculateNNHeuristic());
+        pheromoneTrailInitialValue = this.tau0;
 
         Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue);
         Pheromones.Init();
@@ -33,9 +29,7 @@ public class ACSAntInteraction : AntInteraction
 
         for (int i = 1; i < cities.Count; i++)
         {
-            moveValid = MoveAntsAcs(i);
-
-
+            moveValid = MoveAnts(i);    
             if (!moveValid)
                 throw new Exception("No valid next city!");
         }
@@ -55,7 +49,7 @@ public class ACSAntInteraction : AntInteraction
             else
             {
 
-                lastCity = !MoveAntsAcs(citiesSoFar - 1);
+                lastCity = !MoveAnts(citiesSoFar - 1);
             }
             if (lastCity)
                 CompleteTours();
@@ -65,11 +59,11 @@ public class ACSAntInteraction : AntInteraction
     }
 
     // moves all ants one city ahead. returns false, if no city is available
-    private bool MoveAntsAcs(int currentCityAmount)
+    private bool MoveAnts(int currentCityAmount)
     {
         for (int k = 0; k < Ants.Count; k++)
         {
-            int nextCityIndex = AcsDecisionRule(currentCityAmount, k);
+            int nextCityIndex = DecisionRule(currentCityAmount, k);
             if (nextCityIndex == noValidNextCity)
             {
                 return false;
@@ -79,14 +73,15 @@ public class ACSAntInteraction : AntInteraction
             Ants[k].SetCityVisited(nextCityIndex);
 
             // local update for pheromones
-            LocalPheromoneUpdateAcs(k, currentCityAmount);
+            LocalPheromoneUpdate(k, currentCityAmount);
         }
+
         return true;
     }
 
 
     // the core of the acs algorithm: what city should the  ant select next
-    private int AcsDecisionRule(int currCityIndex, int antIndex)
+    private int DecisionRule(int currCityIndex, int antIndex)
     {
         double q = random.NextDouble();
 
@@ -96,6 +91,7 @@ public class ACSAntInteraction : AntInteraction
         {
             return cities[bestProbIndex].Id;
         }
+
         return ExplorationDecision();
     }
 
@@ -114,7 +110,7 @@ public class ACSAntInteraction : AntInteraction
     }
 
     // the local pheromone update is done after each step (each ant one city step)
-    private void LocalPheromoneUpdateAcs(int antIndex, int currentCityAmount)
+    private void LocalPheromoneUpdate(int antIndex, int currentCityAmount)
     {
         int prevCity = Ants[antIndex].GetCityOfTour(currentCityAmount - 1);
         int currentCity = Ants[antIndex].GetCityOfTour(currentCityAmount);

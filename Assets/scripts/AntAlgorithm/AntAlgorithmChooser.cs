@@ -28,19 +28,19 @@ namespace AntAlgorithms
     {
         public static double PHERDEFAULTINITVALUE = 0.1;
 
-        public AntAlgorithmChooser(Mode mode, int alpha, int beta, double q, int numOfAnts, double pheromoneTrailInitialValue, double acsQ0, double tau0)
+        public AntAlgorithmChooser(Mode mode, int alpha, int beta, double q, int numOfAnts, double acsQ0, double pBest)
         {
             // TODO: intelligent switch due to parameters
             switch (mode)
             {
                 case Mode.AntSystem:
-                    Algorithm = new ASAlgorithm(alpha, beta, q, numOfAnts, pheromoneTrailInitialValue);
+                    Algorithm = new ASAlgorithm(alpha, beta, q, numOfAnts);
                     break;
                 case Mode.AntColonySystem:
-                    Algorithm = new ACSAlgorithm(alpha, beta, q, numOfAnts, tau0);
+                    Algorithm = new ACSAlgorithm(alpha, beta, q, numOfAnts, acsQ0);
                     break;
                 case Mode.MinMaxAntSystem:
-                    Algorithm = new MinMaxAlgorithm(alpha, beta, q, numOfAnts, 0.05);
+                    Algorithm = new MinMaxAlgorithm(alpha, beta, q, numOfAnts, pBest);
                     break;
             }
         }

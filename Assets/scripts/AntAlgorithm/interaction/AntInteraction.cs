@@ -38,14 +38,13 @@ public abstract class AntInteraction
 
     protected Random random = new Random();
 
-    public AntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities, double pheromoneTrailInitialValue)
+    public AntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities)
     {
         this.cities = cities;
         this.alpha = alpha;
         this.beta = beta;
         this.rho = rho;
         this.numOfAnts = numOfAnts;
-        this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
 
         //calculates distances
         Distances = new Distances(cities);
@@ -93,6 +92,7 @@ public abstract class AntInteraction
         for (int i = 0; i < probs.Length; i++)
         {
             probs[i] = selectionProbability[i] / sumProbabilities;
+
             if (probs[i] > probTemp)
             {
                 bestProbIndex = i;
@@ -150,6 +150,7 @@ public abstract class AntInteraction
                 minTourLengthIndex = i;
             }
         }
+
         return Ants[minTourLengthIndex];
     }
 

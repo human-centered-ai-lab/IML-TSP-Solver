@@ -6,10 +6,11 @@ using UnityEngine;
 public class MinMaxAntInteraction : AntInteraction
 {
     private double pBest;
-    public MinMaxAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities, double pheromoneTrailInitialValue, double pBest) : base(alpha, beta, rho, numOfAnts, cities, pheromoneTrailInitialValue)
+
+    public MinMaxAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities, double pBest) : base(alpha, beta, rho, numOfAnts, cities)
     {
         this.pBest = pBest;
-        base.pheromoneTrailInitialValue = 1.0f / (rho * Distances.CalculateNNHeuristic());
+        pheromoneTrailInitialValue = 1.0f / (rho * Distances.CalculateNNHeuristic());
 
         Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue, pBest);
         Pheromones.Init();
@@ -51,13 +52,17 @@ public class MinMaxAntInteraction : AntInteraction
 
         EvaporatePheromones();
 
-        double increaseFactor = (1.0 / Ants[bestAntIndex].TourLength) * rho;
+        double increaseFactor = (1.0 / Ants[bestAntIndex].TourLength);
+
+        //Debug.Log("Best Ant: " + bestAntIndex + " Increase Factor: "+ increaseFactor);
+        //Debug.Log("Tour " + Ants[bestAntIndex].ToString);
 
         DepositPheromones(bestAntIndex, increaseFactor);
-      
         Pheromones.UpdateTrailLimits(Ants[bestAntIndex].TourLength, rho, pBest);
         Pheromones.CheckPheromoneTrailLimits();
-        Debug.Log("Pheromones: " + Pheromones.ToString);
+
+       // Debug.Log("Pheromones: " + Pheromones.ToString);
+
 
         FinishIteration();
     }

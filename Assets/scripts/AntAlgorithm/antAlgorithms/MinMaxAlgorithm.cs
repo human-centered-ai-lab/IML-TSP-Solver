@@ -27,7 +27,7 @@ namespace AntAlgorithms
 
         public override void Init()
         {
-            antin = new MinMaxAntInteraction(alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, pBest);
+            antin = new MinMaxAntInteraction(alpha, beta, q, numOfAnts, Cities, pBest);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();

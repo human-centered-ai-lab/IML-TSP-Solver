@@ -46,12 +46,12 @@ namespace AntAlgorithms
         public abstract void Step();
 
         // debug output for best tour
-        public void PrintBestTour(string context)
+        public void PrintBestTour(string context, int offset)
         {
             string str = "";
             foreach (int cityIndex in BestTour)
             {
-                str += cityIndex + " ";
+                str += (cityIndex + offset) + " ";
             }
             Debug.Log("[" + context + "] Best Dist: " + TourLength + " Tour: " + str);
         }
