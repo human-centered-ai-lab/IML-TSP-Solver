@@ -8,13 +8,14 @@
 /* Pheromone represents the pheromones between cities */
 
 using System;
+using util;
 
 public class Pheromones
 {
     // initialization factor for pheromones
     private double initPheromoneValue;
     // Matrix of pheromones between city x and city y
-    private double[][] pheromones;
+    private double[,] _pheromones;
     private int numOfCities;
     // for mmas
     private double trailMin;
@@ -38,12 +39,14 @@ public class Pheromones
     // init of pheromones
     public void Init()
     {
-        pheromones = new double[numOfCities][];
-        for (int i = 0; i < numOfCities; i++)
-            pheromones[i] = new double[numOfCities];
-        for (int i = 0; i < pheromones.Length; i++)
-            for (int j = 0; j < pheromones[i].Length; j++)
-                pheromones[i][j] = initPheromoneValue;
+        _pheromones = new double[numOfCities, numOfCities];
+        for (int i = 0; i < _pheromones.GetLength(0); i++)
+        {
+            for (int j = 0; j < _pheromones.GetLength(1); j++)
+            {
+                _pheromones[i, j] = initPheromoneValue;
+            }
+        }
     }
 
     public new string ToString
@@ -51,31 +54,33 @@ public class Pheromones
         get
         {
             string str = "";
-            for (int i = 0; i < pheromones.Length; i++)
+            for (int i = 0; i < _pheromones.GetLength(0); i++)
             {
                 str += "\n";
-                for (int j = 0; j < pheromones[i].Length; j++)
-                    str += pheromones[i][j] + " ";
+                for (int j = 0; j < _pheromones.GetLength(1); j++)
+                {
+                    str += _pheromones[i, j] + " ";
+                }
             }
             return str;
         }
     }
-    
+
     public void CheckPheromoneTrailLimits()
     {
         for (int i = 0; i < numOfCities; i++)
         {
             for (int j = 0; j < i; j++)
             {
-                if (pheromones[i][j] < trailMin)
+                if (_pheromones[i, j] < trailMin)
                 {
-                    pheromones[i][j] = trailMin;
-                    pheromones[j][i] = trailMin;
+                    _pheromones[i, j] = trailMin;
+                    _pheromones[j, i] = trailMin;
                 }
-                else if (pheromones[i][j] > trailMax)
+                else if (_pheromones[i, j] > trailMax)
                 {
-                    pheromones[i][j] = trailMax;
-                    pheromones[j][i] = trailMax;
+                    _pheromones[i, j] = trailMax;
+                    _pheromones[j, i] = trailMax;
                 }
             }
         }
@@ -89,22 +94,27 @@ public class Pheromones
     // decrease the pheromone value between 2 particular cities by one ant 
     public void DecreasePheromoneAs(int cityAId, int cityBId, double decreaseValue)
     {
-        pheromones[cityAId][cityBId] = decreaseValue * pheromones[cityAId][cityBId];
+        _pheromones[cityAId, cityBId] = decreaseValue * _pheromones[cityAId, cityBId];
     }
 
     // decrease the pheromone value between 2 particular cities by one ant 
     public void IncreasePheromoneAs(int cityAId, int cityBId, double increaseValue)
     {
-        pheromones[cityAId][cityBId] = pheromones[cityAId][cityBId] + increaseValue;
+        _pheromones[cityAId, cityBId] = _pheromones[cityAId, cityBId] + increaseValue;
     }
 
     public void SetPheromone(int cityAId, int cityBId, double value)
     {
-        pheromones[cityAId][cityBId] = value;
+        _pheromones[cityAId, cityBId] = value;
     }
 
     public double GetPheromone(int cityAId, int cityBId)
     {
-        return pheromones[cityAId][cityBId];
+        return _pheromones[cityAId, cityBId];
+    }
+
+    public double[] GetPheromones(int cityId)
+    {
+        return _pheromones.GetRow(cityId);
     }
 }
