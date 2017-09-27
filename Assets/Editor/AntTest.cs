@@ -67,19 +67,22 @@ public class AntTest
     [Test]
     public void Eil51MM()
     {
-        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 5, 0.02, 51, -1, 0.05);
-        antAlgorithm = antAlgorithmChooser.Algorithm;
-        antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
-
-
-        antAlgorithm.Init();
-        for (int i = 0; i < 1000; i++)
+        for (int x = 0; x < 1; x++)
         {
-            antAlgorithm.Iteration();
-        }
+            antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 2, 0.02, 51, -1, 0.05);
+            antAlgorithm = antAlgorithmChooser.Algorithm;
+            antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
 
-        
-        antAlgorithm.PrintBestTour("Eil51MM",1);
+
+            antAlgorithm.Init();
+            for (int i = 0; i < 10000; i++)
+            {
+                antAlgorithm.Iteration();
+            }
+
+            antAlgorithm.PrintBestTour("Eil51MM-"+ x, 1);
+
+        }
         Assert.True(true);
     }
 
@@ -164,19 +167,18 @@ public class AntTest
         antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 2, 0.02, 8, -1, 0.05);
         antAlgorithm = antAlgorithmChooser.Algorithm;
 
-        cities.Add(new City(2, 4, 0));
-        cities.Add(new City(1, 9, 1));
-        cities.Add(new City(3, 8, 2));
-        cities.Add(new City(9, 1, 3));
-        cities.Add(new City(10, 1, 4));
-
-        cities.Add(new City(5, 4, 5));
-        cities.Add(new City(1, 11, 6));
-        cities.Add(new City(3, 4, 7));
+        cities.Add(new City(10, 10, 0));
+        cities.Add(new City(35, 20, 1));
+        cities.Add(new City(20, 40, 2));
+        cities.Add(new City(45, 65, 3));
+        cities.Add(new City(55, 15, 4));
+        cities.Add(new City(65, 40, 5));
+        cities.Add(new City(75, 60, 6));
+        cities.Add(new City(75, 30, 7));
 
         antAlgorithm.Cities = cities;
         antAlgorithm.Init();
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
             antAlgorithm.Iteration();
         antAlgorithm.PrintBestTour("test8", 1);
         Assert.True(true);
