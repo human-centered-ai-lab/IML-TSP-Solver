@@ -9,19 +9,23 @@
    "An  investigation  of  some  properties of an Ant algorithm" - 1992*/
 
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AntAlgorithms
 {
     public class MinMaxAlgorithm : AntAlgorithm
     {
         private double pBest;
-        public MinMaxAlgorithm(int alpha, int beta, double q, int numOfAnts, double pBest)
+        private double smoothingFactor;
+
+        public MinMaxAlgorithm(int alpha, int beta, double q, int numOfAnts, double pBest, double smoothingFactor)
         {
             this.pBest = pBest;
             this.alpha = alpha;
             this.beta = beta;
             this.q = q;
             this.numOfAnts = numOfAnts;
+            this.smoothingFactor = smoothingFactor;
             this.pheromoneTrailInitialValue = AntAlgorithmChooser.PHERDEFAULTINITVALUE;
         }
 
@@ -38,7 +42,10 @@ namespace AntAlgorithms
         {
             antin.UpdateAnts();
             antin.UpdatePheromones();
-            CheckBestTour();
+            if (!CheckBestTour())
+            {
+                antin.reinitPheromones(smoothingFactor);
+            }            
         }
 
         public override void Step()

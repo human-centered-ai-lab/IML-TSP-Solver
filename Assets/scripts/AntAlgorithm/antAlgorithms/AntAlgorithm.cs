@@ -15,6 +15,8 @@ namespace AntAlgorithms
 {
     public abstract class AntAlgorithm
     {
+        public static int REINITIALIZATIONAFTERXITERATIONS = 400;
+
         // influence of pheromone for decision
         protected int alpha;
         // influence of distance for decision
@@ -32,6 +34,9 @@ namespace AntAlgorithms
 
         //helper
         protected int algStep;
+        private int reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
+        private int iteration = 0;
+
 
         // inits step of the algorithm
         // usage: use it once for initialization
@@ -56,22 +61,31 @@ namespace AntAlgorithms
             Debug.Log("[" + context + "] Best Dist: " + TourLength + " Tour: " + str);
         }
 
+        //returns false if reinitialization is needed.
         protected bool CheckBestTour()
         {
+            iteration++;
             Ant bestAnt = antin.FindBestAnt();
             double tourLengthTemp = bestAnt.TourLength;
+            reinitializationThreshhold--;
 
             if (tourLengthTemp < TourLength)
             {
+                reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
                 TourLength = tourLengthTemp;
                 BestTour.Clear();
                 for (int i = 0; i < bestAnt.Tour.Count; i++)
                 {
                     BestTour.Add(bestAnt.Tour[i]);
                 }
-                return true;
             }
-            return false;
+            if (reinitializationThreshhold <= 0)
+            {
+                reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
+                return false;
+            }
+
+            return true;
         }
 
         // usage: set cities before the initialization

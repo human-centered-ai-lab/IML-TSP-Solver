@@ -255,6 +255,12 @@ public abstract class AntInteraction
         }
     }
 
+    //reinitializing pheromones, usually if search stagnation occurs.
+    public void reinitPheromones(double smoothingFactor)
+    {
+        Pheromones.reinitTrails(smoothingFactor);
+    }
+
     // deposit procedure of pheromones
     protected void FinishIteration()
     {

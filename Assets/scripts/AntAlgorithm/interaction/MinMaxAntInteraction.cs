@@ -15,8 +15,12 @@ public class MinMaxAntInteraction : AntInteraction
         Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue, pBest);
         Pheromones.Init();
 
+        //Debug.Log("InitValue Pheromones: " + pheromoneTrailInitialValue);
+
         choiceInfo = new ChoiceInfo(cities.Count);
         choiceInfo.UpdateChoiceInfo(Pheromones, Distances, alpha, beta);
+        //Debug.Log("Choices: " + choiceInfo.ToString);
+
     }
 
     public override void UpdateAnts()
@@ -54,17 +58,17 @@ public class MinMaxAntInteraction : AntInteraction
 
         double increaseFactor = (1.0 / Ants[bestAntIndex].TourLength);
 
-        //Debug.Log("Best Ant: " + bestAntIndex + " Increase Factor: "+ increaseFactor);
-        //Debug.Log("Tour " + Ants[bestAntIndex].ToString);
+       // Debug.Log("Best Ant: " + bestAntIndex + " Increase Factor: "+ increaseFactor);
+       // Debug.Log("Tour " + Ants[bestAntIndex].ToString);
 
         DepositPheromones(bestAntIndex, increaseFactor);
         Pheromones.UpdateTrailLimits(Ants[bestAntIndex].TourLength, rho, pBest);
         Pheromones.CheckPheromoneTrailLimits();
-
-       // Debug.Log("Pheromones: " + Pheromones.ToString);
-
+       // (Debug.Log("Pheromones: " + Pheromones.ToString);
 
         FinishIteration();
+        //Debug.Log("Choices: " + choiceInfo.ToString);
+
     }
 
     // moves all ants one city ahead. returns false, if no city is available

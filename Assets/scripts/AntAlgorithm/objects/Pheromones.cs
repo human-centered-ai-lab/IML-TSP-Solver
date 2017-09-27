@@ -8,6 +8,7 @@
 /* Pheromone represents the pheromones between cities */
 
 using System;
+using UnityEngine;
 using util;
 
 public class Pheromones
@@ -33,7 +34,7 @@ public class Pheromones
         this.initPheromoneValue = initPheromoneValue;
 
         trailMax = initPheromoneValue;
-        trailMin = (trailMax * (1.0 - Math.Pow(pBest, numOfCities))) / (((numOfCities / 2) - 1.0) * Math.Pow(pBest, numOfCities));
+        trailMin = (trailMax * (1.0 - Math.Pow(pBest, numOfCities))) / (((numOfCities / 2.0) - 1.0) * Math.Pow(pBest, numOfCities));
     }
 
     // init of pheromones
@@ -59,7 +60,7 @@ public class Pheromones
                 str += "\n";
                 for (int j = 0; j < _pheromones.GetLength(1); j++)
                 {
-                    str += _pheromones[i, j] + " ";
+                    str += _pheromones[i, j].ToString("#.000000") + " ";
                 }
             }
             return str;
@@ -88,8 +89,23 @@ public class Pheromones
 
     public void UpdateTrailLimits(double optimalLength, double rho, double pBest)
     {
-        trailMax = 1.0/ (rho * optimalLength);
+        trailMax = 1.0 / (rho * optimalLength);
         trailMin = (trailMax * (1.0 - Math.Pow(pBest, 1.0 / numOfCities))) / (((numOfCities / 2) - 1.0) * Math.Pow(pBest, 1.0 / numOfCities));
+    }
+
+    public void reinitTrails(double smoothingFactor)
+    {
+        //TODO: faster
+        double pheromone;
+
+        for (int i = 0; i < _pheromones.GetLength(0); i++)
+        {
+            for (int j = 0; j < _pheromones.GetLength(1); j++)
+            {
+                pheromone = _pheromones[i, j];
+                _pheromones[i, j] = pheromone + (smoothingFactor * (trailMax - pheromone));
+            }
+        }
     }
     // decrease the pheromone value between 2 particular cities by one ant 
     public void DecreasePheromoneAs(int cityAId, int cityBId, double decreaseValue)

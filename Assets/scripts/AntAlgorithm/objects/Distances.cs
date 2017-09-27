@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Distances
 {
@@ -82,7 +83,7 @@ public class Distances
             }
             str += "\n";
         }
-        //Debug.Log("Distance matrix: " + str);
+      //  Debug.Log("Distance matrix: " + str);
     }
 
     /* Calculate all nearest neigbours of all cities in array order 

@@ -122,5 +122,4 @@ public class ACSAntInteraction : AntInteraction
         choiceInfo.SetChoice(currentCity, prevCity, choiceInfo.GetChoice(prevCity, currentCity));
     }
 
-
 }
