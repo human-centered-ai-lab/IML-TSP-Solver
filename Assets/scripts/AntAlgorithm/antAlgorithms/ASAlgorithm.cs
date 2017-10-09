@@ -8,6 +8,7 @@
 /* ASAlgorithm represents the AS ant algorithm implementation:
    "An  investigation  of  some  properties of an Ant algorithm" - 1992*/
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 
 namespace AntAlgorithms
@@ -33,6 +34,7 @@ namespace AntAlgorithms
 
         public override void Iteration()
         {
+            iteration++;
             antin.UpdateAnts();
             antin.UpdatePheromones();
             CheckBestTour();

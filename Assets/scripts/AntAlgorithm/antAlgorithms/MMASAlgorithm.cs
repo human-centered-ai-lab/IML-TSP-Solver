@@ -8,17 +8,18 @@
 /* ASAlgorithm represents the AS ant algorithm implementation:
    "An  investigation  of  some  properties of an Ant algorithm" - 1992*/
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AntAlgorithms
 {
-    public class MinMaxAlgorithm : AntAlgorithm
+    public class MMASAlgorithm : AntAlgorithm
     {
         private double pBest;
         private double smoothingFactor;
 
-        public MinMaxAlgorithm(int alpha, int beta, double q, int numOfAnts, double pBest, double smoothingFactor)
+        public MMASAlgorithm(int alpha, int beta, double q, int numOfAnts, double pBest, double smoothingFactor)
         {
             this.pBest = pBest;
             this.alpha = alpha;
@@ -31,7 +32,7 @@ namespace AntAlgorithms
 
         public override void Init()
         {
-            antin = new MinMaxAntInteraction(alpha, beta, q, numOfAnts, Cities, pBest);
+            antin = new MMASAntInteraction(alpha, beta, q, numOfAnts, Cities, pBest);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();
@@ -40,6 +41,7 @@ namespace AntAlgorithms
 
         public override void Iteration()
         {
+            iteration++;
             antin.UpdateAnts();
             antin.UpdatePheromones();
             if (!CheckBestTour())

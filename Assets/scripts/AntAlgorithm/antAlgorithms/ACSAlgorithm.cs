@@ -8,6 +8,7 @@
 /* ACSAlgorithm represents the ACS ant algorithm implementation:
    "Ant colony system: a cooperative learning approach to the traveling salesman problem" - 1996*/
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 
 namespace AntAlgorithms
@@ -50,6 +51,7 @@ namespace AntAlgorithms
 
         public override void Iteration()
         {
+            iteration++;
             antin.UpdateAnts();
             antin.UpdatePheromones();
             CheckBestTour();

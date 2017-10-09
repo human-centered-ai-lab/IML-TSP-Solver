@@ -8,6 +8,7 @@
 /* AntAlgorithm is an abstract class for all antAlgorithms 
 */
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace AntAlgorithms
 {
     public abstract class AntAlgorithm
     {
-        public static int REINITIALIZATIONAFTERXITERATIONS = 400;
+        public static int REINITIALIZATIONAFTERXITERATIONS = 500;
 
         // influence of pheromone for decision
         protected int alpha;
@@ -28,6 +29,7 @@ namespace AntAlgorithms
         protected AntInteraction antin;
 
         protected int numOfAnts;
+        protected int iteration;
         protected double pheromoneTrailInitialValue = -1;
 
         // output - updateing after every algorithm iteration
@@ -35,7 +37,6 @@ namespace AntAlgorithms
         //helper
         protected int algStep;
         private int reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
-        private int iteration = 0;
 
 
         // inits step of the algorithm
@@ -64,13 +65,13 @@ namespace AntAlgorithms
         //returns false if reinitialization is needed.
         protected bool CheckBestTour()
         {
-            iteration++;
             Ant bestAnt = antin.FindBestAnt();
             double tourLengthTemp = bestAnt.TourLength;
             reinitializationThreshhold--;
 
             if (tourLengthTemp < TourLength)
             {
+                BestIteration = iteration;
                 reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
                 TourLength = tourLengthTemp;
                 BestTour.Clear();
@@ -78,9 +79,11 @@ namespace AntAlgorithms
                 {
                     BestTour.Add(bestAnt.Tour[i]);
                 }
+                Debug.Log("BestIter:" + iteration + " length:" + tourLengthTemp);
             }
-            if (reinitializationThreshhold <= 0)
+            if (reinitializationThreshhold <= 0 && iteration > 1500)
             {
+                Debug.Log("Reinit i:"+iteration + " length:" + tourLengthTemp);
                 reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
                 return false;
             }
@@ -106,5 +109,8 @@ namespace AntAlgorithms
         public double TourLength { get; protected set; }
 
         public List<int> BestTour { get; protected set; }
+
+        public int BestIteration { get; protected set; }
+
     }
 }

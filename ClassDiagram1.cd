@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Ant" Collapsed="true">
+    <Position X="6.5" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAJiIAAQAAgAAAAEAAQgAAAAAEAAAAAAAEYAAIAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\objects\Ant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.AntAlgorithmChooser" Collapsed="true">
+    <Position X="6.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\AntAlgorithmChooser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.ACSAlgorithm" Collapsed="true">
+    <Position X="8.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgIAAAAAAAAAQAAAAAAAAAAAAAAAAAIAACAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\antAlgorithms\ACSAlgorithm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.AntAlgorithm" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kAAAAAAABARAAAQAQAQIBQABAAAQEAAAICISAAAggAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\antAlgorithms\AntAlgorithm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.ASAlgorithm" Collapsed="true">
+    <Position X="6.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAIAACAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\antAlgorithms\ASAlgorithm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.MMASAlgorithm" Collapsed="true">
+    <Position X="11" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAQAAAAAAAAAAAAgAAAAIAACAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\antAlgorithms\MMASAlgorithm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Distances" Collapsed="true">
+    <Position X="8.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAABAIAAAAAAAAAAAEAQAAEAAAAAAAAAAABAAAAg=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\objects\Distances.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pheromones" Collapsed="true">
+    <Position X="10" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>MADAAAAAAAAAAgAECAAABQAAAAEAAgAAAEAiAAAAAEA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\objects\Pheromones.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="City" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\objects\City.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChoiceInfo" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAgAEAIAAAAAAAgAAAAAAAAAAAgAgAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\objects\ChoiceInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.interaction.ACSAntInteraction" Collapsed="true">
+    <Position X="6.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgIIAAAAAAAAQAAAIAAAAAAgAAAEAAAAAAAAAAgAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\interaction\ACSAntInteraction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.interaction.AntInteraction" Collapsed="true">
+    <Position X="8.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gIAAAAAEAAAAEgQBAAIgBoARIAAREEBFAAYVABgBmAI=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\interaction\AntInteraction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.interaction.ASAntInteraction" Collapsed="true">
+    <Position X="8.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAQAAAIAAAAAAgAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\interaction\ASAntInteraction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AntAlgorithms.interaction.MMASAntInteraction" Collapsed="true">
+    <Position X="10.75" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAQAAAIAAAAAAgAgAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\AntAlgorithm\interaction\MinMaxAntInteraction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

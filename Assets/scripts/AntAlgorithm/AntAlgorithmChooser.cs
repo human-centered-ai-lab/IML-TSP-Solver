@@ -40,7 +40,7 @@ namespace AntAlgorithms
                     Algorithm = new ACSAlgorithm(alpha, beta, q, numOfAnts, acsQ0);
                     break;
                 case Mode.MinMaxAntSystem:
-                    Algorithm = new MinMaxAlgorithm(alpha, beta, q, numOfAnts, pBest, 0.8);
+                    Algorithm = new MMASAlgorithm(alpha, beta, q, numOfAnts, pBest, 0.8);
                     break;
             }
         }

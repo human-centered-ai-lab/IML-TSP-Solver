@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Reflection;
 using AntAlgorithm.tools;
+using UnityEngine;
 
 [assembly: AssemblyVersion("0.1")]
 
@@ -72,10 +73,8 @@ public class AntTest
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 2, 0.02, 51, -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
             antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
-
-
             antAlgorithm.Init();
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 4000; i++)
             {
                 antAlgorithm.Iteration();
             }
