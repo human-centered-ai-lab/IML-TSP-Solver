@@ -8,33 +8,24 @@
 /* ASAlgorithm represents the AS ant algorithm implementation:
    "An  investigation  of  some  properties of an Ant algorithm" - 1992*/
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 
 namespace AntAlgorithms
 {
     public class ASAlgorithm : AntAlgorithm
     {
-        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts, double pheromoneTrailInitialValue)
+        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts)
         {
             this.alpha = alpha;
             this.beta = beta;
             this.q = q;
             this.numOfAnts = numOfAnts;
-            this.pheromoneTrailInitialValue = pheromoneTrailInitialValue;
-        }
-
-        public ASAlgorithm(int alpha, int beta, double q, int numOfAnts)     
-        {
-            this.alpha = alpha;
-            this.beta = beta;
-            this.q = q;
-            this.numOfAnts = numOfAnts;
-            this.pheromoneTrailInitialValue = AntAlgorithmChooser.PHERDEFAULTINITVALUE;
         }
 
         public override void Init()
         {
-            antin = new AntInteraction(Mode.AntSystem, alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, 0, 0);
+            antin = new ASAntInteraction(alpha, beta, q, numOfAnts, Cities);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();
@@ -43,8 +34,9 @@ namespace AntAlgorithms
 
         public override void Iteration()
         {
+            iteration++;
             antin.UpdateAnts();
-            antin.UpdatePheromonesAs();
+            antin.UpdatePheromones();
             CheckBestTour();
         }
 
@@ -53,7 +45,7 @@ namespace AntAlgorithms
             if (antin.UpdateAntsStepwise(algStep))
             {
                 algStep = 1;
-                antin.UpdatePheromonesAs();
+                antin.UpdatePheromones();
                 CheckBestTour();
             }
             else

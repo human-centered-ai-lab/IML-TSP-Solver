@@ -8,6 +8,7 @@
 /* AntAlgorithm is an abstract class for all antAlgorithms 
 */
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ namespace AntAlgorithms
 {
     public abstract class AntAlgorithm
     {
+        public static int REINITIALIZATIONAFTERXITERATIONS = 500;
+
         // influence of pheromone for decision
         protected int alpha;
         // influence of distance for decision
@@ -26,12 +29,15 @@ namespace AntAlgorithms
         protected AntInteraction antin;
 
         protected int numOfAnts;
+        protected int iteration;
         protected double pheromoneTrailInitialValue = -1;
 
         // output - updateing after every algorithm iteration
 
         //helper
         protected int algStep;
+        private int reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
+
 
         // inits step of the algorithm
         // usage: use it once for initialization
@@ -46,32 +52,43 @@ namespace AntAlgorithms
         public abstract void Step();
 
         // debug output for best tour
-        public void PrintBestTour(string context)
+        public void PrintBestTour(string context, int offset)
         {
             string str = "";
             foreach (int cityIndex in BestTour)
             {
-                str += cityIndex + " ";
+                str += (cityIndex + offset) + " ";
             }
             Debug.Log("[" + context + "] Best Dist: " + TourLength + " Tour: " + str);
         }
 
+        //returns false if reinitialization is needed.
         protected bool CheckBestTour()
         {
             Ant bestAnt = antin.FindBestAnt();
             double tourLengthTemp = bestAnt.TourLength;
+            reinitializationThreshhold--;
 
             if (tourLengthTemp < TourLength)
             {
+                BestIteration = iteration;
+                reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
                 TourLength = tourLengthTemp;
                 BestTour.Clear();
                 for (int i = 0; i < bestAnt.Tour.Count; i++)
                 {
                     BestTour.Add(bestAnt.Tour[i]);
                 }
-                return true;
+                Debug.Log("BestIter:" + iteration + " length:" + tourLengthTemp);
             }
-            return false;
+            if (reinitializationThreshhold <= 0 && iteration > 1500)
+            {
+                Debug.Log("Reinit i:"+iteration + " length:" + tourLengthTemp);
+                reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
+                return false;
+            }
+
+            return true;
         }
 
         // usage: set cities before the initialization
@@ -92,5 +109,8 @@ namespace AntAlgorithms
         public double TourLength { get; protected set; }
 
         public List<int> BestTour { get; protected set; }
+
+        public int BestIteration { get; protected set; }
+
     }
 }

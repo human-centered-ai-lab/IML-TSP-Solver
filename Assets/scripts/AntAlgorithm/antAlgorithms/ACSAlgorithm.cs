@@ -8,6 +8,7 @@
 /* ACSAlgorithm represents the ACS ant algorithm implementation:
    "Ant colony system: a cooperative learning approach to the traveling salesman problem" - 1996*/
 
+using AntAlgorithms.interaction;
 using System.Collections.Generic;
 
 namespace AntAlgorithms
@@ -41,7 +42,7 @@ namespace AntAlgorithms
 
         public override void Init()
         {
-            antin = new AntInteraction(Mode.AntColonySystem, alpha, beta, q, numOfAnts, Cities, pheromoneTrailInitialValue, acsQ0, tau0);
+            antin = new ACSAntInteraction(alpha, beta, q, numOfAnts, Cities, acsQ0);
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();
@@ -50,8 +51,9 @@ namespace AntAlgorithms
 
         public override void Iteration()
         {
+            iteration++;
             antin.UpdateAnts();
-            antin.GlobalPheromoneUpdateAcs();
+            antin.UpdatePheromones();
             CheckBestTour();
         }
 
@@ -60,7 +62,7 @@ namespace AntAlgorithms
             if (antin.UpdateAntsStepwise(algStep))
             {
                 algStep = 1;
-                antin.GlobalPheromoneUpdateAcs();
+                antin.UpdatePheromones();
                 CheckBestTour();
             }
             else

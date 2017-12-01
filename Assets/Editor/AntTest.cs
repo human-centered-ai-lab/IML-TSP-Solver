@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Reflection;
 using AntAlgorithm.tools;
+using UnityEngine;
 
 [assembly: AssemblyVersion("0.1")]
 
@@ -52,15 +53,35 @@ public class AntTest
     [Test]
     public void Eil51ACS()
     {
-        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 20, 0.9);
+        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, 1, 2, 0.1, 10, 0.9, -1);
         antAlgorithm = antAlgorithmChooser.Algorithm;
         antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
         antAlgorithm.Init();
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 10000; i++)
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("Eil51ACS");
+        antAlgorithm.PrintBestTour("Eil51ACS", 1);
+        Assert.True(true);
+    }
+
+    [Test]
+    public void Eil51MM()
+    {
+        for (int x = 0; x < 1; x++)
+        {
+            antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 2, 0.02, 51, -1, 0.05);
+            antAlgorithm = antAlgorithmChooser.Algorithm;
+            antAlgorithm.Cities = TSPImporter.ImportTsp("eil51.tsp");
+            antAlgorithm.Init();
+            for (int i = 0; i < 4000; i++)
+            {
+                antAlgorithm.Iteration();
+            }
+
+            antAlgorithm.PrintBestTour("Eil51MM-"+ x, 1);
+
+        }
         Assert.True(true);
     }
 
@@ -75,7 +96,7 @@ public class AntTest
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("Eil51AS");
+        antAlgorithm.PrintBestTour("Eil51AS", 1);
         Assert.True(true);
     }
 
@@ -90,7 +111,7 @@ public class AntTest
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("Oliver30ACS");
+        antAlgorithm.PrintBestTour("Oliver30ACS", 1);
         Assert.True(true);
     }
 
@@ -105,14 +126,14 @@ public class AntTest
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("Oliver30AS");
+        antAlgorithm.PrintBestTour("Oliver30AS", 1);
         Assert.True(true);
     }
 
     [Test]
     public void Oliver30ACSWithCustomPara()
     {
-        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, 1, 2, 0.1, 10, 0.9, 0.000088, 0.000088);
+        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, 1, 2, 0.1, 10, 0.9, -1);
         antAlgorithm = antAlgorithmChooser.Algorithm;
         antAlgorithm.Cities = TSPImporter.ImportTsp("oliver30.tsp");
         antAlgorithm.Init();
@@ -120,7 +141,7 @@ public class AntTest
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("Oliver30ACSWithCustomPara");
+        antAlgorithm.PrintBestTour("Oliver30ACSWithCustomPara", 1);
         Assert.True(true);
     }
 
@@ -135,31 +156,30 @@ public class AntTest
         {
             antAlgorithm.Iteration();
         }
-        antAlgorithm.PrintBestTour("berlin52");
+        antAlgorithm.PrintBestTour("berlin52", 1);
         Assert.True(true);
     }
 
     [Test]
     public void test8()
     {
-        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(1, 2, 0.1, 10, 0.9);
+        antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, 1, 2, 0.02, 8, -1, 0.05);
         antAlgorithm = antAlgorithmChooser.Algorithm;
 
-        cities.Add(new City(2, 4, 0));
-        cities.Add(new City(1, 9, 1));
-        cities.Add(new City(3, 8, 2));
-        cities.Add(new City(9, 1, 3));
-        cities.Add(new City(10, 1, 4));
-
-        cities.Add(new City(5, 4, 5));
-        cities.Add(new City(1, 11, 6));
-        cities.Add(new City(3, 4, 7));
+        cities.Add(new City(10, 10, 0));
+        cities.Add(new City(35, 20, 1));
+        cities.Add(new City(20, 40, 2));
+        cities.Add(new City(45, 65, 3));
+        cities.Add(new City(55, 15, 4));
+        cities.Add(new City(65, 40, 5));
+        cities.Add(new City(75, 60, 6));
+        cities.Add(new City(75, 30, 7));
 
         antAlgorithm.Cities = cities;
         antAlgorithm.Init();
-        for (int i = 0; i < 400; i++)
+        for (int i = 0; i < 4; i++)
             antAlgorithm.Iteration();
-        antAlgorithm.PrintBestTour("test8");
+        antAlgorithm.PrintBestTour("test8", 1);
         Assert.True(true);
     }
 
