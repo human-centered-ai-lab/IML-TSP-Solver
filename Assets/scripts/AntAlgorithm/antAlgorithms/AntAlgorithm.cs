@@ -95,9 +95,9 @@ namespace AntAlgorithms
         public List<City> Cities { get; set; }
 
         // after the initialization you can modify each ant
-        public Ant GetAnt(int antIndex)
+        public List<Ant> Ants()
         {
-            return antin.Ants[antIndex];
+            return antin.Ants;
         }
 
         // after the initialization you can modify the pheromones

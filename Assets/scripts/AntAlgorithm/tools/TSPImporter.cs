@@ -49,7 +49,7 @@ namespace AntAlgorithm.tools
             int count = 0;
             List<City> cities = new List<City>();
             StreamReader file =
-               new StreamReader(Application.dataPath + "/" + ResourcesFolderName + "/" + TspLibFolderName + "/" + fileName);
+               new StreamReader(Application.streamingAssetsPath + "/"  + TspLibFolderName + "/" + fileName);
             while ((line = file.ReadLine()) != null)
             {
                 if (line == PointSection)
