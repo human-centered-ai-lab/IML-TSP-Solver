@@ -5,7 +5,9 @@ using UnityEngine;
 public class AntController : MonoBehaviour {
 
     private static List<GameObject> antObjects;
+
     private static GameObject _antPrefab;
+    private static GameObject _antPathPrefab;
 
     public static void Init()
     {
@@ -15,6 +17,10 @@ public class AntController : MonoBehaviour {
         {
             _antPrefab = Resources.Load("Prefabs/ant") as GameObject;
         }
+        if (_antPathPrefab == null)
+        {
+            _antPathPrefab = Resources.Load("Prefabs/antPath") as GameObject;
+        }
     }
 
     public static void MakeConnections(AntAlgorithms.AntAlgorithm antAlgorithm)
@@ -23,23 +29,34 @@ public class AntController : MonoBehaviour {
         {
             Ant currentAnt = AntAlgorithmManager.Instance.Ants[i];
             antObjects.Add(Instantiate(_antPrefab));
-            antObjects[i].GetComponent<LineRenderer>().positionCount = AntAlgorithmManager.Instance.Ants[i].Tour.Count;
-            antObjects[i].GetComponent<LineRenderer>().material = new Material(Shader.Find("Particles/Additive"));
-            float colorAmount = (i + 1f) / AntAlgorithmManager.Instance.Ants.Count;
-            Debug.Log(colorAmount);
-            antObjects[i].GetComponent<LineRenderer>().startColor = Color.Lerp(Color.magenta, Color.cyan, colorAmount);
-            antObjects[i].GetComponent<LineRenderer>().endColor = Color.Lerp(Color.magenta, Color.cyan, colorAmount);
-            antObjects[i].GetComponent<LineRenderer>().startWidth = 10f;
-            antObjects[i].GetComponent<LineRenderer>().endWidth = 10f;
+            
+            
 
 
 
-            for (int j = 0; j < AntAlgorithmManager.Instance.Ants[i].Tour.Count; j ++)
+            for (int j = 0; j < AntAlgorithmManager.Instance.Ants[i].Tour.Count-1; j ++)
             {
+                GameObject currentPath = Instantiate(_antPathPrefab);
+                currentPath.GetComponent<LineRenderer>().positionCount = 2;
+                currentPath.name = "path" + j + "-" + (j+1);
+                currentPath.GetComponent<LineRenderer>().material = new Material(Shader.Find("Particles/Additive"));
+                /*               float colorAmount = (i + 1f) / AntAlgorithmManager.Instance.Ants.Count;
+                               Debug.Log(colorAmount);
+                               antObjects[i].GetComponent<LineRenderer>().startColor = Color.Lerp(Color.magenta, Color.cyan, colorAmount);
+                               antObjects[i].GetComponent<LineRenderer>().endColor = Color.Lerp(Color.magenta, Color.cyan, colorAmount);
+                               */
+                currentPath.GetComponent<LineRenderer>().startWidth = 10f;
+                currentPath.GetComponent<LineRenderer>().endWidth = 10f;
                 GameObject gameObject1 = GameObject.Find("cityGameObject_" + currentAnt.Tour[j]);
+                GameObject gameObject2 = GameObject.Find("cityGameObject_" + currentAnt.Tour[j+1]);
 
-                antObjects[i].GetComponent<LineRenderer>().SetPosition(j, gameObject1.transform.position);
-                //addColliderToLine(antObjects[i], gameObject2.transform.position, gameObject1.transform.position);
+
+                currentPath.GetComponent<LineRenderer>().SetPosition(0, gameObject1.transform.position);
+                currentPath.GetComponent<LineRenderer>().SetPosition(1, gameObject2.transform.position);
+
+                currentPath.transform.SetParent(antObjects[i].transform);
+
+                addColliderToLine(currentPath, gameObject2.transform.position, gameObject1.transform.position);
 
             }
 
@@ -60,11 +77,11 @@ public class AntController : MonoBehaviour {
             antObjects.Clear();
     }
 
-    public static void HideConnections( int id,  bool flag)
+    public static void SetConnectionVisibility(int id,  bool flag)
     {
         antObjects[id].SetActive(flag);   
     }
-    public static void HideAllConnections(bool flag)
+    public static void SetConnectionsVisibility(bool flag)
     {
         for (int i = 0; i < antObjects.Count; i++)
         {

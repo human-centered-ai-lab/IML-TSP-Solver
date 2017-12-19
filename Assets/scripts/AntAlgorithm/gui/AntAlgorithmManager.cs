@@ -18,6 +18,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     public Button reloadButton;
     public Button stepButton;
     public Button iterationButton;
+    public Button exitButton;
+
     public InputField iterationInputField;
     public Toggle pheromoneToggle;
     public GameObject antScrollView;
@@ -40,6 +42,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 
     public List<City> Cities { get; private set; }
     public List<Ant> Ants { get; private set; }
+    public Pheromone Pheromones { get; private set; }
+
 
 
 
@@ -52,6 +56,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         tspImporter = new TSPImporter();
         reloadButton.onClick.AddListener(LoadParam);
         stepButton.onClick.AddListener(algoStep);
+        exitButton.onClick.AddListener(Exit);
+
         iterationButton.onClick.AddListener(algoIteration);
         pheromoneToggle.onValueChanged.AddListener((isSelected) =>
         {
@@ -105,7 +111,34 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
+            Pheromones = antAlgorithm.Pheromones;
             antAlgorithm.PrintBestTour("MMAS-" + file, 1);
+
+        }
+        if (algorithm.Equals("ACS"))
+        {
+            antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
+            antAlgorithm = antAlgorithmChooser.Algorithm;
+            Cities = TSPImporter.ImportTsp(file);
+            antAlgorithm.Cities = (Cities);
+            CityController.Init();
+            antAlgorithm.Init();
+            Ants = antAlgorithm.Ants();
+            Pheromones = antAlgorithm.Pheromones;
+            antAlgorithm.PrintBestTour("ACS-" + file, 1);
+
+        }
+        if (algorithm.Equals("AS"))
+        {
+            antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntSystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
+            antAlgorithm = antAlgorithmChooser.Algorithm;
+            Cities = TSPImporter.ImportTsp(file);
+            antAlgorithm.Cities = (Cities);
+            CityController.Init();
+            antAlgorithm.Init();
+            Ants = antAlgorithm.Ants();
+            Pheromones = antAlgorithm.Pheromones;
+            antAlgorithm.PrintBestTour("AS-" + file, 1);
 
         }
         PheromoneController.Init();
@@ -117,6 +150,11 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         showAnts(false);
 
 
+    }
+
+    void SetPheromones(int a, int b, float value)
+    {
+        antAlgorithm.Pheromones.SetPheromone(a, b, value);
     }
     void LoadAntToggles(int numOfAnts)
     {
@@ -182,11 +220,11 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     }
     void showAnt(int id, bool flag)
     {
-        AntController.HideConnections(id, flag);
+        AntController.SetConnectionVisibility(id, flag);
     }
     void showAnts(bool flag)
     {
-        AntController.HideAllConnections(flag);
+        AntController.SetConnectionsVisibility(flag);
     }
     void algoIteration()
     {
@@ -198,5 +236,9 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         }
         PheromoneController.MakeConnections(antAlgorithm);
 
+    }
+    void Exit()
+    {
+        Application.Quit();
     }
 }

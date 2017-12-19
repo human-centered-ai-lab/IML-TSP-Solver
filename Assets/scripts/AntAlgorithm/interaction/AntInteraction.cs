@@ -271,7 +271,7 @@ namespace AntAlgorithms.interaction
 
         public List<Ant> Ants { get; protected set; }
 
-        public Pheromones Pheromones { get; protected set; }
+        public Pheromone Pheromones { get; protected set; }
 
         public Distances Distances { get; protected set; }
     }

@@ -14,7 +14,7 @@ namespace AntAlgorithms.interaction
             this.pBest = pBest;
             pheromoneTrailInitialValue = 1.0f / (rho * Distances.CalculateNNHeuristic());
 
-            Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue, pBest);
+            Pheromones = new Pheromone(cities.Count, pheromoneTrailInitialValue, pBest);
             Pheromones.Init();
 
             //Debug.Log("InitValue Pheromones: " + pheromoneTrailInitialValue);

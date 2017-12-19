@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PheromoneInfoController : MonoBehaviour {
 
     public bool displayInfo;
     public Text infoText;
-    private LineRenderer lineRenderer;
+    public GameObject _editCanvasPrefab;
+    public GameObject editCanvas;
 
+    private LineRenderer lineRenderer;
+    private InputField pheromoneInput;
     public Color c1 = Color.green;
     public Color c2 = Color.red;
+    public static bool isInstantiated = false;
 
     void Start()
     {
@@ -21,6 +26,10 @@ public class PheromoneInfoController : MonoBehaviour {
         lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
         lineRenderer.startColor = c1;
         lineRenderer.endColor = c1;
+        if (_editCanvasPrefab == null)
+        {
+            _editCanvasPrefab = Resources.Load("Prefabs/EditCanvas") as GameObject;
+        }
     }
 
     void Update()
@@ -30,11 +39,30 @@ public class PheromoneInfoController : MonoBehaviour {
 
     void OnMouseOver()
     {
-        displayInfo = true;
+        if(!EventSystem.current.IsPointerOverGameObject())
+            displayInfo = true;
+    }
+
+
+    private void OnMouseUp()
+    {
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+
+            if (!isInstantiated)
+            {
+                editCanvas = Instantiate(_editCanvasPrefab);
+                pheromoneInput = editCanvas.GetComponentInChildren<InputField>();
+                editCanvas.SetActive(true);
+                isInstantiated = true;
+            }
+            if (editCanvas == null)
+                return;
+            ShowEditCanvas();
+        }
     }
 
     void OnMouseExit()
-
     {
         displayInfo = false;
     }
@@ -52,5 +80,30 @@ public class PheromoneInfoController : MonoBehaviour {
             lineRenderer.startColor = c1;
             lineRenderer.endColor = c1;
         }
+    }
+    void ShowEditCanvas()
+    {
+        Debug.Log("ShowEditCanvas()");
+
+        Button[] controlButtons = editCanvas.GetComponentsInChildren<Button>();
+        controlButtons[0].onClick.AddListener(SaveChanges);
+        controlButtons[1].onClick.AddListener(CloseCanvas);
+        Text desciptionText = editCanvas.GetComponentInChildren<Text>();
+        desciptionText.text = this.GetComponent<PheromoneData>().name;
+        pheromoneInput.text = this.GetComponent<PheromoneData>().value + "";
+    }
+    void CloseCanvas()
+    {
+        editCanvas.SetActive(false);
+        isInstantiated = false;
+        Destroy(editCanvas);
+    }
+    void SaveChanges()
+    {
+        Debug.Log("SaveChanges()");
+        float value = float.Parse(pheromoneInput.text);
+        AntAlgorithmManager.Instance.Pheromones.SetPheromone(this.GetComponent<PheromoneData>().from, this.GetComponent<PheromoneData>().to, value);
+        this.GetComponent<PheromoneData>().value = value;
+        CloseCanvas();
     }
 }

@@ -16,7 +16,7 @@ namespace AntAlgorithms
 {
     public abstract class AntAlgorithm
     {
-        public static int REINITIALIZATIONAFTERXITERATIONS = 500;
+        public static int REINITIALIZATIONAFTERXITERATIONS = 99999;
 
         // influence of pheromone for decision
         protected int alpha;
@@ -83,7 +83,7 @@ namespace AntAlgorithms
             }
             if (reinitializationThreshhold <= 0 && iteration > 1500)
             {
-                Debug.Log("Reinit i:"+iteration + " length:" + tourLengthTemp);
+                //Debug.Log("Reinit i:"+iteration + " length:" + tourLengthTemp);
                 reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
                 return false;
             }
@@ -101,7 +101,7 @@ namespace AntAlgorithms
         }
 
         // after the initialization you can modify the pheromones
-        public Pheromones Pheromones
+        public Pheromone Pheromones
         {
             get { return antin.Pheromones; }
         }

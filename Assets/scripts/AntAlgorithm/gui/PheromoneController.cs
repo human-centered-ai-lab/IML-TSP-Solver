@@ -59,8 +59,10 @@ public class PheromoneController : Singleton<PheromoneController>
                 lineObjects[counter].GetComponent<LineRenderer>().SetPosition(1, gameObject2.transform.position);
                 lineObjects[counter].name = "pheromone" + i + "_" + j;
                 PheromoneData pd = lineObjects[counter].AddComponent<PheromoneData>();
+                pd.from = i;
+                pd.to = j;
                 pd.name = "Pheromone " + i + " to " + j + ": ";
-                pd.value = antAlgorithm.Pheromones.GetPheromone(i, j)+ "";
+                pd.value = (float)antAlgorithm.Pheromones.GetPheromone(i, j);
                 // GameObject.FindGameObjectWithTag("infoText").GetComponent<Text>().text = "Pheromone from " + i + " to " + j + ":\n value: " + w1;
                 lineObjects[counter].GetComponent<LineRenderer>().startWidth = w1;
                 lineObjects[counter].GetComponent<LineRenderer>().endWidth = w1 ;

@@ -5,5 +5,7 @@ using UnityEngine;
 public class PheromoneData : MonoBehaviour {
 
     public string name;
-    public string value;
+    public int from;
+    public int to;
+    public float value;
 }

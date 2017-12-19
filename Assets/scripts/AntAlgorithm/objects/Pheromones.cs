@@ -11,7 +11,7 @@ using System;
 using UnityEngine;
 using util;
 
-public class Pheromones
+public class Pheromone
 {
     // initialization factor for pheromones
     private double initPheromoneValue;
@@ -22,13 +22,13 @@ public class Pheromones
     private double trailMin;
     private double trailMax;
 
-    public Pheromones(int numOfCities, double initPheromoneValue)
+    public Pheromone(int numOfCities, double initPheromoneValue)
     {
         this.numOfCities = numOfCities;
         this.initPheromoneValue = initPheromoneValue;
     }
 
-    public Pheromones(int numOfCities, double initPheromoneValue, double pBest)
+    public Pheromone(int numOfCities, double initPheromoneValue, double pBest)
     {
         this.numOfCities = numOfCities;
         this.initPheromoneValue = initPheromoneValue;
