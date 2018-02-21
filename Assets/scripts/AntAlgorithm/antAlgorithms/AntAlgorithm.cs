@@ -62,6 +62,17 @@ namespace AntAlgorithms
             Debug.Log("[" + context + "] Best Dist: " + TourLength + " Tour: " + str);
         }
 
+        //gets the best tour string
+        public string GetBestTour(int offset)
+        {
+            string str = "";
+            foreach (int cityIndex in BestTour)
+            {
+                str += (cityIndex + offset) + " ";
+            }
+            return str;
+        }
+
         //returns false if reinitialization is needed.
         protected bool CheckBestTour()
         {

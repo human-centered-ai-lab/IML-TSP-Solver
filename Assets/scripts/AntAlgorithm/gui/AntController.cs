@@ -50,9 +50,9 @@ public class AntController : MonoBehaviour {
                 GameObject gameObject1 = GameObject.Find("cityGameObject_" + currentAnt.Tour[j]);
                 GameObject gameObject2 = GameObject.Find("cityGameObject_" + currentAnt.Tour[j+1]);
 
-
                 currentPath.GetComponent<LineRenderer>().SetPosition(0, gameObject1.transform.position);
                 currentPath.GetComponent<LineRenderer>().SetPosition(1, gameObject2.transform.position);
+                iTween.MoveBy(currentPath, iTween.Hash("x", 2, "easeType", "easeInOutExpo", "loopType", "pingPong", "delay", .1));
 
                 currentPath.transform.SetParent(antObjects[i].transform);
 

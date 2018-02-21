@@ -28,6 +28,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     public InputField alphaInputField;
     public InputField betaInputField;
     public InputField numAntsInputField;
+    public Text infoText;
+
 
 
 
@@ -155,6 +157,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithm.PrintBestTour("AS-" + currentFile, 1);
 
         }
+
         PheromoneController.Init();
         PheromoneController.MakeConnections(antAlgorithm);
         AntController.Init();
@@ -183,12 +186,20 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 #endif
 
 
+        ShowAnts(false);
     }
 
     void SetPheromones(int a, int b, float value)
     {
         antAlgorithm.Pheromones.SetPheromone(a, b, value);
     }
+
+    void ShowSolution()
+    {
+        string solution = "Best iteration: " + antAlgorithm.BestIteration + "\nBest Tour: " + antAlgorithm.GetBestTour(1);
+        infoText.text = solution;
+    }
+
     void LoadAntToggles(int numOfAnts)
     {
         DestroyCurrentAnts();
@@ -219,7 +230,9 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         }
         ShowAnt(id, true);
     }
+
     void DestroyCurrentAnts()
+
     {
         for (int i = 0; i < antToggles.Count; i++)
         {
@@ -244,12 +257,12 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
                 ShowAnt(i, false);
 
 
+        ShowSolution();
     }
 
     void ShowPheromones(bool flag)
     {
         PheromoneController.HideConnections(flag);
-
     }
     void ShowAnt(int id, bool flag)
     {
@@ -268,8 +281,10 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithm.Iteration();
         }
         PheromoneController.MakeConnections(antAlgorithm);
+        ShowSolution();
 
     }
+
     void Exit()
     {
         Application.Quit();
