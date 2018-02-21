@@ -13,6 +13,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     private AntAlgorithms.AntAlgorithmChooser antAlgorithmChooser;
     private AntAlgorithms.AntAlgorithm antAlgorithm;
     private TSPImporter tspImporter;
+    private int numOfFilesNotSA = 3;
+
     public Transform dropdownMenuTSP;
     public Transform dropdownMenuAlgorithm;
     public Button reloadButton;
@@ -33,7 +35,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 
     private List<GameObject> antToggles;
     private GameObject antToggle;
-
+    private string currentFile = null;
 
 
 
@@ -55,27 +57,30 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         Ants = new List<Ant>();
         tspImporter = new TSPImporter();
         reloadButton.onClick.AddListener(LoadParam);
-        stepButton.onClick.AddListener(algoStep);
+        stepButton.onClick.AddListener(AlgoStep);
         exitButton.onClick.AddListener(Exit);
 
-        iterationButton.onClick.AddListener(algoIteration);
+        iterationButton.onClick.AddListener(AlgoIteration);
         pheromoneToggle.onValueChanged.AddListener((isSelected) =>
         {
             if (!isSelected)
             {
-                showPheromones(false);
+                ShowPheromones(false);
                 return;
             }
-            showPheromones(true);
+            ShowPheromones(true);
 
         });
 
         iterationInputField.text = "" + 1;
 
-        DirectoryInfo levelDirectoryPath = new DirectoryInfo(Application.streamingAssetsPath);
-        FileInfo[] fileInfo = levelDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
+
         List<string> fileNames = new List<string>();
 
+
+#if UNITY_STANDALONE_WIN
+           DirectoryInfo levelDirectoryPath = new DirectoryInfo(Application.streamingAssetsPath);
+        FileInfo[] fileInfo = levelDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
         foreach (FileInfo file in fileInfo)
         {
             if (file.Extension == ".tsp")
@@ -83,10 +88,23 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
                 fileNames.Add(file.Name);
             }
         }
-
-        for (int i = 0; i < fileNames.Count; i++)
+          for (int i = 0; i < fileNames.Count; i++)
             dropdownMenuTSP.GetComponent<Dropdown>().options.Add(new Dropdown.OptionData(fileNames[i]));
         dropdownMenuTSP.GetComponent<Dropdown>().RefreshShownValue();
+#endif
+
+#if UNITY_WEBGL || UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+
+        for (int i = 0; i < numOfFilesNotSA; i++)
+            dropdownMenuTSP.GetComponent<Dropdown>().options.Add(new Dropdown.OptionData("cust" + (i + 1) + ".tsp"));
+        dropdownMenuTSP.GetComponent<Dropdown>().RefreshShownValue();
+#endif
+    }
+    private IEnumerator InitWebGL(TSPImporter tsp)
+    {
+        while (!tsp.loadingComplete)
+            yield return new WaitForSeconds(0.1f);
+        Init();
     }
 
     // Update is called once per frame
@@ -95,50 +113,46 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 
     }
 
-    void LoadParam()
+    void Init()
     {
         CityController.DestroyAll();
         PheromoneController.ClearConnections();
 
         string algorithm = dropdownMenuAlgorithm.GetComponent<Dropdown>().options[dropdownMenuAlgorithm.GetComponent<Dropdown>().value].text;
-        string file = dropdownMenuTSP.GetComponent<Dropdown>().options[dropdownMenuTSP.GetComponent<Dropdown>().value].text;
         if (algorithm.Equals("MMAS"))
         {
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
-            Cities = TSPImporter.ImportTsp(file);
             antAlgorithm.Cities = (Cities);
             CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
             Pheromones = antAlgorithm.Pheromones;
-            antAlgorithm.PrintBestTour("MMAS-" + file, 1);
+            antAlgorithm.PrintBestTour("MMAS-" + currentFile, 1);
 
         }
         if (algorithm.Equals("ACS"))
         {
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
-            Cities = TSPImporter.ImportTsp(file);
             antAlgorithm.Cities = (Cities);
             CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
             Pheromones = antAlgorithm.Pheromones;
-            antAlgorithm.PrintBestTour("ACS-" + file, 1);
+            antAlgorithm.PrintBestTour("ACS-" + currentFile, 1);
 
         }
         if (algorithm.Equals("AS"))
         {
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntSystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
-            Cities = TSPImporter.ImportTsp(file);
             antAlgorithm.Cities = (Cities);
             CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
             Pheromones = antAlgorithm.Pheromones;
-            antAlgorithm.PrintBestTour("AS-" + file, 1);
+            antAlgorithm.PrintBestTour("AS-" + currentFile, 1);
 
         }
         PheromoneController.Init();
@@ -147,7 +161,26 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         AntController.MakeConnections(antAlgorithm);
         LoadAntToggles(Int32.Parse(numAntsInputField.text));
 
-        showAnts(false);
+        ShowAnts(false);
+
+    }
+    void LoadParam()
+    {
+        currentFile = dropdownMenuTSP.GetComponent<Dropdown>().options[dropdownMenuTSP.GetComponent<Dropdown>().value].text;
+
+#if UNITY_STANDALONE_WIN
+        Debug.Log("Stand Alone Windows");
+        Cities = TSPImporter.ImportTsp(currentFile);
+        Init();
+#endif
+
+#if UNITY_WEBGL || UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        TSPImporter tsp = new TSPImporter();
+        Debug.Log("WebGL or Mobile");
+        StartCoroutine(tsp.ImportTspFromWebWebGL(currentFile));
+        StartCoroutine(InitWebGL(tsp));
+        Cities = tsp.Cities;
+#endif
 
 
     }
@@ -158,7 +191,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     }
     void LoadAntToggles(int numOfAnts)
     {
-        destroyCurrentAnts();
+        DestroyCurrentAnts();
         antToggle = Resources.Load("Prefabs/antToggle") as GameObject;
         for (int i = 0; i < numOfAnts; i++)
         {
@@ -181,12 +214,12 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     {
         if (!isSelected)
         {
-            showAnt(id, false);
+            ShowAnt(id, false);
             return;
         }
-        showAnt(id, true);
+        ShowAnt(id, true);
     }
-    void destroyCurrentAnts()
+    void DestroyCurrentAnts()
     {
         for (int i = 0; i < antToggles.Count; i++)
         {
@@ -195,7 +228,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         antToggles.Clear();
     }
 
-    void algoStep()
+    void AlgoStep()
     {
         PheromoneController.ClearConnections();
         AntController.ClearConnections();
@@ -203,30 +236,30 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         PheromoneController.MakeConnections(antAlgorithm);
         if (!pheromoneToggle.isOn)
         {
-            showPheromones(false);
+            ShowPheromones(false);
         }
         AntController.MakeConnections(antAlgorithm);
         for (int i = 0; i < antToggles.Count; i++)
             if (!antToggles[i].GetComponent<Toggle>().isOn)
-                showAnt(i,false);
-                
+                ShowAnt(i, false);
+
 
     }
 
-    void showPheromones(bool flag)
+    void ShowPheromones(bool flag)
     {
         PheromoneController.HideConnections(flag);
 
     }
-    void showAnt(int id, bool flag)
+    void ShowAnt(int id, bool flag)
     {
         AntController.SetConnectionVisibility(id, flag);
     }
-    void showAnts(bool flag)
+    void ShowAnts(bool flag)
     {
         AntController.SetConnectionsVisibility(flag);
     }
-    void algoIteration()
+    void AlgoIteration()
     {
         int iterations = Int32.Parse(iterationInputField.text);
         PheromoneController.ClearConnections();

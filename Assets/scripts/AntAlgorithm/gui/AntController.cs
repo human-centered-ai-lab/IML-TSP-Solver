@@ -56,7 +56,7 @@ public class AntController : MonoBehaviour {
 
                 currentPath.transform.SetParent(antObjects[i].transform);
 
-                addColliderToLine(currentPath, gameObject2.transform.position, gameObject1.transform.position);
+                AddColliderToLine(currentPath, gameObject2.transform.position, gameObject1.transform.position);
 
             }
 
@@ -90,7 +90,7 @@ public class AntController : MonoBehaviour {
     }
 
 
-    private static void addColliderToLine(GameObject line, Vector3 startPos, Vector3 endPos)
+    private static void AddColliderToLine(GameObject line, Vector3 startPos, Vector3 endPos)
     {
         BoxCollider col = line.AddComponent<BoxCollider>();
         col.transform.SetParent(line.GetComponent<LineRenderer>().transform);
