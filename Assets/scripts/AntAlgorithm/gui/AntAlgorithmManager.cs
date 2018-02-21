@@ -26,6 +26,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     public InputField alphaInputField;
     public InputField betaInputField;
     public InputField numAntsInputField;
+    public Text infoText;
+
 
 
 
@@ -141,6 +143,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithm.PrintBestTour("AS-" + file, 1);
 
         }
+
         PheromoneController.Init();
         PheromoneController.MakeConnections(antAlgorithm);
         AntController.Init();
@@ -148,14 +151,19 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         LoadAntToggles(Int32.Parse(numAntsInputField.text));
 
         showAnts(false);
-
-
     }
 
     void SetPheromones(int a, int b, float value)
     {
         antAlgorithm.Pheromones.SetPheromone(a, b, value);
     }
+
+    void ShowSolution()
+    {
+        string solution = "Best iteration: " + antAlgorithm.BestIteration + "\nBest Tour: " + antAlgorithm.GetBestTour(1);
+        infoText.text = solution;
+    }
+
     void LoadAntToggles(int numOfAnts)
     {
         destroyCurrentAnts();
@@ -186,6 +194,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         }
         showAnt(id, true);
     }
+
     void destroyCurrentAnts()
     {
         for (int i = 0; i < antToggles.Count; i++)
@@ -209,23 +218,25 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         for (int i = 0; i < antToggles.Count; i++)
             if (!antToggles[i].GetComponent<Toggle>().isOn)
                 showAnt(i,false);
-                
 
+        ShowSolution();
     }
 
     void showPheromones(bool flag)
     {
         PheromoneController.HideConnections(flag);
-
     }
+
     void showAnt(int id, bool flag)
     {
         AntController.SetConnectionVisibility(id, flag);
     }
+
     void showAnts(bool flag)
     {
         AntController.SetConnectionsVisibility(flag);
     }
+
     void algoIteration()
     {
         int iterations = Int32.Parse(iterationInputField.text);
@@ -235,8 +246,10 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithm.Iteration();
         }
         PheromoneController.MakeConnections(antAlgorithm);
+        ShowSolution();
 
     }
+
     void Exit()
     {
         Application.Quit();
