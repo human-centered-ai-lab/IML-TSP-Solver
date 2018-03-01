@@ -7,12 +7,14 @@ using util;
 public class CityController : MonoBehaviour
 {
     private static GameObject _cityPrefab;
+    public static List<GameObject> cityObjects;
     private static int numOfCities = 0;
     public int Id { get; private set; }
 
     // Use this for initialization
     public static void Init()
     {
+        cityObjects = new List<GameObject>();
         int minX, maxX, minY, maxY;
 
         var cities = AntAlgorithmManager.Instance.Cities;
@@ -30,12 +32,12 @@ public class CityController : MonoBehaviour
             float yPos = (city.YPosition / (float)absoluteMaxY) * Screen.height * 5;
             var pos = new Vector3(xPos, yPos, 0);
 
-            Create(pos, city.Id);
+            cityObjects.Add(Create(pos, city.Id));
         }
 
 
     }
-    public static CityController Create(Vector3 position, int id)
+    public static GameObject Create(Vector3 position, int id)
     {
         if (_cityPrefab == null)
         {
@@ -46,17 +48,18 @@ public class CityController : MonoBehaviour
         cityGameObject.name = "cityGameObject_" + id;
         Text text = cityGameObject.GetComponentInChildren<Image>().GetComponentInChildren<Text>();
         text.text = "" + id;
-        var controller = cityGameObject.transform.GetOrAddComponent<CityController>();
-        controller.Id = id;
 
-        return controller;
+        return cityGameObject;
     }
 
     public static void DestroyAll()
     {
-        if (numOfCities != 0)
-            for (int i = 0; i < numOfCities; i++)
-                Destroy(GameObject.Find("cityGameObject_" + i));
+        if (cityObjects != null)
+        {
+            for (int i = 0; i < cityObjects.Count; i++)
+                Destroy(cityObjects[i]);
+            cityObjects.Clear();
+        }
     }
 
 

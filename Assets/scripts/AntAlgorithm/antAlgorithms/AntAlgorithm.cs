@@ -29,13 +29,11 @@ namespace AntAlgorithms
         protected AntInteraction antin;
 
         protected int numOfAnts;
-        protected int iteration;
         protected double pheromoneTrailInitialValue = -1;
 
         // output - updateing after every algorithm iteration
 
         //helper
-        protected int algStep;
         private int reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
 
 
@@ -82,7 +80,7 @@ namespace AntAlgorithms
 
             if (tourLengthTemp < TourLength)
             {
-                BestIteration = iteration;
+                BestIteration = CurrentIteration;
                 reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
                 TourLength = tourLengthTemp;
                 BestTour.Clear();
@@ -90,9 +88,9 @@ namespace AntAlgorithms
                 {
                     BestTour.Add(bestAnt.Tour[i]);
                 }
-                Debug.Log("BestIter:" + iteration + " length:" + tourLengthTemp);
+                Debug.Log("BestIter:" + CurrentIteration + " length:" + tourLengthTemp);
             }
-            if (reinitializationThreshhold <= 0 && iteration > 1500)
+            if (reinitializationThreshhold <= 0 && CurrentIteration > 1500)
             {
                 //Debug.Log("Reinit i:"+iteration + " length:" + tourLengthTemp);
                 reinitializationThreshhold = REINITIALIZATIONAFTERXITERATIONS;
@@ -122,6 +120,7 @@ namespace AntAlgorithms
         public List<int> BestTour { get; protected set; }
 
         public int BestIteration { get; protected set; }
-
+        public int CurrentIteration { get; protected set; }
+        public int AlgStep { get; protected set; }
     }
 }

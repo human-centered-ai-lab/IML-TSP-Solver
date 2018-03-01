@@ -14,13 +14,16 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     private AntAlgorithms.AntAlgorithm antAlgorithm;
     private TSPImporter tspImporter;
     private int numOfFilesNotSA = 3;
+    private int numOfAnts;
 
+    public AntController antController;
     public Transform dropdownMenuTSP;
     public Transform dropdownMenuAlgorithm;
     public Button reloadButton;
     public Button stepButton;
     public Button iterationButton;
     public Button exitButton;
+    public Button animateAllButton;
 
     public InputField iterationInputField;
     public Toggle pheromoneToggle;
@@ -29,40 +32,56 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     public InputField betaInputField;
     public InputField numAntsInputField;
     public Text infoText;
+    public Text iterationText;
 
-
-
-
-
+    List<Button> animationButtons;
+    List<Button> focusButtons;
 
     private List<GameObject> antToggles;
     private GameObject antToggle;
     private string currentFile = null;
-
-
-
-
-
+    private bool animateAllActive = false;
 
     public List<City> Cities { get; private set; }
     public List<Ant> Ants { get; private set; }
     public Pheromone Pheromones { get; private set; }
 
+    private void ClearLists()
+    {
+        DestroyDynamicUIElemets();
+        animationButtons.Clear();
+        focusButtons.Clear();
+        antToggles.Clear();
+        Cities.Clear();
+        Ants.Clear();
+    }
+   private void DestroyDynamicUIElemets()
+    {
+        for(int i = 0; i < numOfAnts; i++)
+        {
+            Destroy(antToggles[i].gameObject);
+            Destroy(animationButtons[i].gameObject);
+            Destroy(focusButtons[i].gameObject);
 
+        }
 
-
+    }
     // Use this for initialization
     void Start()
     {
+        animationButtons = new List<Button>();
+        focusButtons = new List<Button>();
         antToggles = new List<GameObject>();
         Cities = new List<City>();
         Ants = new List<Ant>();
         tspImporter = new TSPImporter();
-        reloadButton.onClick.AddListener(LoadParam);
+
+        reloadButton.onClick.AddListener(Reload);
         stepButton.onClick.AddListener(AlgoStep);
         exitButton.onClick.AddListener(Exit);
-
+        animateAllButton.onClick.AddListener(ShowAllAntsAnimation);
         iterationButton.onClick.AddListener(AlgoIteration);
+
         pheromoneToggle.onValueChanged.AddListener((isSelected) =>
         {
             if (!isSelected)
@@ -71,17 +90,14 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
                 return;
             }
             ShowPheromones(true);
-
         });
 
         iterationInputField.text = "" + 1;
 
-
+#if UNITY_STANDALONE_WIN
         List<string> fileNames = new List<string>();
 
-
-#if UNITY_STANDALONE_WIN
-           DirectoryInfo levelDirectoryPath = new DirectoryInfo(Application.streamingAssetsPath);
+        DirectoryInfo levelDirectoryPath = new DirectoryInfo(Application.streamingAssetsPath);
         FileInfo[] fileInfo = levelDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
         foreach (FileInfo file in fileInfo)
         {
@@ -90,7 +106,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
                 fileNames.Add(file.Name);
             }
         }
-          for (int i = 0; i < fileNames.Count; i++)
+        for (int i = 0; i < fileNames.Count; i++)
             dropdownMenuTSP.GetComponent<Dropdown>().options.Add(new Dropdown.OptionData(fileNames[i]));
         dropdownMenuTSP.GetComponent<Dropdown>().RefreshShownValue();
 #endif
@@ -102,6 +118,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         dropdownMenuTSP.GetComponent<Dropdown>().RefreshShownValue();
 #endif
     }
+
     private IEnumerator InitWebGL(TSPImporter tsp)
     {
         while (!tsp.loadingComplete)
@@ -112,11 +129,12 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     // Update is called once per frame
     void Update()
     {
-
     }
 
     void Init()
     {
+        numOfAnts = Int32.Parse(numAntsInputField.text);
+
         CityController.DestroyAll();
         PheromoneController.ClearConnections();
 
@@ -126,7 +144,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.MinMaxAntSystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
             antAlgorithm.Cities = (Cities);
-            CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
             Pheromones = antAlgorithm.Pheromones;
@@ -138,7 +155,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntColonySystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
             antAlgorithm.Cities = (Cities);
-            CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
             Pheromones = antAlgorithm.Pheromones;
@@ -150,25 +166,25 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithmChooser = new AntAlgorithms.AntAlgorithmChooser(AntAlgorithms.Mode.AntSystem, Int32.Parse(alphaInputField.text), Int32.Parse(betaInputField.text), 0.02, Int32.Parse(numAntsInputField.text), -1, 0.05);
             antAlgorithm = antAlgorithmChooser.Algorithm;
             antAlgorithm.Cities = (Cities);
-            CityController.Init();
             antAlgorithm.Init();
             Ants = antAlgorithm.Ants();
             Pheromones = antAlgorithm.Pheromones;
             antAlgorithm.PrintBestTour("AS-" + currentFile, 1);
-
         }
 
+        CityController.Init();
         PheromoneController.Init();
         PheromoneController.MakeConnections(antAlgorithm);
-        AntController.Init();
-        AntController.MakeConnections(antAlgorithm);
-        LoadAntToggles(Int32.Parse(numAntsInputField.text));
-
-        ShowAnts(false);
+        antController.MakeConnections(antAlgorithm);
+        //ShowAnts(false);
+        LoadAntToggles(numOfAnts);
+        VisibilityCheck();
 
     }
-    void LoadParam()
+    void Reload()
     {
+        StopAllAnimations();
+        ClearLists();
         currentFile = dropdownMenuTSP.GetComponent<Dropdown>().options[dropdownMenuTSP.GetComponent<Dropdown>().value].text;
 
 #if UNITY_STANDALONE_WIN
@@ -185,8 +201,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         Cities = tsp.Cities;
 #endif
 
-
-        ShowAnts(false);
     }
 
     void SetPheromones(int a, int b, float value)
@@ -198,30 +212,120 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     {
         string solution = "Best iteration: " + antAlgorithm.BestIteration + "\nBest Tour: " + antAlgorithm.GetBestTour(1);
         infoText.text = solution;
+        iterationText.text = "Current iteration: " + antAlgorithm.CurrentIteration + "\nCurrent step: " + antAlgorithm.AlgStep;
     }
 
     void LoadAntToggles(int numOfAnts)
     {
-        DestroyCurrentAnts();
         antToggle = Resources.Load("Prefabs/antToggle") as GameObject;
         for (int i = 0; i < numOfAnts; i++)
         {
             antToggles.Add(Instantiate(antToggle));
             antToggles[i].transform.SetParent(antScrollView.transform, false);
             antToggles[i].name = "antToggle" + i;
-            antToggles[i].GetComponentInChildren<Text>().text = "ant " + i;
+            antToggles[i].GetComponentInChildren<Text>().text = "ant route " + i;
+            UnityEngine.Events.UnityAction animationButtonlistener = AnimationButtonListener(i);
+            UnityEngine.Events.UnityAction focusButtonlistener = FocusButtonListener(i);
+
+            Button[] buttons = new Button[2];
+            buttons = antToggles[i].GetComponentsInChildren<Button>();
+
+            animationButtons.Add(buttons[0]);
+            focusButtons.Add(buttons[1]);
+
+            animationButtons[i].onClick.AddListener(animationButtonlistener);
+            focusButtons[i].onClick.AddListener(focusButtonlistener);
+
             antToggles[i].GetComponent<Toggle>().isOn = false;
-            UnityEngine.Events.UnityAction<bool> listener = AntListener(i);
-            antToggles[i].GetComponent<Toggle>().onValueChanged.AddListener(listener);
+            UnityEngine.Events.UnityAction<bool> toggleListener = AntToggleListener(i);
+            antToggles[i].GetComponent<Toggle>().onValueChanged.AddListener(toggleListener);
         }
 
     }
-    private UnityEngine.Events.UnityAction<bool> AntListener(int id)
+
+    void ShowAntAnimation(int id)
     {
-        return (val) => HandleAntListener(val, id);
+        if (antController.animationsRunning[id])
+        {
+            StopAntAnimation(id);
+        }
+        else
+        {
+            StartAntAnimation(id);
+        }
+    }
+    void StopAntAnimation(int id)
+    {
+        focusButtons[id].interactable = false;
+        iterationButton.interactable = true;
+        stepButton.interactable = true;
+        reloadButton.interactable = true;
+        antController.StopAnimation(id);
+        animationButtons[id].GetComponentInChildren<Text>().text = "ANIM";
+
+    }
+    void StartAntAnimation(int id)
+    {
+        focusButtons[id].interactable = true;
+        iterationButton.interactable = false;
+        stepButton.interactable = false;
+        reloadButton.interactable = false;
+
+
+        animationButtons[id].GetComponentInChildren<Text>().text = "STOP";
+
+        List<Button> buttons = new List<Button>
+            {
+                animationButtons[id],
+                focusButtons[id]
+            };
+
+        antController.Animate(id, buttons);
     }
 
-    void HandleAntListener(bool isSelected, int id)
+    void ShowAllAntsAnimation()
+    {
+        if (!animateAllActive)
+        {
+            animateAllButton.GetComponentInChildren<Text>().text = "STOP";
+            for (int i = 0; i < numOfAnts; i++)
+                StartAntAnimation(i);
+            animateAllActive = true;
+        }
+        else
+        {
+            animateAllButton.GetComponentInChildren<Text>().text = "animate all ants";
+            for (int i = 0; i < numOfAnts; i++)
+                StopAntAnimation(i);
+            animateAllActive = false;
+        }
+    }
+    void StopAllAnimations()
+    {
+        animateAllButton.GetComponentInChildren<Text>().text = "animate all ants";
+        for (int i = 0; i < numOfAnts; i++)
+            StopAntAnimation(i);
+        animateAllActive = false;
+    }
+
+    void FocusAnt(int id)
+    {
+        antController.FocusAnt(id);
+    }
+    private UnityEngine.Events.UnityAction AnimationButtonListener(int id)
+    {
+        return () => ShowAntAnimation(id);
+    }
+    private UnityEngine.Events.UnityAction FocusButtonListener(int id)
+    {
+        return () => FocusAnt(id);
+    }
+    private UnityEngine.Events.UnityAction<bool> AntToggleListener(int id)
+    {
+        return (val) => HandleAntToggleListener(val, id);
+    }
+
+    void HandleAntToggleListener(bool isSelected, int id)
     {
         if (!isSelected)
         {
@@ -231,33 +335,53 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         ShowAnt(id, true);
     }
 
-    void DestroyCurrentAnts()
-
+    void HandleAnimationButtonListener(int id)
     {
-        for (int i = 0; i < antToggles.Count; i++)
-        {
-            Destroy(antToggles[i]);
-        }
-        antToggles.Clear();
+        ShowAntAnimation(id);
     }
 
     void AlgoStep()
     {
         PheromoneController.ClearConnections();
-        AntController.ClearConnections();
         antAlgorithm.Step();
         PheromoneController.MakeConnections(antAlgorithm);
+        ShowSolution();
+        VisibilityCheck();
+    }
+    void AlgoIteration()
+    {
+        PheromoneController.ClearConnections();
+
+        int iterations = Int32.Parse(iterationInputField.text);
+        for (int i = 0; i < iterations; i++)
+        {
+            antAlgorithm.Iteration();
+        }
+        ShowSolution();
+        PheromoneController.MakeConnections(antAlgorithm);
+        antController.MakeConnections(antAlgorithm);
+        VisibilityCheck();
+    }
+   
+    void VisibilityCheck()
+    {
+        
         if (!pheromoneToggle.isOn)
         {
             ShowPheromones(false);
         }
-        AntController.MakeConnections(antAlgorithm);
+        else
+        {
+            ShowPheromones(true);
+        }
         for (int i = 0; i < antToggles.Count; i++)
+        {
             if (!antToggles[i].GetComponent<Toggle>().isOn)
                 ShowAnt(i, false);
+            else
+                ShowAnt(i, true);
+        }
 
-
-        ShowSolution();
     }
 
     void ShowPheromones(bool flag)
@@ -266,24 +390,13 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     }
     void ShowAnt(int id, bool flag)
     {
-        AntController.SetConnectionVisibility(id, flag);
+        antController.SetConnectionVisibility(id, flag);
     }
     void ShowAnts(bool flag)
     {
-        AntController.SetConnectionsVisibility(flag);
+        antController.SetConnectionsVisibility(flag);
     }
-    void AlgoIteration()
-    {
-        int iterations = Int32.Parse(iterationInputField.text);
-        PheromoneController.ClearConnections();
-        for (int i = 0; i < iterations; i++)
-        {
-            antAlgorithm.Iteration();
-        }
-        PheromoneController.MakeConnections(antAlgorithm);
-        ShowSolution();
-
-    }
+   
 
     void Exit()
     {

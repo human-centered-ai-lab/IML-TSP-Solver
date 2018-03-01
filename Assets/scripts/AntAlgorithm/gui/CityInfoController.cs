@@ -32,11 +32,11 @@ public class CityInfoController : MonoBehaviour {
     {
         if (displayInfo)
         {
-            myText.color = Color.red;
+            myText.color = Color.blue;
         }
         else
         {
-            myText.color = Color.clear;
+            myText.color = Color.magenta;
         }
     }
 }
