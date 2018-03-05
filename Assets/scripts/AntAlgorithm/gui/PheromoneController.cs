@@ -24,8 +24,6 @@ public class PheromoneController : Singleton<PheromoneController>
     public static void MakeConnections(AntAlgorithms.AntAlgorithm antAlgorithm)
     {
         float pheromoneMaxValue = 0f;
-
-
         int counter = 0;
 
         for (int i = 0; i < AntAlgorithmManager.Instance.Cities.Count; i++)
@@ -45,13 +43,10 @@ public class PheromoneController : Singleton<PheromoneController>
                 GameObject gameObject2 = CityController.cityObjects[j];
                 lineObjects.Add(Instantiate(_linePrefab));
                 float w1 = ((float)antAlgorithm.Pheromones.GetPheromone(i, j) / pheromoneMaxValue) * 2.0f;
-
                 lineObjects[counter].GetComponent<LineRenderer>().SetPosition(0, gameObject1.transform.position);
                 lineObjects[counter].GetComponent<LineRenderer>().SetPosition(1, gameObject2.transform.position);
                 lineObjects[counter].name = "pheromone" + i + "_" + j;
-
-                AddColliderToLine(lineObjects[counter], gameObject2.transform.position, gameObject1.transform.position, w1);
-
+                AddColliderToLine(lineObjects[counter], gameObject2.transform.position, gameObject1.transform.position, 1);
                 PheromoneData pd = lineObjects[counter].AddComponent<PheromoneData>();
                 pd.from = i;
                 pd.to = j;

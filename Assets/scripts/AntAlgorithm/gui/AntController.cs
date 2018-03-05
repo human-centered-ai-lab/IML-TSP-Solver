@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class AntController : MonoBehaviour
 {
     public Camera antCamera;
+    public Color antPathColor;
+
     public Camera mainCamera;
     private int activeAnt;
 
@@ -19,7 +21,8 @@ public class AntController : MonoBehaviour
     private GameObject _antContainerPrefab;
     private GameObject _antPrefab;
     private GameObject _antPathPrefab;
-
+    private Button focusButton;
+    private Button previousFocusButton;
     private static List<Vector3> previousAntPositions;
 
     void Start()
@@ -48,6 +51,7 @@ public class AntController : MonoBehaviour
         {
             if (antObjects[i].activeSelf == true && focus == true)
             {
+               
                 Vector3 position = antObjects[activeAnt].transform.position;
                 position.z = -2.5f;
                 antCamera.transform.position = position;
@@ -128,7 +132,7 @@ public class AntController : MonoBehaviour
 
             antObjects[i].GetComponentInChildren<Canvas>().GetComponentInChildren<Text>().text = "" + i;
             antObjects[i].SetActive(false);
-            for (int j = 0; j < AntAlgorithmManager.Instance.Ants[i].Tour.Count - 2; j++)
+            for (int j = 0; j < AntAlgorithmManager.Instance.Ants[i].Tour.Count - 1; j++)
             {
                 GameObject currentPath = Instantiate(_antPathPrefab);
                 currentPath.GetComponent<LineRenderer>().positionCount = 2;
@@ -146,11 +150,10 @@ public class AntController : MonoBehaviour
 
                 currentPath.GetComponent<LineRenderer>().SetPosition(0, gameObject1.transform.position);
                 currentPath.GetComponent<LineRenderer>().SetPosition(1, gameObject2.transform.position);
+                //currentPath.GetComponent<LineRenderer>().material= antPathColor;
 
-                currentPath.transform.SetParent(antContainerObjects[i].transform);
-
-                AddColliderToLine(currentPath, gameObject2.transform.position, gameObject1.transform.position);
-
+               currentPath.transform.SetParent(antContainerObjects[i].transform);
+ 
             }
             antContainerObjects[i].name = "ant" + i;
         }
@@ -180,25 +183,35 @@ public class AntController : MonoBehaviour
         Hashtable values = new Hashtable();
         values.Add("buttons", buttons);
         values.Add("id", i);
-        iTween.MoveTo(antObjects[i], iTween.Hash("name", "antAnimation" + i, "path", currentPath, "time", currentPath.Length * 2, "easetype", iTween.EaseType.linear, "orienttopath", true, "lookahead", 0.0f, "oncomplete", "OnAnimationComplete", "oncompletetarget", this.gameObject, "oncompleteparams", values));
+        if (currentAnt.Tour.Count > 2)
+            iTween.MoveTo(antObjects[i], iTween.Hash("name", "antAnimation" + i, "path", currentPath, "time", currentPath.Length * 2, "easetype", iTween.EaseType.linear, "orienttopath", true, "lookahead", 0.0f, "oncomplete", "OnAnimationComplete", "oncompletetarget", this.gameObject, "oncompleteparams", values));
 
     }
 
-    public void FocusAnt(int i)
+    public void FocusAnt(int i, Button button)
     {
+        if (activeAnt != i && focus == true)
+        {
+            RecolorButton(Color.white, previousFocusButton);
+            focus = false;
+        }
         activeAnt = i;
         antCamera.enabled = true;
         mainCamera.enabled = false;
         if (focus == false)
+        {
+            RecolorButton(Color.green, button);
             focus = true;
+        }
         else
         {
+            RecolorButton(Color.white, button);
             focus = false;
             antCamera.enabled = false;
             mainCamera.enabled = true;
         }
+        previousFocusButton = button;
     }
-
     public void OnAnimationComplete(Hashtable values)
     {
         List<Button> buttons = (List<Button>)values["buttons"];
@@ -212,6 +225,15 @@ public class AntController : MonoBehaviour
         focus = false;
         antCamera.enabled = false;
         mainCamera.enabled = true;
+        RecolorButton(Color.white, previousFocusButton);
+    }
+
+    void RecolorButton(Color color, Button button)
+    {
+        ColorBlock cb = button.colors;
+        cb.normalColor = color;
+        cb.highlightedColor = color;
+        button.colors = cb;
     }
 
     public void StopAnimation(int i)
@@ -221,23 +243,6 @@ public class AntController : MonoBehaviour
         animationsRunning[i] = false;
         antCamera.enabled = false;
         mainCamera.enabled = true;
-    }
-
-    private static void AddColliderToLine(GameObject line, Vector3 startPos, Vector3 endPos)
-    {
-        BoxCollider col = line.AddComponent<BoxCollider>();
-        col.transform.SetParent(line.GetComponent<LineRenderer>().transform);
-        float lineLength = Vector3.Distance(startPos, endPos);
-        col.center = new Vector3(0, 0, 0.5f);
-        col.size = new Vector3(lineLength, 1f, 1f);
-        Vector3 midPoint = (startPos + endPos) / 2;
-        col.transform.position = midPoint;
-        float angle = (Mathf.Abs(startPos.y - endPos.y) / Mathf.Abs(startPos.x - endPos.x));
-        if ((startPos.y < endPos.y && startPos.x > endPos.x) || (endPos.y < startPos.y && endPos.x > startPos.x))
-        {
-            angle *= -1;
-        }
-        angle = Mathf.Rad2Deg * Mathf.Atan(angle);
-        col.transform.Rotate(0, 0, angle);
+        RecolorButton(Color.white, previousFocusButton);
     }
 }

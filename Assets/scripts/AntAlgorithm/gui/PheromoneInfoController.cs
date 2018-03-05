@@ -13,13 +13,14 @@ public class PheromoneInfoController : MonoBehaviour {
 
     private LineRenderer lineRenderer;
     private InputField pheromoneInput;
-    public Color c1 = Color.green;
+    public Color c1;
     public Color c2 = Color.red;
     public static bool isInstantiated = false;
 
     void Start()
     {
-        if(infoText == null)
+        c1 = new Color32(59, 189, 35, 255);
+        if (infoText == null)
             infoText = GameObject.FindGameObjectWithTag("infoText").GetComponent<Text>();
         lineRenderer = this.gameObject.GetComponent<LineRenderer>();
         displayInfo = false;
@@ -71,7 +72,7 @@ public class PheromoneInfoController : MonoBehaviour {
     {
         if (displayInfo)
         {
-            infoText.text = this.GetComponent<PheromoneData>().name + "\n" + this.GetComponent<PheromoneData>().value;
+            infoText.text = this.GetComponent<PheromoneData>().name + " " + this.GetComponent<PheromoneData>().value;
             lineRenderer.startColor = c2;
             lineRenderer.endColor = c2;
         }
@@ -83,8 +84,6 @@ public class PheromoneInfoController : MonoBehaviour {
     }
     void ShowEditCanvas()
     {
-        Debug.Log("ShowEditCanvas()");
-
         Button[] controlButtons = editCanvas.GetComponentsInChildren<Button>();
         controlButtons[0].onClick.AddListener(SaveChanges);
         controlButtons[1].onClick.AddListener(CloseCanvas);
@@ -100,7 +99,6 @@ public class PheromoneInfoController : MonoBehaviour {
     }
     void SaveChanges()
     {
-        Debug.Log("SaveChanges()");
         float value = float.Parse(pheromoneInput.text);
         AntAlgorithmManager.Instance.Pheromones.SetPheromone(this.GetComponent<PheromoneData>().from, this.GetComponent<PheromoneData>().to, value);
         this.GetComponent<PheromoneData>().value = value;

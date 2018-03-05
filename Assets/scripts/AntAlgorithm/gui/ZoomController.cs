@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ZoomController : MonoBehaviour
 {
@@ -9,15 +10,16 @@ public class ZoomController : MonoBehaviour
     private bool isPanning;
     public Texture2D cursorTexture;
 
+
+
     void Start()
     {
-
+       
     }
-
+  
     // Update is called once per frame
     void Update()
     {
-
         if (Input.GetMouseButtonDown(1))
         {
             mouseOrigin = Input.mousePosition;
