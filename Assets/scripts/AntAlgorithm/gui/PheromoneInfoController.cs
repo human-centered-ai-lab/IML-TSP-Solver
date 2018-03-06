@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -29,7 +28,7 @@ public class PheromoneInfoController : MonoBehaviour {
         lineRenderer.endColor = c1;
         if (_editCanvasPrefab == null)
         {
-            _editCanvasPrefab = Resources.Load("Prefabs/EditCanvas") as GameObject;
+            _editCanvasPrefab = Resources.Load("Prefabs/IMLEditCanvas") as GameObject;
         }
     }
 
@@ -44,12 +43,10 @@ public class PheromoneInfoController : MonoBehaviour {
             displayInfo = true;
     }
 
-
     private void OnMouseUp()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-
             if (!isInstantiated)
             {
                 editCanvas = Instantiate(_editCanvasPrefab);
@@ -84,6 +81,7 @@ public class PheromoneInfoController : MonoBehaviour {
     }
     void ShowEditCanvas()
     {
+        editCanvas.GetComponentInChildren<Dropdown>().interactable = false;
         Button[] controlButtons = editCanvas.GetComponentsInChildren<Button>();
         controlButtons[0].onClick.AddListener(SaveChanges);
         controlButtons[1].onClick.AddListener(CloseCanvas);

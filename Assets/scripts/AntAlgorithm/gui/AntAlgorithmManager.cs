@@ -11,7 +11,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 {
     public Canvas rightCanvas;
     public Canvas leftCanvas;
-    public Canvas startCanvas;
+    public GameObject startCanvasPrefab;
     public Canvas aboutCanvas;
 
     private AntAlgorithms.AntAlgorithmChooser antAlgorithmChooser;
@@ -21,12 +21,16 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     private int numOfAnts;
 
     public AntController antController;
+    public PheromoneController pheromoneController;
+
     public Transform dropdownMenuTSP;
     public Transform dropdownMenuAlgorithm;
     public Button reloadButton;
     public Button stepButton;
     public Button iterationButton;
     public Button animateAllButton;
+    public Button editPheromonesButton;
+
     public Button aboutButton;
 
 
@@ -41,7 +45,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     public Text infoText;
     public Text iterationText;
     public Text filenameText;
-
 
     List<Button> animationButtons;
     List<Button> focusButtons;
@@ -78,6 +81,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     // Use this for initialization
     void Start()
     {
+        startCanvasPrefab = Instantiate(Resources.Load("Prefabs/StartCanvas") as GameObject);
+
         animationButtons = new List<Button>();
         focusButtons = new List<Button>();
         antToggles = new List<GameObject>();
@@ -85,13 +90,15 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         Ants = new List<Ant>();
         tspImporter = new TSPImporter();
 
+        editPheromonesButton.onClick.AddListener(EditPheromones);
+
         reloadButton.onClick.AddListener(Reload);
         stepButton.onClick.AddListener(AlgoStep);
         animateAllButton.onClick.AddListener(ShowAllAntsAnimation);
         iterationButton.onClick.AddListener(AlgoIteration);
         rightCanvas.GetComponent<CanvasHider>().Hide();
-        startCanvas.enabled = true;
-        startCanvas.GetComponentInChildren<Button>().onClick.AddListener(EnterMainMode);
+        startCanvasPrefab.GetComponent<Canvas>().enabled = true;
+        startCanvasPrefab.GetComponent<Canvas>().GetComponentInChildren<Button>().onClick.AddListener(EnterMainMode);
         aboutButton.onClick.AddListener(About);
         aboutCanvas.GetComponentInChildren<Button>().onClick.AddListener(About);
 
@@ -144,9 +151,9 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         Init();
     }
 
-    // Update is called once per frame
-    void Update()
+    void EditPheromones()
     {
+        pheromoneController.ShowEditCanvas();
     }
 
     void Init()
@@ -154,7 +161,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         numOfAnts = Int32.Parse(numAntsInputField.text);
 
         CityController.DestroyAll();
-        PheromoneController.ClearConnections();
+        pheromoneController.ClearConnections();
 
         string algorithm = dropdownMenuAlgorithm.GetComponent<Dropdown>().options[dropdownMenuAlgorithm.GetComponent<Dropdown>().value].text;
         if (algorithm.Equals("MMAS"))
@@ -191,8 +198,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         }
 
         CityController.Init();
-        PheromoneController.Init();
-        PheromoneController.MakeConnections(antAlgorithm);
+        pheromoneController.Init();
+        pheromoneController.MakeConnections(antAlgorithm);
         antController.MakeConnections(antAlgorithm);
         //ShowAnts(false);
         LoadAntToggles(numOfAnts);
@@ -336,7 +343,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 
     void FocusAnt(int id)
     {
-        //focusButtons[id]..normalColor = Color.gray;
         antController.FocusAnt(id, focusButtons[id]);
     }
     private UnityEngine.Events.UnityAction AnimationButtonListener(int id)
@@ -371,13 +377,13 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     {
         StopAllAnimations();
         int steps = Int32.Parse(stepInputField.text);
-        PheromoneController.ClearConnections();
+        pheromoneController.ClearConnections();
         Debug.Log("" + steps);
         for (int i = 0; i < steps; i++)
         {
             antAlgorithm.Step();
         }
-        PheromoneController.MakeConnections(antAlgorithm);
+        pheromoneController.MakeConnections(antAlgorithm);
         antController.MakeConnections(antAlgorithm);
 
         ShowSolution();
@@ -387,7 +393,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     {
         StopAllAnimations();
 
-        PheromoneController.ClearConnections();
+        pheromoneController.ClearConnections();
 
         int iterations = Int32.Parse(iterationInputField.text);
         for (int i = 0; i < iterations; i++)
@@ -395,7 +401,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
             antAlgorithm.Iteration();
         }
         ShowSolution();
-        PheromoneController.MakeConnections(antAlgorithm);
+        pheromoneController.MakeConnections(antAlgorithm);
         antController.MakeConnections(antAlgorithm);
         VisibilityCheck();
     }
@@ -423,7 +429,7 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
 
     void ShowPheromones(bool flag)
     {
-        PheromoneController.HideConnections(flag);
+        pheromoneController.HideConnections(flag);
     }
     void ShowAnt(int id, bool flag)
     {
@@ -445,6 +451,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     }
     void EnterMainMode()
     {
-        startCanvas.enabled = false;
+        startCanvasPrefab.GetComponent<Canvas>().enabled = false;
     }
 }

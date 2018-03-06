@@ -5,23 +5,36 @@ using UnityEngine;
 using UnityEngine.UI;
 using util;
 
-public class PheromoneController : Singleton<PheromoneController>
+public class PheromoneController : MonoBehaviour
 {
-
-    private static List<GameObject> lineObjects;
+    private  List<GameObject> lineObjects;
     private static GameObject _linePrefab;
+    private  GameObject editCanvasPrefab;
 
-    public static void Init()
+    private GameObject editCanvas;
+    private InputField editPheromoneinputField;
+    private Dropdown editPheromoneDropdown;
+    private int currentFrom;
+    private int currentTo;
+    private double currentValue;
+    private int currentIndex;
+
+
+
+    public void Init()
     {
         lineObjects = new List<GameObject>();
-
+        if (editCanvasPrefab == null)
+        {
+            editCanvasPrefab = Resources.Load("Prefabs/IMLEditCanvas") as GameObject;
+        }
         if (_linePrefab == null)
         {
-            _linePrefab = Resources.Load("Prefabs/line") as GameObject;
+            _linePrefab = Resources.Load("Prefabs/Line") as GameObject;
         }
     }
 
-    public static void MakeConnections(AntAlgorithms.AntAlgorithm antAlgorithm)
+    public void MakeConnections(AntAlgorithms.AntAlgorithm antAlgorithm)
     {
         float pheromoneMaxValue = 0f;
         int counter = 0;
@@ -59,7 +72,7 @@ public class PheromoneController : Singleton<PheromoneController>
             }
         }
     }
-    public static void ClearConnections()
+    public void ClearConnections()
     {
         if (lineObjects != null)
         {
@@ -71,14 +84,51 @@ public class PheromoneController : Singleton<PheromoneController>
         }
     }
 
-    public static void HideConnections(bool flag)
+    public void HideConnections(bool flag)
     {
         for (int i = 0; i < lineObjects.Count; i++)
         {
             lineObjects[i].SetActive(flag);
         }
     }
-
+    public void ShowEditCanvas()
+    {
+        editCanvas = Instantiate(editCanvasPrefab);
+        editPheromoneinputField = editCanvas.GetComponentInChildren<InputField>();
+        editPheromoneDropdown = editCanvas.GetComponentInChildren<Dropdown>();
+        Button[] controlButtons = editCanvas.GetComponentsInChildren<Button>();
+        controlButtons[0].onClick.AddListener(SaveChanges);
+        controlButtons[1].onClick.AddListener(CloseCanvas);
+        editCanvas.GetComponentInChildren<Text>().text = "Edit Pheromones";
+        for (int i = 0; i< lineObjects.Count; i++) {
+            string option = lineObjects[i].GetComponent<PheromoneData>().from + "-" + lineObjects[i].GetComponent<PheromoneData>().to;
+            editPheromoneDropdown.options.Add(new Dropdown.OptionData(option));
+        }
+        editPheromoneDropdown.onValueChanged.AddListener(delegate {
+            DropdownValueChanged(editPheromoneDropdown.value, editPheromoneDropdown.options[editPheromoneDropdown.value].text);
+        });
+    }
+    void DropdownValueChanged(int index, string value)
+    {
+        string[] fromto = value.Split('-');
+        currentFrom = Int32.Parse(fromto[0]);
+        currentTo = Int32.Parse(fromto[1]);
+        currentValue = AntAlgorithmManager.Instance.Pheromones.GetPheromone(currentFrom, currentTo);
+        editPheromoneinputField.text = "" + currentValue;
+    }
+    void CloseCanvas()
+    {
+        editCanvas.SetActive(false);
+        Destroy(editCanvas);
+    }
+    void SaveChanges()
+    {
+        float value = float.Parse(editPheromoneinputField.text);
+        Debug.Log("Saved " + currentFrom + " - " + currentTo + " with value: " + value);
+        AntAlgorithmManager.Instance.Pheromones.SetPheromone(currentFrom, currentTo, value);
+        lineObjects[currentIndex].GetComponent<PheromoneData>().value = (float)value;
+        CloseCanvas();
+    }
 
     private static void AddColliderToLine(GameObject line, Vector3 startPos, Vector3 endPos, float colliderThikness)
     {

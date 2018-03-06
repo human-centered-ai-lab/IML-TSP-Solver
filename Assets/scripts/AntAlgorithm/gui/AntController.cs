@@ -8,7 +8,6 @@ public class AntController : MonoBehaviour
 {
     public Camera antCamera;
     public Color antPathColor;
-
     public Camera mainCamera;
     private int activeAnt;
 
@@ -21,6 +20,7 @@ public class AntController : MonoBehaviour
     private GameObject _antContainerPrefab;
     private GameObject _antPrefab;
     private GameObject _antPathPrefab;
+
     private Button focusButton;
     private Button previousFocusButton;
     private static List<Vector3> previousAntPositions;
@@ -230,10 +230,13 @@ public class AntController : MonoBehaviour
 
     void RecolorButton(Color color, Button button)
     {
-        ColorBlock cb = button.colors;
-        cb.normalColor = color;
-        cb.highlightedColor = color;
-        button.colors = cb;
+        if (button != null)
+        {
+            ColorBlock cb = button.colors;
+            cb.normalColor = color;
+            cb.highlightedColor = color;
+            button.colors = cb;
+        }
     }
 
     public void StopAnimation(int i)

@@ -36,7 +36,7 @@ public class CityInfoController : MonoBehaviour {
         }
         else
         {
-            myText.color = Color.magenta;
+            myText.color = Color.cyan;
         }
     }
 }
