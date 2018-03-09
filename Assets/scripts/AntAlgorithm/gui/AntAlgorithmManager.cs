@@ -253,7 +253,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     // shows the solution of the algorith in the text field
     void ShowSolution()
     {
-        string solution = "Best iteration: " + antAlgorithm.BestIteration + "\nBest tour: " + antAlgorithm.GetBestTour(1) + "\nBest tour length: " + antAlgorithm.TourLength;
+        Debug.Log("Best tour l: " + antAlgorithm.TourLength);
+        string solution = "Best iteration: " + antAlgorithm.BestIteration + "\nBest tour: " + antAlgorithm.GetBestTour(1) + "\nBest tour length: " + antAlgorithm.TourLength.ToString("F2");
         infoText.text = solution;
         iterationText.text = "Current iteration: " + antAlgorithm.CurrentIteration + "\nCurrent step: " + antAlgorithm.AlgStep;
     }
