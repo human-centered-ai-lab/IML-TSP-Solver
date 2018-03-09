@@ -1,5 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* CameraController for Camera swithing*/
+
 using UnityEngine;
 
 public class CameraController : MonoBehaviour

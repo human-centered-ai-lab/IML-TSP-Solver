@@ -253,7 +253,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     // shows the solution of the algorith in the text field
     void ShowSolution()
     {
-        Debug.Log("Best tour l: " + antAlgorithm.TourLength);
         string solution = "Best iteration: " + antAlgorithm.BestIteration + "\nBest tour: " + antAlgorithm.GetBestTour(1) + "\nBest tour length: " + antAlgorithm.TourLength.ToString("F2");
         infoText.text = solution;
         iterationText.text = "Current iteration: " + antAlgorithm.CurrentIteration + "\nCurrent step: " + antAlgorithm.AlgStep;
@@ -392,7 +391,6 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         StopAllAnimations();
         int steps = Int32.Parse(stepInputField.text);
         pheromoneController.ClearConnections();
-        Debug.Log("" + steps);
         for (int i = 0; i < steps; i++)
         {
             antAlgorithm.Step();
