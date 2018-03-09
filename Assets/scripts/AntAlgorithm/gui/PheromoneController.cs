@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* PheromoneController is used for pheromone ui representation*/
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using util;
 
 public class PheromoneController : MonoBehaviour
 {
     private  List<GameObject> lineObjects;
     private static GameObject _linePrefab;
     private  GameObject editCanvasPrefab;
-
     private GameObject editCanvas;
     private InputField editPheromoneinputField;
     private Dropdown editPheromoneDropdown;
@@ -18,8 +24,6 @@ public class PheromoneController : MonoBehaviour
     private int currentTo;
     private double currentValue;
     private int currentIndex;
-
-
 
     public void Init()
     {
@@ -48,6 +52,7 @@ public class PheromoneController : MonoBehaviour
                     pheromoneMaxValue = currentPheromone;
             }
         }
+
         for (int i = 0; i < AntAlgorithmManager.Instance.Cities.Count; i++)
         {
             for (int j = (i + 1); j < AntAlgorithmManager.Instance.Cities.Count; j++)
@@ -65,13 +70,13 @@ public class PheromoneController : MonoBehaviour
                 pd.to = j;
                 pd.name = "Pheromone " + i + " to " + j + ": ";
                 pd.value = (float)antAlgorithm.Pheromones.GetPheromone(i, j);
-                // GameObject.FindGameObjectWithTag("infoText").GetComponent<Text>().text = "Pheromone from " + i + " to " + j + ":\n value: " + w1;
                 lineObjects[counter].GetComponent<LineRenderer>().startWidth = w1;
                 lineObjects[counter].GetComponent<LineRenderer>().endWidth = w1;
                 counter++;
             }
         }
     }
+
     public void ClearConnections()
     {
         if (lineObjects != null)
@@ -91,6 +96,7 @@ public class PheromoneController : MonoBehaviour
             lineObjects[i].SetActive(flag);
         }
     }
+
     public void ShowEditCanvas()
     {
         editCanvas = Instantiate(editCanvasPrefab);
@@ -108,6 +114,7 @@ public class PheromoneController : MonoBehaviour
             DropdownValueChanged(editPheromoneDropdown.value, editPheromoneDropdown.options[editPheromoneDropdown.value].text);
         });
     }
+
     void DropdownValueChanged(int index, string value)
     {
         string[] fromto = value.Split('-');
@@ -116,11 +123,13 @@ public class PheromoneController : MonoBehaviour
         currentValue = AntAlgorithmManager.Instance.Pheromones.GetPheromone(currentFrom, currentTo);
         editPheromoneinputField.text = "" + currentValue;
     }
+
     void CloseCanvas()
     {
         editCanvas.SetActive(false);
         Destroy(editCanvas);
     }
+
     void SaveChanges()
     {
         float value = float.Parse(editPheromoneinputField.text);

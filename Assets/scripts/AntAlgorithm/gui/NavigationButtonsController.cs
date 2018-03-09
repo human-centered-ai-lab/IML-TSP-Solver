@@ -1,4 +1,13 @@
-﻿using System.Collections;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* NavigationButtonsController is used for hiding ui canvas elements*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,22 +17,17 @@ public class NavigationButtonsController : MonoBehaviour, IPointerDownHandler, I
 {
 
     public Camera mainCamera;
-
     public bool isDown;
     public bool isUp;
     public bool isLeft;
     public bool isRight;
     public bool isIn;
     public bool isOut;
-
     public int zoomSpeed = 30;
     public int transfSpeed = 10;
 
     private Vector3 position;
 
-    void Start()
-    {
-    }
     void Update()
     {
         position = mainCamera.GetComponent<RectTransform>().position;

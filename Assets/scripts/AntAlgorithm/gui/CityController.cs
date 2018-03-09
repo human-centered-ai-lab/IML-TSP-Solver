@@ -1,8 +1,14 @@
-﻿using System.Collections;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* CityController is dragged in to the Scene and is used for city ui controlling*/
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using util;
 
 public class CityController : MonoBehaviour
 {
@@ -23,9 +29,7 @@ public class CityController : MonoBehaviour
 
         int absoluteMaxX = Mathf.Max(Mathf.Abs(minX), Mathf.Abs(maxX));
         int absoluteMaxY = Mathf.Max(Mathf.Abs(minY), Mathf.Abs(maxY));
-        // Debug.Log ("Game board is rotated, so that player is not bored when playing with same town more often. Angle to rotate: " + angleToRotate);
 
-        //initialize food objects with normalized values
         foreach (var city in cities)
         {
             float xPos = (city.XPosition / (float)absoluteMaxX) * Screen.width * 5;
@@ -34,18 +38,16 @@ public class CityController : MonoBehaviour
 
             cityObjects.Add(Create(pos, city.Id));
         }
-
-
     }
     public static GameObject Create(Vector3 position, int id)
     {
         if (_cityPrefab == null)
         {
-            _cityPrefab = Resources.Load("Prefabs/circle") as GameObject;
+            _cityPrefab = Resources.Load("Prefabs/City") as GameObject;
         }
 
         var cityGameObject = Instantiate(_cityPrefab, position, Quaternion.identity);
-        cityGameObject.name = "cityGameObject_" + id;
+        cityGameObject.name = "CityGameObject_" + id;
         Text text = cityGameObject.GetComponentInChildren<Image>().GetComponentInChildren<Text>();
         text.text = "" + id;
 
@@ -61,7 +63,6 @@ public class CityController : MonoBehaviour
             cityObjects.Clear();
         }
     }
-
 
     #region Helper Methods
 

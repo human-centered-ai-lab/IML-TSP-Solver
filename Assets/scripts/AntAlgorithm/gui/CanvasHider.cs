@@ -1,5 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* CanvasHider is dragged in to the Scene and is used for hiding ui elements*/
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +21,7 @@ public class CanvasHider : MonoBehaviour
         fadeSpeed = Time.deltaTime * 2;
         toggleCanvasButton.onClick.AddListener(Toggle);
     }
+
     void Toggle()
     {
         if (!toggleFlag)
@@ -36,6 +44,7 @@ public class CanvasHider : MonoBehaviour
         toggleFlag = true;
 
     }
+
     public void Show()
     {
         StartCoroutine(FadeIn(myCanvas));
@@ -54,6 +63,7 @@ public class CanvasHider : MonoBehaviour
         canvasGroup.interactable = false;
         yield return null;
     }
+
     IEnumerator FadeIn(Canvas canvas)
     {
         CanvasGroup canvasGroup = canvas.GetComponent<CanvasGroup>();
@@ -64,13 +74,5 @@ public class CanvasHider : MonoBehaviour
         }
         canvasGroup.interactable = true;
         yield return null;
-    }
-    // Use this for initialization
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

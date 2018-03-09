@@ -1,4 +1,12 @@
-﻿
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* PheromoneInfoController is used for mouseover pheromone handling*/
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -6,16 +14,16 @@ using UnityEngine.UI;
 public class PheromoneInfoController : MonoBehaviour {
 
     public bool displayInfo;
+    public Color c1;
+    public Color c2 = Color.red;
+    public static bool isInstantiated = false;
     public Text infoText;
     public GameObject _editCanvasPrefab;
     public GameObject editCanvas;
 
     private LineRenderer lineRenderer;
     private InputField pheromoneInput;
-    public Color c1;
-    public Color c2 = Color.red;
-    public static bool isInstantiated = false;
-
+   
     void Start()
     {
         c1 = new Color32(59, 189, 35, 255);
@@ -79,6 +87,7 @@ public class PheromoneInfoController : MonoBehaviour {
             lineRenderer.endColor = c1;
         }
     }
+
     void ShowEditCanvas()
     {
         editCanvas.GetComponentInChildren<Dropdown>().interactable = false;
@@ -89,12 +98,14 @@ public class PheromoneInfoController : MonoBehaviour {
         desciptionText.text = this.GetComponent<PheromoneData>().name;
         pheromoneInput.text = this.GetComponent<PheromoneData>().value + "";
     }
+
     void CloseCanvas()
     {
         editCanvas.SetActive(false);
         isInstantiated = false;
         Destroy(editCanvas);
     }
+
     void SaveChanges()
     {
         float value = float.Parse(pheromoneInput.text);

@@ -1,21 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/****************************************************
+ * IML ACO implementation for TSP 
+ * More information: http://hci-kdd.org/project/iml/
+ * Author: Andrej Mueller
+ * Year: 2018
+ *****************************************************/
+
+/* ZoomController is used for zooming */
+
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ZoomController : MonoBehaviour
 {
-    private Vector3 mouseOrigin;
-    private bool isPanning;
     public Texture2D cursorTexture;
 
-
-
-    void Start()
-    {
-       
-    }
+    private Vector3 mouseOrigin;
+    private bool isPanning;
   
     // Update is called once per frame
     void Update()
