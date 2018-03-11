@@ -61,6 +61,8 @@ public class CanvasHider : MonoBehaviour
             yield return null;
         }
         canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
         yield return null;
     }
 
@@ -73,6 +75,7 @@ public class CanvasHider : MonoBehaviour
             yield return null;
         }
         canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
         yield return null;
     }
 }

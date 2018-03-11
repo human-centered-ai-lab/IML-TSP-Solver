@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using util;
 
@@ -37,6 +38,8 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     public Button animateAllButton;
     public Button editPheromonesButton;
     public Button aboutButton;
+    public Button exitButton;
+
     public InputField iterationInputField;
     public InputField stepInputField;
     public Toggle pheromoneToggle;
@@ -149,6 +152,11 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
         for (int i = 0; i < numOfFilesNotSA; i++)
             dropdownMenuTSP.GetComponent<Dropdown>().options.Add(new Dropdown.OptionData("data" + (i + 1) + ".tsp"));
         dropdownMenuTSP.GetComponent<Dropdown>().RefreshShownValue();
+#endif
+#if  UNITY_ANDROID 
+        exitButton.interactable = true;
+        exitButton.onClick.AddListener(Exit);
+
 #endif
     }
 
@@ -469,5 +477,25 @@ public class AntAlgorithmManager : Singleton<AntAlgorithmManager>
     void EnterMainMode()
     {
         startCanvasPrefab.GetComponent<Canvas>().enabled = false;
+    }
+
+    void Exit()
+    {
+        Application.Quit();
+    }
+
+    public static bool IsPointerOverGameObject()
+    {
+        //check mouse
+        if (EventSystem.current.IsPointerOverGameObject())
+            return true;
+
+        //check touch
+        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        {
+            if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+                return true;
+        }
+        return false;
     }
 }
