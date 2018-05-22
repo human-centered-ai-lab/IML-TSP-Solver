@@ -24,7 +24,7 @@ public class ChoiceInfo
     }
 
     // choice update
-    public void UpdateChoiceInfo(Pheromones pheromones, Distances distances, int alpha, int beta)
+    public void UpdateChoiceInfo(Pheromone pheromones, Distances distances, int alpha, int beta)
     {
         for (int i = 0; i < size; i++)
         {

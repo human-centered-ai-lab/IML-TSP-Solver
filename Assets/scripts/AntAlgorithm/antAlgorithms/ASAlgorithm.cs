@@ -29,12 +29,13 @@ namespace AntAlgorithms
             BestTour = new List<int>();
             TourLength = double.MaxValue;
             CheckBestTour();
-            algStep = 1;
+            AlgStep = 1;
         }
 
         public override void Iteration()
         {
-            iteration++;
+            AlgStep = 1;
+            CurrentIteration++;
             antin.UpdateAnts();
             antin.UpdatePheromones();
             CheckBestTour();
@@ -42,15 +43,16 @@ namespace AntAlgorithms
 
         public override void Step()
         {
-            if (antin.UpdateAntsStepwise(algStep))
+            if (antin.UpdateAntsStepwise(AlgStep))
             {
-                algStep = 1;
+                CurrentIteration++;
+                AlgStep = 1;
                 antin.UpdatePheromones();
                 CheckBestTour();
             }
             else
             {
-                algStep++;
+                AlgStep++;
             }
         }
     }

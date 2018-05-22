@@ -14,7 +14,7 @@ namespace AntAlgorithms.interaction
             this.pBest = pBest;
             pheromoneTrailInitialValue = 1.0f / (rho * Distances.CalculateNNHeuristic());
 
-            Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue, pBest);
+            Pheromones = new Pheromone(cities.Count, pheromoneTrailInitialValue, pBest);
             Pheromones.Init();
 
             //Debug.Log("InitValue Pheromones: " + pheromoneTrailInitialValue);
@@ -49,7 +49,21 @@ namespace AntAlgorithms.interaction
 
         public override bool UpdateAntsStepwise(int citiesSoFar)
         {
-            throw new NotImplementedException();
+            bool lastCity = false;
+
+            if (!tourComplete)
+            {
+                if (citiesSoFar == 1)
+                    InitAntUpdate();
+                else
+                {
+                    lastCity = !MoveAnts(citiesSoFar - 1);
+                }
+                if (lastCity)
+                    CompleteTours();
+            }
+
+            return tourComplete;
         }
 
         public override void UpdatePheromones()

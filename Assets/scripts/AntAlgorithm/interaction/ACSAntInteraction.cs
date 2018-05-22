@@ -17,7 +17,7 @@ namespace AntAlgorithms.interaction
             tau0 = 1.0f / (cities.Count * Distances.CalculateNNHeuristic());
             pheromoneTrailInitialValue = this.tau0;
 
-            Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue);
+            Pheromones = new Pheromone(cities.Count, pheromoneTrailInitialValue);
             Pheromones.Init();
 
             choiceInfo = new ChoiceInfo(cities.Count);

@@ -10,7 +10,7 @@ namespace AntAlgorithms.interaction
         public ASAntInteraction(int alpha, int beta, double rho, int numOfAnts, List<City> cities) : base(alpha, beta, rho, numOfAnts, cities)
         {
             pheromoneTrailInitialValue = numOfAnts / Distances.CalculateNNHeuristic();
-            Pheromones = new Pheromones(cities.Count, pheromoneTrailInitialValue);
+            Pheromones = new Pheromone(cities.Count, pheromoneTrailInitialValue);
             Pheromones.Init();
 
             choiceInfo = new ChoiceInfo(cities.Count);

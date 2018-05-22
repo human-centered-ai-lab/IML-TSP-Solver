@@ -49,9 +49,10 @@ namespace AntAlgorithm.tools
             int count = 0;
             List<City> cities = new List<City>();
             StreamReader file =
-               new StreamReader(Application.dataPath + "/" + ResourcesFolderName + "/" + TspLibFolderName + "/" + fileName);
+               new StreamReader(Application.streamingAssetsPath + "/"  + TspLibFolderName + "/" + fileName);
             while ((line = file.ReadLine()) != null)
             {
+
                 if (line == PointSection)
                     break;
             }
@@ -88,7 +89,7 @@ namespace AntAlgorithm.tools
             LoadCities(www.text);
         }
 
-        public IEnumerator importTspFromWebWebGL(string tspFileToUse)
+        public IEnumerator ImportTspFromWebWebGL(string tspFileToUse)
         {
             loadingComplete = false;
             string filePath = TspWebDirectory + tspFileToUse;
@@ -144,7 +145,7 @@ namespace AntAlgorithm.tools
             bool pointArea = false;
             int count = 0;
 
-            foreach (string line in result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in result.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (string.Compare(line.Trim(), PointSection.Trim(), StringComparison.OrdinalIgnoreCase) == 0) // equal - fix because of unprintable sign at end of "line"
                 {
@@ -156,7 +157,6 @@ namespace AntAlgorithm.tools
                     string[] cityParameter = line.Split(delimiterChars);
                     if (cityParameter.Length == 3)
                     {
-                        Debug.Log("City" + count + " " + cityParameter[1] + " / " + cityParameter[2]);
                         Cities.Add(new City(Int32.Parse(cityParameter[1]), Int32.Parse(cityParameter[2]), count));
                     }
                     count++;
